@@ -8,9 +8,12 @@ project:
     - "talks.qmd"
     - "resources.qmd"
     - "software.qmd"
+    - "cv.qmd"
+    - "publications.qmd"
     - "posts/**"
   resources:
     - CNAME
+  post-render: scripts/copy-feed.sh
 
 website:
   title: "Credibly Curious"

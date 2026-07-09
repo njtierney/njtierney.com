@@ -1,6 +1,8 @@
 ---
 title: Consulting
 comments: false
+aliases:
+  - /consulting/
 ---
 
 **Struggling with your data?** Too big? Too messy? Missing? **I can help with that.**

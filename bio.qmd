@@ -1,6 +1,8 @@
 ---
 title: bio
 comments: false
+aliases:
+  - /bio/
 ---
 
 My name is Nick Tierney. I have an bachelors and honours degree in Psychological Science, and completed my PhD in Statistics (under [Kerrie Mengersen](https://en.wikipedia.org/wiki/Kerrie_Mengersen)) in 2018. I work as a freelance consultant, you can see my available services at my [consulting page](https://www.njtierney.com/consulting/).

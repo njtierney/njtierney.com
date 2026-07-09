@@ -1,6 +1,8 @@
 ---
 title: Talks
 comments: false
+aliases:
+  - /talks/
 ---
 
 # 2026

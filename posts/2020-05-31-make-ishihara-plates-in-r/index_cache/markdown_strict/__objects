@@ -1,0 +1,32 @@
+show-ishihara	
+create-poly-packings	create_poly_packings
+plot-triangles	tri	.Random.seed
+plot-many-triangles	tris
+circles	circles_df
+create-circle-plate	create_circle_plate
+circle-plate	circle_plate
+cast-packing-poly	cast_packing_poly
+cast-packing-poly-sf	circle_plate_sf
+fun-glyph	glyph
+print-glyph	letter_s
+plot-glyph	
+fun-cast-font-sf	cast_font_sf
+cast-letter-s	letter_s_sf
+sf-plot	
+overlay-s	
+funs-font-size-change	font_center	font_increase
+plot-font-size-change	letter_s_bigger
+increase-font-size-change	letter_s_bigger
+fun-overlays	is_sf_intersects	overlay_text_in_circle
+cast-bigger-letter-s	letter_s_bigger_sf
+overlay-circle	overlayed_circle
+plot-ishihara	gg_ishihara
+plot-multiple-colours	
+all-together-circles	circle_plate
+all-together-circles-sf	circle_plate_sf
+all-together-letter-s	letter_s
+all-together-letter-s-sf	letter_s_sf
+all-together-circle	overlayed_circle
+all-together-plot	gg_ishihara
+all-together-plot-more	
+gg-ishihara	gg_ish	ish

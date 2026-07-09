@@ -1,6 +1,8 @@
 ---
 title: Resources
 comments: false
+aliases:
+  - /resources/
 ---
 
 There are a lot of questions and answers on the internet. This page lists resources that I have found useful, so I thought you might find them useful too.

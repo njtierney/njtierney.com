@@ -1,6 +1,8 @@
 ---
 title: Software
 comments: false
+aliases:
+  - /software/
 ---
 
 ## [visdat](https://docs.ropensci.org/visdat/): Preliminary exploratory visualisation of data
