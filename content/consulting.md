@@ -43,6 +43,15 @@ I'm **currently accepting** select clients for new projects. My approach is tail
 
 - **Mentoring**: I can meet with you or a small group on a regular basis to develop customised material and code review, so you can improve your data analytic skills. I've previously run code review in the [infectious disease ecology and modelling team](https://www.thekids.org.au/our-research/brain-and-behaviour/child-health-analytics-research-program/infectious-disease-ecology-and-modelling/), [live streamed my review of R packages](https://www.youtube.com/@NicholasTierney/streams), and also led [rOpenSci coworking sessions](https://ropensci.org/coworking/).
 
+# Portfolio
+
+- Australian Federal Government, 2025. Reviewed and developed econometric model and methodology. Improved code quality, speed, and developed R package.
+- Private sector, acturials, 2025. Developed R training material for data visualisation. Implemented branding scheme based on updated design documents, using best practices in data visualisation and accessibility. Developed workflows and R packages for automating financial outputs.
+- Research institute, UK, 2025. Refreshed software used for infectious disease modelling. This involved developing a new R package for data access, as well as carefully separating out functionality into easier to maintain pieces whilst ensuring existing code would not break.
+- Research institute, Australia, 2025-2026. Translated existing research methods into R software for use in geospatial data analytics.
+- Research institute, Europe, 2026. Reviewed statistical methodology and ensured implementation in software matched the methods. Reviewed software and provided guidance on how to improve key areas, listed in order of importance and effort.
+
+
 # Let's Solve Your Data Challenges
 
 I'm **currently accepting** projects. Contact me at info `{at}` `[njtierney]` `(dot)` com to discuss how we can work together. Initial consultations are complimentary and without obligation.
