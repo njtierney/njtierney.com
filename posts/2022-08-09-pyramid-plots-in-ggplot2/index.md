@@ -1,6 +1,5 @@
 ---
 title: Population Pyramid Plots in `ggplot2`
-author: Nicholas Tierney
 date: '2022-08-09'
 slug: ggplot-pyramid
 categories:

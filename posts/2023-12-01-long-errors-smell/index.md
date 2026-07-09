@@ -1,6 +1,5 @@
 ---
 title: "Code Smell: Error Handling Eclipse"
-author: Nicholas Tierney
 date: '2023-12-06'
 slug: long-errors-smell
 categories:

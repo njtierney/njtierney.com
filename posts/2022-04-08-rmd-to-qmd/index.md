@@ -1,6 +1,5 @@
 ---
 title: Notes on Changing from Rmarkdown/Bookdown to Quarto
-author: Nicholas Tierney
 date: '2022-04-11'
 slug: rmd-to-qmd
 categories:

@@ -22,6 +22,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
   color: #313131;
   letter-spacing: -.025rem;
+  border-bottom: none;
 }
 
 strong {
@@ -43,6 +44,9 @@ main li {
 }
 .site-title {
   text-align: center;
+  /* !important: on pages without a frontmatter title, Quarto promotes this
+     h1 to the page title and adds a .display-7 class that shrinks it */
+  font-size: 3em !important;
 }
 .site-logo {
   vertical-align: top;
@@ -92,6 +96,14 @@ hr {
 .quarto-title-meta,
 .quarto-title-block .quarto-title .quarto-categories {
   justify-content: center;
+}
+.quarto-title-meta {
+  /* only the date lives here now; flatten Quarto's meta grid and centre it */
+  display: block !important;
+  text-align: center;
+}
+.quarto-title-meta-heading {
+  display: none;
 }
 #title-block-header .date {
   color: #268bd2;

@@ -1,6 +1,5 @@
 ---
 title: 'Get Good with R: Typing Skills and Shortcuts'
-author: Nicholas Tierney
 date: '2023-12-04'
 slug: get-good-type-fast
 categories:

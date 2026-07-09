@@ -35,7 +35,9 @@ format:
     theme:
       - default
       - assets/theme.scss
-    css: assets/hover.css
+    css:
+      - assets/hover.css
+      - assets/syntax.css
     include-before-body: assets/header.html
     grid:
       body-width: 680px

@@ -1,6 +1,5 @@
 ---
 title: How to Get Good with R?
-author: Nicholas Tierney
 date: '2023-11-10'
 slug: how-to-get-good-with-r
 categories:

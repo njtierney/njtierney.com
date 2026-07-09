@@ -44,8 +44,9 @@ quarto preview
 
 1. **Migrate the other ~160 posts.** The script used for these 10 is a good
    template (parametrise the sample list): for each post, copy the rendered
-   markdown, strip `output:`/`rmd_hash:`/`tags:` from frontmatter, add the
-   old-URL alias, copy asset dirs, and rewrite `/post/*_files/` figure paths.
+   markdown, strip `output:`/`rmd_hash:`/`tags:`/`author:` from frontmatter
+   (posts don't show an author), add the old-URL alias, copy asset dirs, and
+   rewrite `/post/*_files/` figure paths.
 2. **~28 old `.Rmd` posts render to HTML, not markdown** (blogdown default
    for `.Rmd`). Their bodies need converting back to markdown
    (e.g. `pandoc -f html -t markdown`) or re-rendering.

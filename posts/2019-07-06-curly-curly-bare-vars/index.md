@@ -1,6 +1,5 @@
 ---
 title: 'Curly Curly: How to pass bare variable arguments to things?'
-author: ''
 date: '2019-07-06'
 slug: jq-bare-vars
 categories:

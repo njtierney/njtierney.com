@@ -1,6 +1,5 @@
 ---
 title: "What I wish I'd known"
-author: ''
 date: '2018-06-15'
 slug: wish-id-known
 categories: [blag]

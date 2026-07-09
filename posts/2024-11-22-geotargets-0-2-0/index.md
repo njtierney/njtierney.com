@@ -1,6 +1,5 @@
 ---
 title: "{geotargets} 0.2.0"
-author: Nicholas Tierney
 date: '2024-11-27'
 slug: geotargets-0-2-0
 categories:
