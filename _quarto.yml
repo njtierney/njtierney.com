@@ -1,0 +1,50 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "index.qmd"
+    - "bio.qmd"
+    - "consulting.qmd"
+    - "talks.qmd"
+    - "resources.qmd"
+    - "software.qmd"
+    - "posts/**"
+  resources:
+    - CNAME
+
+website:
+  title: "Credibly Curious"
+  site-url: https://www.njtierney.com/
+  description: "Nick Tierney's (mostly) rstats blog"
+  favicon: assets/njt-logo-small.png
+  navbar: false
+  page-footer:
+    center: |
+      &copy; [Nicholas Tierney](https://njtierney.com) 2013-25 | [Github](https://github.com/njtierney) | [Blue Sky](https://bsky.app/profile/njtierney.bsky.social) | [RSS](https://www.njtierney.com/index.xml)
+  repo-url: https://github.com/rbind/njtierney.com
+  repo-branch: quarto-migration
+  comments:
+    utterances:
+      repo: rbind/njtierney.com
+      label: "comments :speech_balloon:"
+      theme: github-light
+      issue-term: title
+
+format:
+  html:
+    theme:
+      - default
+      - assets/theme.scss
+    css: assets/hover.css
+    include-before-body: assets/header.html
+    grid:
+      body-width: 680px
+    toc: false
+    smooth-scroll: true
+    link-external-newwindow: false
+    code-copy: true
+    highlight-style: pygments
+    date-format: "YYYY-MM-DD"
+
+execute:
+  freeze: auto

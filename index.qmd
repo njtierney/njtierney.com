@@ -1,0 +1,13 @@
+---
+listing:
+  id: posts
+  contents: posts
+  sort: "date desc"
+  template: assets/listing.ejs
+  feed: true
+pagetitle: "Credibly Curious"
+comments: false
+---
+
+::: {#posts}
+:::

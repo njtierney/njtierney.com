@@ -1,0 +1,16 @@
+<div class="post-listing">
+<ul>
+<% for (const item of items) { %>
+<%
+  const d = new Date(item.date);
+  const fmt = d.getFullYear() + "/" +
+    String(d.getMonth() + 1).padStart(2, "0") + "/" +
+    String(d.getDate()).padStart(2, "0");
+%>
+  <li class="hvr-forward">
+    <span class="listing-date"><%= fmt %></span>
+    <a href="<%- item.path %>"><%= item.title %></a>
+  </li>
+<% } %>
+</ul>
+</div>
