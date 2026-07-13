@@ -2,6 +2,10 @@
 title: Talks
 ---
 
+# 2026
+
+- [2026-07-09: The value in teaching is not the **content** it's the **teacher**](https://njtierney.github.io/talk-teacher-over-content/#/title-slide)
+
 # 2025
 
 - [2025-05-12: "Career QnA", nipaluna, lutruwita (Hobart, Tasmania), Ziggy Lab groupd meeting (online)](https://njtierney.github.io/ziggy-lab-talk/)
