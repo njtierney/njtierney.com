@@ -108,5 +108,9 @@ org-verification attempt can be deleted from Route 53 if present.
 2. The old Hugo `/categories/*` and `/tags/*` taxonomy pages have no
    equivalent and will 404 after cutover (low-value pages; accepted).
 3. Once live, delete the Hugo files (`config.toml`, `content/`, `layouts/`,
-   `themes/`, `static/`, `resources/`, `netlify.toml`), the `render:`
-   allowlist in `_quarto.yml`, and this file.
+   `themes/`, `static/`, `resources/`, `archetypes/`, `netlify.toml`,
+   `.hugo_build.lock`, `public/`) and this file. Salvaged already:
+   drafts → `drafts/`, images → `imgs/` + `hexes/` + `favicon.ico`,
+   legacy `static/_redirects` rules → post aliases. **Keep the `render:`
+   allowlist in `_quarto.yml`** — it is what stops Quarto rendering
+   `drafts/`.
