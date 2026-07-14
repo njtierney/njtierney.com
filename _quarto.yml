@@ -44,7 +44,9 @@ format:
       - assets/hover.css
       - assets/syntax.css
     include-before-body: assets/header.html
-    include-after-body: assets/copy-chroma.html
+    include-after-body:
+      - assets/copy-chroma.html
+      - assets/lightbox-shim.html
     grid:
       body-width: 680px
     toc: false
