@@ -1,0 +1,135 @@
+---
+title: Getting ggplot2 to Have a Transparent Background
+author: Nicholas Tierney
+date: '2025-10-09'
+slug: getting-ggplot2-to-have-a-transparent-background
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+This is a blog post about how to get your ggplot plots to have a transparent background. This can be a useful thing to do if you put your ggplot onto a slide of a presentation and you want the background to be the same colour of the slide.
+
+Making the background of a plot transparent was not as straightforward as I thought it would be, and it apparently has changed since the release of (the awesome) [ggplot2 4.0.0](). But, thanks to [Andrew Heiss](), who really is such a great guy, I've worked this out. I thought I would share this as a blog post, mostly because I will invariably forget how to do this, and I want to write it down to help me remember, and also maybe it will be useful to others.
+
+## Let's go
+
+Let's start with loading the tidyverse
+
+```{r}
+library(tidyverse)
+```
+
+This is a regular ggplot. Note that `penguins` has been in R since [R 4.5.0]().
+
+```{r}
+#| label: regular-ggplot
+ggp <- ggplot(penguins,
+       aes(x = flipper_len,
+           y = bill_dep)) + 
+  geom_point()
+ggp
+```
+
+There are two things you need to do to make the background transparent:
+
+1. Set the `paper` argument of the theme to "transparent"
+2. Save the image with background (bg) as "transparent"
+
+In order to really see this, we will need to place the ggplot onto a different coloured background.
+
+
+# Some things that did not work
+
+In case it is useful, I thought it might be good to show you the 
+
+## theme minimal
+
+```{r}
+#| label: theme-minimal
+ggp + theme_minimal()
+```
+
+## background blank
+
+```{r}
+#| label: theme-minimal-panel-blank
+ggp + theme_minimal() + theme_sub_panel(background = element_blank())
+```
+
+## background paper transparent
+
+```{r}
+#| label: theme-minimal-paper-transparent
+ggp + theme_minimal(paper = "transparent")
+```
+
+## mtcars
+
+```{r}
+#| label: regular-mtcars
+ggplot(mtcars, aes(x = hp, y = mpg)) + 
+    geom_point() + 
+    theme_minimal()
+```
+
+## mtcars transparent
+
+```{r}
+#| label: mtcars-paper-transparent
+ggplot(mtcars, aes(x = hp, y = mpg)) + 
+    geom_point() + 
+    theme_minimal(paper = "transparent")
+```
+
+## SO answer
+
+Adapted from <https://stackoverflow.com/questions/7455046/how-to-make-graphics-with-transparent-background-in-r-using-ggplot2>
+
+```{r}
+#| label: mtcars-so-example
+ggplot(mtcars, aes(x = hp, y = mpg)) + 
+    geom_point() + 
+    theme_sub_panel(
+        background = element_rect(fill = "transparent", colour = NA),
+        grid.major = element_line(colour = "grey")
+    ) + 
+    theme_sub_plot(
+        background = element_rect(fill = "transparent", colour = NA)
+    )
+```
+
+## sys info
+
+<details style="margin-bottom:10px;">
+
+<summary>
+
+Session info
+</summary>
+
+```{r}
+sessioninfo::session_info()
+```
+
+</details>

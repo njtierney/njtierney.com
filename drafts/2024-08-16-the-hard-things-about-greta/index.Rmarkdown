@@ -1,0 +1,37 @@
+---
+title: The Hard Things About Greta
+author: Nicholas Tierney
+date: '2024-08-16'
+slug: the-hard-things-about-greta
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+- the hard things about greta
+- big
+- environments
+- recursiveness?
+- R6
+- not putting your browser by hand
+    - ask Joe Chenge how to debug R6 functions/

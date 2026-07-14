@@ -42,7 +42,7 @@ Recently, I've been going through a few iterations of trying to get a quarto boo
 1. Create a quarto book via rstudio
 2. Create a github repo for this book
 3. [Push the repo onto github](https://github.com/njtierney/quarto-gh-pages-2/commits/main)
-4. Establish your R dependencies: Run `usethis::use_description(check_name = FALSE)`. This ensures the right packages are installed on github later. There are other approachs (like `renv`), but in my opinion this is easier. Make sure any packages you use in your work are in the DESCRIPTION file. See [my example DESCRIPTION as an example](https://github.com/njtierney/quarto-gh-pages-2/blob/main/DESCRIPTION). Note that rmarkdown and knitr should be there.
+4. Establish your R dependencies: Run `usethis::use_description(check_name = FALSE)`. This ensures the right packages are installed on github later. There are other approaches (like `renv`), but in my opinion this is easier. Make sure any packages you use in your work are in the DESCRIPTION file. See [my example DESCRIPTION as an example](https://github.com/njtierney/quarto-gh-pages-2/blob/main/DESCRIPTION). Note that rmarkdown and knitr should be there.
 5. Run `usethis::use_github_pages()`. This sets up a separate gh-pages branch for you to publish your work.
 6. Run `usethis::use_github_action(name = "quarto-publish", url = "https://github.com/njtierney/actions/blob/main/quarto-publish.yml")`. This uses a slightly tinkered version of the [quarto publish examples](), borrowing from other repos I've seen.
 7. [Push these changes onto github]()

@@ -60,9 +60,9 @@ This is one of the greatest things about R - it is designed to be extended. You 
 
 # But my code might break if I use dependencies?
 
-I mean, maybe. But I think you should probably be far more worried about your own time and hidden bugs in your own code.
+I mean, maybe. But I think you should probably be far more worried about your own time spent writing things, and the hidden bugs in your own code.
 
-One argument that I hear sometimes is "Then I won't have to worry about some developer changing some code and then my code breaks". Sure - that can be really annoying. However, that is I think the price that you pay for getting the abstraction of the code that developer wrote.
+One argument that I hear sometimes is "Then I won't have to worry about some developer changing some code and then my code breaks". Sure - that can be really annoying. However, that is I think the price that you pay for getting the abstraction of the code that developer wrote. In addition, you are paying for the benefit of the package author fixing bugs.
 
 For example, if I'm using `tidyr::pivot_wider()` or `tidyr::pivot_longer()`, you can bet that I'm not going to write that myself. That code is abstracting away __one of the hardest problems in data science__.
 
@@ -70,7 +70,7 @@ For example, if I'm using `tidyr::pivot_wider()` or `tidyr::pivot_longer()`, you
 
 I've seen various tweets where people go on to spout some wisdom like, "You really hit the next level of programming when you change from using tidyverse to using base".
 
-There is no "use base OR tidyverse". It is both. Unless you want to try and give yourself some kind of strange 
+There is no "use base OR tidyverse". It is both. 
 
 # Should I be mindful of dependencies?
 

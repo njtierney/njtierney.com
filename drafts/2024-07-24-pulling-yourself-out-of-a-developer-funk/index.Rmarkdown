@@ -1,0 +1,49 @@
+---
+title: Pulling Yourself Out of a Developer Funk
+author: Nicholas Tierney
+date: '2024-07-24'
+slug: pulling-yourself-out-of-a-developer-funk
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+Lately I've been finding work on maintaining greta very challenging, and I wanted to write about this to share my experience, in the hope that it will be useful for others.
+
+I didn't think that writing software could make me depressed, but here I am.
+
+greta is an elegant, beautiful way to specify models.
+
+The cost of the elegance is deep complexity.
+
+At times, starting into the complexity of it has made me question my sanity, and my own self worth. Not a joke - I wish it was. I've been feeling so devoid of meaning.
+
+Lately I've been trying to understand the nature of complexity in software so I can start to come to grips with it. One of the realisations I had that has helped me pull myself out of this sad funk was watching Maëlle Salmon's UseR! keynote: []().
+
+There are many key gems to take away from this (and indeed, the gems have been extracted out into this blog post that has all the links from the talk.)
+
+But a few things that have profoundly impacted my day-to-day:
+
+1. Using git amend
+2. The idea that git blame should be called "git explain"
+3. Starting small.

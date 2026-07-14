@@ -1,0 +1,36 @@
+---
+title: Notes on Moving from Targets to Shiny
+author: Nicholas Tierney
+date: '2025-12-02'
+slug: targets-to-shiny
+categories:
+  - targets
+  - shiny
+tags:
+  - targets
+  - shiny
+draft: true
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+This is a blog post to capture some of my thoughts and notes on moving from targets to shiny.
+
+- reactivity and similarity to targets invalidation
+- targets doesn't really need to be run with a shiny app; it manages state and updating etc
+- How to think about/take a targets pipeline and convert it into something for shiny
+  - e.g., add `reactive()` instead of `tar_target()` etc?

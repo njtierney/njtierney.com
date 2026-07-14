@@ -1,0 +1,33 @@
+---
+title: Convert Rmarkdown Chunk Options into Yaml Format
+author: Nicholas Tierney
+date: '2024-05-29'
+slug: rmd-to-qmd-yaml
+categories:
+  - rstats
+  - quarto
+  - rmarkdown
+  - research software engineer
+tags:
+  - rstats
+  - quarto
+  - rmarkdown
+  - research software engineer
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```

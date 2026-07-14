@@ -4,6 +4,7 @@ date: "2017-01-11"
 categories: [rstats, rbloggers]
 slug: magic-reprex
 aliases:
+  - "/r/rbloggers/2017/01/11/reprex-magic"
   - /post/2017/01/11/magic-reprex/
 ---
 

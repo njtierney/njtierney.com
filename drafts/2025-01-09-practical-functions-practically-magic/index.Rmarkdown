@@ -1,0 +1,33 @@
+---
+title: Practical Functions - Practically Magic
+author: Nicholas Tierney
+date: '2025-01-09'
+slug: practical-functions-practically-magic
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+I've said it a couple of times: Writing functions is really important. It helps you clarify your thinking, and makes your life easier.
+
+https://github.com/njtierney/funfun

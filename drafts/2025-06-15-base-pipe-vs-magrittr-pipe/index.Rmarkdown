@@ -1,0 +1,108 @@
+---
+title: Base Pipe |> vs Magrittr Pipe %>%
+author: Nicholas Tierney
+date: '2025-06-15'
+slug: base-pipe-vs-magrittr-pipe
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+In this blog post aims to answer the question:
+
+> How is %>% different to |>?
+
+This comes up fairly regularly, and it's a fair question: which one to use? Does it matter? I've talked about base vs magrittr pipe a few times to different colleagues, and so I thought I'd share some of my thoughts on this.
+
+There's some interesting history here, and also some blog posts I'd recommend reading on this topic:
+
+- [The tidyverse post on pipes](https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/)
+- [Abert Rapp's post](https://albert-rapp.de/posts/31_pipes_compared/31_pipes_compared)
+- [R4ds chapter](https://r4ds.had.co.nz/pipes.html)
+- [](https://stackoverflow.com/questions/67633022/what-are-the-differences-between-rs-native-pipe-and-the-magrittr-pipe)
+
+# History of the pipe
+
+- magrittr package
+  - Post from Stefan Milton Bache on R bloggers
+  - inspiration from F#
+  - %.% chain operator nearly being the thing
+  - massive, widespread usage
+
+- base R pipe
+  - introduced in 4.1.0
+  - `_` placeholder introduced in 4.2.0
+  - a topic of much internal discussion
+  
+# key differences
+
+- use `()`
+- use `_` not `.` for placeholder (since 4.2.0)
+- can only use `_` once (there are workarounds, I don't recommend them)
+- `_$` extraction allowed (since 4.3.0)
+- hack around `...` in functions
+- use anonymous functions: `\()` (also a syntax transformation)
+
+# Under the hood
+
+- `|>` is actually rewriting how the code is evaluated, which is wild, and awesome.
+- `%>%` is nesting calls, which can be harder to debug
+- `\()` is also a syntax transformation
+
+# other fun things
+
+This [SO thread](https://stackoverflow.com/questions/67633022/what-are-the-differences-between-rs-native-pipe-and-the-magrittr-pipe) is incredibly comprehensive. One thing I didn't know about was the experimental `=>` operator - which as far as I can tell isn't in the NEWS file, and is very much an experimental operator. Cool.
+
+# Does it really matter which one you use?
+
+Yes, and no.
+
+base pipe is faster, because it is a syntax transformation.
+
+The %>% pipe is slower - in terms of absolute speed, it is a difference of 82 nanoseconds to 820 nanoseconds. Which is about 10 times slower - but remember a danger with comparing relative measurements. It might be ten times slower, but that often isn't a meaningful difference.
+
+```{r}
+# from https://stackoverflow.com/questions/67633022/what-are-the-differences-between-rs-native-pipe-and-the-magrittr-pipe
+x <- 42
+bm <- bench::mark(min_time = 0.2, max_iterations = 1e8
+            # , x
+            , identity(x)
+            , "|>" = x |> identity()
+            , "|> _" = x |> identity(x=_)
+            , "|> f()" = x |> (\(y) identity(y))()
+            , "%>%" = x %>% identity
+)
+
+bm
+summary(bm, relative = TRUE)
+
+```
+
+# Which one do I use?
+
+I use the base pipe. There aren't any features in %>% that I need for how I use it. 
+
+# What do use in R packages?
+
+I'd recommend using |> in R packages. R 4.1.0 came out in May 2021, and R 4.2.0 (which introduced `_`) came out in April 2022. (see https://cran.r-project.org/bin/windows/base/old/). My personal view is that supporting R versions from 3 years ago seems plenty stable, but if you want a different standpoint, consider that the tidyverse team have a 5 year policy. So, from May 2026 you can use `|>` if you aren't using `_`, and April 2027 if you want to use `_`.
+

@@ -47,17 +47,13 @@ I recently watched [Josiah Parry's](https://josiahparry.com/) wonderful video, [
 
 Then someone writes in with an example of some code that is even faster than that, just using R code. It ends up being about 6 times faster than his Rust code. So a (300x6) 2000 times speed up. The main thing that helped with that was ensuring to vectorise your R code. Essentially, not working on the rows, but instead working on the columns.
 
-Throughout the video Josiah makes good use of the [`bench`](https://github.com/r-lib/bench) R package to evaluate how much faster your code is. This idea is called "microbenchmarking", and it involves running your code many times to evaluate how much faster it is than some other option. The reason you want to run your code many times is there is often variation around the runtimes in your code, so you don't just want to base your improvements around a single measurement. It's a general standard approach to attempt tp truly compare your approach to another. 
+Throughout the video Josiah makes good use of the [`bench`](https://github.com/r-lib/bench) R package to evaluate how much faster your code is. This idea is called "microbenchmarking", and it involves running your code many times to evaluate how much faster it is than some other option. The reason you want to run your code many times is there is often variation around the runtimes in your code, so you don't just want to base your improvements around a single measurement. It's a general standard approach to attempt to truly compare your approach to another. 
 
-All this being said, you should be wary of trying to make your code fast first without good reason. You want to make sure your code does the right thing first. Don't just start trying to write performant code. Or as [Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) says:
-
-> "The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; **premature optimization is the root of all evil (or at least most of it) in programming.**".
-
-If you want to learn more about how to speed up your code, I think it's worthwhile reading up on the [measuring performance](https://adv-r.hadley.nz/perf-measure.html) chapter in Advanced R.
+Anyway, the reason I am writing this blog post is because I noticed Josiah writing some code to calculate _how many times faster_ something is over another, and there's a neat trick to do this. So, I'll talk a bit more about microbenchmarking with an example from my own work, before showing this trick. I also haven't written about testing performant code, and it's something I like doing.
 
 # An example microbenchmark
 
-Let's take an example from the [`naniar`](https://naniar.njtierney.com/) package. I'll give more detail of this story of this optimisation at the end of this section. For the moment, let's say we want to get the number of missing values in a row of a data frame. We can do something like this:
+Let's take an example from the [`naniar`](https://naniar.njtierney.com/) package. I'll give more detail of this story a bit later. So, let's say we want to get the number of missing values in a row of a data frame. We can do something like this:
 
 ```{r}
 library(dplyr)
@@ -135,6 +131,15 @@ This is a similar story to Josiah's, where he used Rust code to get it faster, b
 Sometimes, you don't need extra C or Fortran or Rust. R is enough!
 
 And if you want to be able to compare the speeds of things, don't forget the `relative = TRUE` argument in `summary` when using `bench::mark`.
+
+# A cautionary note on chasing performance
+
+Fast things are usually good. But, you should be wary of trying to make your code fast without good reason. You want to make sure your code does the right thing first. Don't just start trying to write performant code. Or as [Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) says:
+
+> "The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; **premature optimization is the root of all evil (or at least most of it) in programming.**".
+
+If you want to learn more about how to speed up your code, I think it's worthwhile reading up on the [measuring performance](https://adv-r.hadley.nz/perf-measure.html) chapter in Advanced R.
+
 
 # Other packages for microbenchmarking
 

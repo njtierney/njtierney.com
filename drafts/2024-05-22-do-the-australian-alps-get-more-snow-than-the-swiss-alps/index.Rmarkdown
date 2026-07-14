@@ -1,0 +1,57 @@
+---
+title: Do the Australian Alps Get more Snow than the Swiss Alps?
+author: Nicholas Tierney
+date: '2024-05-22'
+slug: aus-alps-vs-swiss-alps
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r setup, include = FALSE}
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+I recently saw one of those viral "50 facts you didn't know about Australia" posts. It had a few things going on...but the first point was:
+
+> The Australian Alps get more snow than the Swiss Alps
+
+With no citation.
+
+And I found this hard to believe. It turns out I'm [not the only one](https://www.weatherzone.com.au/news/does-australia-really-have-more-snow-than-switzerland/1381140).
+
+This article does a nice job of proving this in a somewhat simple fashion.
+
+But I thought it might be fun/useful to do a data analysis to explore this.
+
+Before we get snowfall data records.
+
+Let's see if we can establish areas that would get snowfall for both regions.
+
+Then we can define the elevation that gets snow, and then do a rough calculation of the area of those places of elevation.
+
+From that we can then compare the areas between the two places.
+
+I'm anticipating the Swiss Alps will have greater area.
+
+But we could assume that maybe there's just a lot more snow in Australia. This seems unlikely, but then we can see how many times the area would need to be of Australia compared to Switzerland.
+
+If it somehow turns out Switzerland and Australia get the same area, then we can start to look at historical data of snowfall.
+
+Of course, it could just be that Australia gets more snow than Switzerland _when Australia gets snow_, which would be in our winter, and Switzerland's summer. In which case, well done, Internet. You totally got me with some technicality that reminds me of a bad high school riddle. But damnit, I'm right.

@@ -1,0 +1,40 @@
+---
+title: Parallelisation - {purrr} Meets {mirai}
+author: Nicholas Tierney
+date: '2025-05-04'
+slug: parallelisation-purrr-meets-mirai
+categories:
+  - rstats
+  - functions
+tags:
+  - rstats
+  - functions
+draft: yes
+output: hugodown::md_document
+---
+
+```{r}
+#| label: setup
+#| include: false
+options(cli.width = 70)  # For tidyverse loading messages
+knitr::opts_chunk$set(
+  tidy.opts = list(width.cutoff = 70),  # For code
+  width = 70,
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  fig.retina = 2,
+  out.width = "700px"
+)
+```
+
+
+The new (development) version of `purrr` gains a `.parallel` argument! This is pretty huge.
+
+The reason this is a big deal, is that we get really clever improvements in how fast the code can run. 
+
+Previously, you could do this with the `furrr` package, which uses `future` as the backend to manage the plan for how to distribute computer things.
+
+To demonstrate this efficiency, let's create a function that computes the likelihood

@@ -7,6 +7,7 @@ categories:
 - rbloggers
 slug: ggplot-missing-data
 aliases:
+  - "/r/missing data/rbloggers/2015/12/01/ggplot-missing-data/"
   - /post/2015/11/12/ggplot-missing-data/
 ---
 

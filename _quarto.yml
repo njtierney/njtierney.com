@@ -14,6 +14,8 @@ project:
   resources:
     - CNAME
     - imgs
+    - hexes
+    - favicon.ico
   post-render: scripts/copy-feed.sh
 
 website:
