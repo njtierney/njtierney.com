@@ -25,8 +25,7 @@ website:
     center: |
       &copy; [Nicholas Tierney](https://njtierney.com) 2013-25 | [Github](https://github.com/njtierney) | [Blue Sky](https://bsky.app/profile/njtierney.bsky.social) | [RSS](https://www.njtierney.com/index.xml)
   repo-url: https://github.com/rbind/njtierney.com
-  # NOTE: flip to master when the quarto-migration branch is merged
-  repo-branch: quarto-migration
+  repo-branch: master
   repo-actions: [edit]
   comments:
     utterances:
