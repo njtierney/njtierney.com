@@ -3,7 +3,7 @@ title: A guide to awesome slides
 date: '2017-07-31'
 slug: awesome-slides
 categories: 
-  - Blag
+  - blag
 aliases:
   - /post/2017/07/31/awesome-slides/
 ---

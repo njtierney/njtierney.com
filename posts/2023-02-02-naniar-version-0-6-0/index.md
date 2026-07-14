@@ -5,7 +5,7 @@ slug: naniar-version-1
 categories:
   - rstats
   - data visualisation
-  - Missing Data
+  - missing data
 aliases:
   - /post/2023/02/07/naniar-version-1/
 ---

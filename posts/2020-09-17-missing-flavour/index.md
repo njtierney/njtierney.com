@@ -3,7 +3,7 @@ title: The many Flavours of Missing Values
 date: '2020-09-17'
 slug: missing-flavour
 categories:
-  - Missing Data
+  - missing data
   - rstats
 aliases:
   - /post/2020/09/17/missing-flavour/

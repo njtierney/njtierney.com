@@ -4,7 +4,7 @@ date: '2018-08-28'
 slug: style-pipe
 categories:
   - rstats
-  - Teaching
+  - teaching
   - blag
 aliases:
   - /post/2018/08/28/style-pipe/

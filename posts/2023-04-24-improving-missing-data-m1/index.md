@@ -3,7 +3,7 @@ title: 'Continuing to Improve R’s Ability to Visualise and Explore Missing Val
 date: '2023-04-24'
 slug: improving-missing-data-m1
 categories:
-  - Missing Data
+  - missing data
   - data visualisation
   - ggplot2
   - rstats

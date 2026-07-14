@@ -2,7 +2,7 @@
 title: Humanity
 date: "2013-06-12"
 categories:
-  - Blag
+  - blag
 slug: humanity
 aliases:
   - /post/2013/06/12/humanity/

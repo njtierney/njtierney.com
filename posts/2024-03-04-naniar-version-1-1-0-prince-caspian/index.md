@@ -4,7 +4,7 @@ date: '2024-03-04'
 slug: naniar-version-1-1-0-prince-caspian
 categories:
   - rstats
-  - Missing Data
+  - missing data
   - rbloggers
   - research software engineer
   - data visualisation

@@ -5,7 +5,7 @@ slug: visdat-060
 categories:
   - rstats
   - data visualisation
-  - Missing Data
+  - missing data
   - rbloggers
 aliases:
   - /post/2023/02/02/visdat-060/

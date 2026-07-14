@@ -4,7 +4,7 @@ date: '2018-06-20'
 slug: naming-things
 categories:
   - rstats
-  - Teaching
+  - teaching
 aliases:
   - /post/2018/06/20/naming-things/
 ---

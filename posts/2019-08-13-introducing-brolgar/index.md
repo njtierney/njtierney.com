@@ -5,7 +5,7 @@ slug: introducing-brolgar
 categories:
   - ggplot2
   - rstats
-  - Statistics
+  - statistics
   - data visualisation
   - longitudinal data
   - panel data

@@ -3,7 +3,7 @@ title: Acknowledgements
 date: '2018-02-07'
 slug: acknowledgements
 categories:
-  - Blag
+  - blag
 aliases:
   - /post/2018/02/07/acknowledgements/
 ---

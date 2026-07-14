@@ -4,7 +4,7 @@ date: '2018-07-06'
 slug: style-ggplot
 categories:
   - rstats
-  - Teaching
+  - teaching
   - blag
 aliases:
   - /post/2018/07/06/style-ggplot/

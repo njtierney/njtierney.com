@@ -3,7 +3,7 @@ title: Notes on Changing from Rmarkdown/Bookdown to Quarto
 date: '2022-04-11'
 slug: rmd-to-qmd
 categories:
-  - Blag
+  - blag
   - rstats
   - rmarkdown
   - bookdown

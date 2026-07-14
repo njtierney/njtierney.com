@@ -6,7 +6,7 @@ categories:
   - rstats
   - CRAN
   - rse
-  - Research Software Engineer
+  - research software engineer
 aliases:
   - /post/2025/04/14/r-version-4-5-0-is-out/
 ---

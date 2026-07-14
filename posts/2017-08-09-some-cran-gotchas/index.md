@@ -4,7 +4,7 @@ date: '2017-08-09'
 slug: some-cran-gotchas
 categories:
   - rstats
-  - Blag
+  - blag
 aliases:
   - /post/2017/08/09/some-cran-gotchas/
 ---
