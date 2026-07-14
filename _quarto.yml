@@ -13,6 +13,7 @@ project:
     - "posts/**"
   resources:
     - CNAME
+    - imgs
   post-render: scripts/copy-feed.sh
 
 website:
