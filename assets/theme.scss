@@ -127,6 +127,12 @@ hr {
 }
 
 /* code */
+pre, code {
+  /* Fira Code's ligatures (<- as an arrow glyph etc.) could confuse
+     readers about what to actually type, so show literal characters */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
 pre {
   font-family: "Fira Code", Monaco, monospace;
   background-color: #f8f8f8 !important;

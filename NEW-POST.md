@@ -40,6 +40,26 @@ categories:
 ---
 ```
 
+If the post has R code, start with this setup chunk — it pipes each chunk's
+displayed code through [Air](https://posit-dev.github.io/air/) at render
+time, so the code on the blog always comes out consistently formatted no
+matter how scrappily it was typed (the `.qmd` source itself is untouched;
+Air can't format chunks in `.qmd` files directly yet — see
+[posit-dev/air#455](https://github.com/posit-dev/air/issues/455)):
+
+````markdown
+```{r setup, include=FALSE}
+air_tidy <- function(code, ...) {
+  system2("air", c("format", "--stdin-file-path", "chunk.R"),
+          input = code, stdout = TRUE)
+}
+knitr::opts_chunk$set(tidy = air_tidy)
+```
+````
+
+(The `chunk.R` path is never written — it just tells Air where to look for
+an `air.toml` config, so repo-level Air settings apply to chunks too.)
+
 ## 3. Preview while you write
 
 Run `quarto preview` in the repo — it opens the site in your browser and
