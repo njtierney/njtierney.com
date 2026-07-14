@@ -48,6 +48,7 @@ format:
     smooth-scroll: true
     link-external-newwindow: false
     code-copy: true
+    code-overflow: wrap
     highlight-style: pygments
     date-format: "YYYY-MM-DD"
 
