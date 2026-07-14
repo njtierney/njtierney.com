@@ -149,22 +149,24 @@ pre {
    sit on Quarto's div.sourceCode / chroma's div.highlight wrappers (their
    overflow clipping swallows any breakout applied to the pre inside), and
    the font must be set here so the ch unit measures Fira Code. */
-div.sourceCode, div.highlight, main pre {
+div.sourceCode, main pre {
   font-family: "Fira Code", Monaco, monospace;
   font-size: 0.8rem;
   width: calc(80ch + 22px);
   margin-left: calc((100% - 80ch - 22px) / 2);
 }
-div.sourceCode pre, div.highlight pre {
+/* NOT div.highlight: hugodown uses that class for figure wrappers too,
+   so chroma pres get the breakout directly via `main pre` above */
+div.sourceCode pre {
   width: 100%;
   margin-left: 0;
 }
 @media (max-width: 820px) {
-  div.sourceCode, div.highlight, main pre {
+  div.sourceCode, main pre {
     width: auto;
     margin-left: 0;
   }
-  div.sourceCode pre, div.highlight pre {
+  div.sourceCode pre {
     width: auto;
   }
 }
