@@ -110,6 +110,16 @@ hr {
   color: #268bd2;
 }
 
+/* margin TOC: rest below the site header (it still floats on scroll) */
+#quarto-margin-sidebar {
+  margin-top: 280px;
+}
+/* posts/_metadata.yml sets toc-title: "" but Quarto treats an empty
+   title as "use the default", so hide the heading here instead */
+#quarto-margin-sidebar #toc-title {
+  display: none;
+}
+
 /* post listing (replicates hugo-xmin homepage list) */
 .post-listing ul {
   list-style: none;
