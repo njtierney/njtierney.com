@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-06-01">
+
+<title>Tidyverse Case Study: Anscombe’s quartet – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#exploring-anscombe-using-the-tidyverse" id="toc-exploring-anscombe-using-the-tidyverse" class="nav-link active" data-scroll-target="#exploring-anscombe-using-the-tidyverse">Exploring Anscombe using the tidyverse</a>
+  <ul class="collapse">
+  <li><a href="#tidy-up-the-data" id="toc-tidy-up-the-data" class="nav-link" data-scroll-target="#tidy-up-the-data">Tidy up the data</a></li>
+  </ul></li>
+  <li><a href="#explore-the-summary-statistics-of-each-group" id="toc-explore-the-summary-statistics-of-each-group" class="nav-link" data-scroll-target="#explore-the-summary-statistics-of-each-group">Explore the summary statistics of each group</a>
+  <ul class="collapse">
+  <li><a href="#fit-a-model-to-each-group" id="toc-fit-a-model-to-each-group" class="nav-link" data-scroll-target="#fit-a-model-to-each-group">Fit a model to each group</a></li>
+  </ul></li>
+  <li><a href="#make-the-plots-in-ggplot-which-you-should-have-done-in-the-first-place." id="toc-make-the-plots-in-ggplot-which-you-should-have-done-in-the-first-place." class="nav-link" data-scroll-target="#make-the-plots-in-ggplot-which-you-should-have-done-in-the-first-place.">Make the plots in ggplot (which you should have done in the first place).</a></li>
+  <li><a href="#some-thoughts" id="toc-some-thoughts" class="nav-link" data-scroll-target="#some-thoughts">Some thoughts</a>
+  <ul class="collapse">
+  <li><a href="#the-state-of-the-tools" id="toc-the-state-of-the-tools" class="nav-link" data-scroll-target="#the-state-of-the-tools">The state of the tools</a></li>
+  </ul></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2020-06-01-tidy-anscombe/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tidyverse Case Study: Anscombe’s quartet</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">rbloggers</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2020-06-01</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Anscombe’s quartet is a really cool dataset that is used to illustrate the importance of data visualisation. It even comes built into R (how cool is that?), and reading the helpfile, it states:</p>
+<blockquote class="blockquote">
+<p>[Anscombe’s quartet] Four x-y datasets which have the same traditional statistical properties (mean, variance, correlation, regression line, etc.), yet are quite different.</p>
+</blockquote>
+<p>Different, how?</p>
+<p>The helpfile provides code exploring and visualising anscombe’s quartet, presented below:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">require</span>(<span class="k"><a href="https://rdrr.io/r/stats">stats</a></span>); <span class="nf">require</span>(<span class="k"><a href="https://rdrr.io/r/graphics">graphics</a></span>)
+<span class="nf">summary</span>(<span class="k">anscombe</span>)
+<span class="c">#&gt;        x1             x2             x3             x4           y1        </span>
+<span class="c">#&gt;  Min.   : 4.0   Min.   : 4.0   Min.   : 4.0   Min.   : 8   Min.   : 4.260  </span>
+<span class="c">#&gt;  1st Qu.: 6.5   1st Qu.: 6.5   1st Qu.: 6.5   1st Qu.: 8   1st Qu.: 6.315  </span>
+<span class="c">#&gt;  Median : 9.0   Median : 9.0   Median : 9.0   Median : 8   Median : 7.580  </span>
+<span class="c">#&gt;  Mean   : 9.0   Mean   : 9.0   Mean   : 9.0   Mean   : 9   Mean   : 7.501  </span>
+<span class="c">#&gt;  3rd Qu.:11.5   3rd Qu.:11.5   3rd Qu.:11.5   3rd Qu.: 8   3rd Qu.: 8.570  </span>
+<span class="c">#&gt;  Max.   :14.0   Max.   :14.0   Max.   :14.0   Max.   :19   Max.   :10.840  </span>
+<span class="c">#&gt;        y2              y3              y4        </span>
+<span class="c">#&gt;  Min.   :3.100   Min.   : 5.39   Min.   : 5.250  </span>
+<span class="c">#&gt;  1st Qu.:6.695   1st Qu.: 6.25   1st Qu.: 6.170  </span>
+<span class="c">#&gt;  Median :8.140   Median : 7.11   Median : 7.040  </span>
+<span class="c">#&gt;  Mean   :7.501   Mean   : 7.50   Mean   : 7.501  </span>
+<span class="c">#&gt;  3rd Qu.:8.950   3rd Qu.: 7.98   3rd Qu.: 8.190  </span>
+<span class="c">#&gt;  Max.   :9.260   Max.   :12.74   Max.   :12.500</span>
+
+<span class="c">##-- now some "magic" to do the 4 regressions in a loop:</span>
+<span class="k">ff</span> <span class="o">&lt;-</span> <span class="k">y</span> <span class="o">~</span> <span class="k">x</span>
+<span class="k">mods</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span>(<span class="nf">as.list</span>(<span class="m">1</span><span class="o">:</span><span class="m">4</span>), <span class="nf">paste0</span>(<span class="s">"lm"</span>, <span class="m">1</span><span class="o">:</span><span class="m">4</span>))
+<span class="kr">for</span>(<span class="k">i</span> <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span>) {
+  <span class="k">ff</span>[<span class="m">2</span><span class="o">:</span><span class="m">3</span>] <span class="o">&lt;-</span> <span class="nf">lapply</span>(<span class="nf">paste0</span>(<span class="nf">c</span>(<span class="s">"y"</span>,<span class="s">"x"</span>), <span class="k">i</span>), <span class="k">as.name</span>)
+  <span class="k">mods</span>[[<span class="k">i</span>]] <span class="o">&lt;-</span> <span class="k">lmi</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="k">ff</span>, data = <span class="k">anscombe</span>)
+  <span class="nf">print</span>(<span class="nf"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span>(<span class="k">lmi</span>))
+}
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y1</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value  Pr(&gt;F)   </span>
+<span class="c">#&gt; x1         1 27.510 27.5100   17.99 0.00217 **</span>
+<span class="c">#&gt; Residuals  9 13.763  1.5292                   </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y2</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value   Pr(&gt;F)   </span>
+<span class="c">#&gt; x2         1 27.500 27.5000  17.966 0.002179 **</span>
+<span class="c">#&gt; Residuals  9 13.776  1.5307                    </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y3</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value   Pr(&gt;F)   </span>
+<span class="c">#&gt; x3         1 27.470 27.4700  17.972 0.002176 **</span>
+<span class="c">#&gt; Residuals  9 13.756  1.5285                    </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y4</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value   Pr(&gt;F)   </span>
+<span class="c">#&gt; x4         1 27.490 27.4900  18.003 0.002165 **</span>
+<span class="c">#&gt; Residuals  9 13.742  1.5269                    </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+
+<span class="c">## See how close they are (numerically!)</span>
+<span class="nf">sapply</span>(<span class="k">mods</span>, <span class="k">coef</span>)
+<span class="c">#&gt;                   lm1      lm2       lm3       lm4</span>
+<span class="c">#&gt; (Intercept) 3.0000909 3.000909 3.0024545 3.0017273</span>
+<span class="c">#&gt; x1          0.5000909 0.500000 0.4997273 0.4999091</span>
+<span class="nf">lapply</span>(<span class="k">mods</span>, <span class="nf">function</span>(<span class="k">fm</span>) <span class="nf"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="nf">summary</span>(<span class="k">fm</span>)))
+<span class="c">#&gt; $lm1</span>
+<span class="c">#&gt;              Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.0000909  1.1247468 2.667348 0.025734051</span>
+<span class="c">#&gt; x1          0.5000909  0.1179055 4.241455 0.002169629</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; $lm2</span>
+<span class="c">#&gt;             Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.000909  1.1253024 2.666758 0.025758941</span>
+<span class="c">#&gt; x2          0.500000  0.1179637 4.238590 0.002178816</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; $lm3</span>
+<span class="c">#&gt;              Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.0024545  1.1244812 2.670080 0.025619109</span>
+<span class="c">#&gt; x3          0.4997273  0.1178777 4.239372 0.002176305</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; $lm4</span>
+<span class="c">#&gt;              Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.0017273  1.1239211 2.670763 0.025590425</span>
+<span class="c">#&gt; x4          0.4999091  0.1178189 4.243028 0.002164602</span>
+
+<span class="c">## Now, do what you should have done in the first place: PLOTS</span>
+<span class="k">op</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(mfrow = <span class="nf">c</span>(<span class="m">2</span>, <span class="m">2</span>), mar = <span class="m">0.1</span><span class="o">+</span><span class="nf">c</span>(<span class="m">4</span>,<span class="m">4</span>,<span class="m">1</span>,<span class="m">1</span>), oma =  <span class="nf">c</span>(<span class="m">0</span>, <span class="m">0</span>, <span class="m">2</span>, <span class="m">0</span>))
+<span class="kr">for</span>(<span class="k">i</span> <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span>) {
+  <span class="k">ff</span>[<span class="m">2</span><span class="o">:</span><span class="m">3</span>] <span class="o">&lt;-</span> <span class="nf">lapply</span>(<span class="nf">paste0</span>(<span class="nf">c</span>(<span class="s">"y"</span>,<span class="s">"x"</span>), <span class="k">i</span>), <span class="k">as.name</span>)
+  <span class="nf"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="k">ff</span>, data = <span class="k">anscombe</span>, col = <span class="s">"red"</span>, pch = <span class="m">21</span>, bg = <span class="s">"orange"</span>, cex = <span class="m">1.2</span>,
+       xlim = <span class="nf">c</span>(<span class="m">3</span>, <span class="m">19</span>), ylim = <span class="nf">c</span>(<span class="m">3</span>, <span class="m">13</span>))
+  <span class="nf"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span>(<span class="k">mods</span>[[<span class="k">i</span>]], col = <span class="s">"blue"</span>)
+}
+<span class="nf"><a href="https://rdrr.io/r/graphics/mtext.html">mtext</a></span>(<span class="s">"Anscombe's 4 Regression data sets"</span>, outer = <span class="m">TRUE</span>, cex = <span class="m">1.5</span>)
+</code></pre>
+<img src="figs/anscombe-base-1.png" width="700px" style="display: block; margin: auto;">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="k">op</span>)</code></pre>
+</div>
+<p>It’s nice to see some fun style in the comments!</p>
+<p>But what we learn here is that the data itself has similar statistical properties, in terms of summary statistics, but also in terms of regression fit.</p>
+<p>So, you might look at those and think what you’ve learned is: “Everything looks the same”.</p>
+<p>But the point is that when we visualise the data, we learn:</p>
+<blockquote class="blockquote">
+<p>Everything is actually very different.</p>
+</blockquote>
+<p>And that the only way to learn this is through data visualisation!</p>
+<section id="exploring-anscombe-using-the-tidyverse" class="level1">
+<h1>Exploring Anscombe using the tidyverse</h1>
+<p>The helpfile does a great job of providing summaries of the data and plots!</p>
+<p>There have been some recent changes with dplyr 1.0.0 coming out just the other day. I think it would be interesting to try doing the same steps as in the helpfile, but using the <a href="https://tidyverse.org/">tidyverse</a> tools.</p>
+<p>There are a few key parts to this analysis:</p>
+<ol type="1">
+<li>Tidy up the data</li>
+<li>Explore the summary statistics of each group</li>
+<li>Fit a model to each group</li>
+<li>Make the plots in ggplot2.</li>
+</ol>
+<section id="tidy-up-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="tidy-up-the-data">Tidy up the data</h2>
+<p>Before we tidy up the data, it is good to think about what format we want the data in.</p>
+<p>Currently, the data is in this format:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">head</span>(<span class="k">anscombe</span>)
+<span class="c">#&gt;   x1 x2 x3 x4   y1   y2    y3   y4</span>
+<span class="c">#&gt; 1 10 10 10  8 8.04 9.14  7.46 6.58</span>
+<span class="c">#&gt; 2  8  8  8  8 6.95 8.14  6.77 5.76</span>
+<span class="c">#&gt; 3 13 13 13  8 7.58 8.74 12.74 7.71</span>
+<span class="c">#&gt; 4  9  9  9  8 8.81 8.77  7.11 8.84</span>
+<span class="c">#&gt; 5 11 11 11  8 8.33 9.26  7.81 8.47</span>
+<span class="c">#&gt; 6 14 14 14  8 9.96 8.10  8.84 7.04</span></code></pre>
+</div>
+<p>So how do we know the “right” format?</p>
+<p>One trick that I use is to imagine how I would write the ggplot code. Because this then allows me to work out what I want the columns to be.</p>
+<p>So, perhaps at a basic level, I’d want code like this:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span>(<span class="k">anscombe</span>,
+       <span class="nf">aes</span>(x = <span class="k">x</span>,
+           y = <span class="k">y</span>)) <span class="o">+</span> 
+  <span class="nf">geom_point</span>() <span class="o">+</span> 
+  <span class="nf">facet_wrap</span>(<span class="o">~</span><span class="k">set</span>)</code></pre>
+</div>
+<p>So this tells me:</p>
+<ul>
+<li>The x axis maps onto the x column</li>
+<li>The y axis maps onto the y column</li>
+<li>I have a column, set</li>
+</ul>
+<p>What we want is a format where we have:</p>
+<div class="highlight">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">set</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">8.04</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In fact, reading the recent documentation for <code>tidyr</code>’s <code>pivot_longer</code> (the new version of <code>gather</code>), we have new example that shows you how to clean the <code>anscombe</code> data:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span>(<span class="k"><a href="https://tidyverse.tidyverse.org/reference">tidyverse</a></span>)
+<span class="c">#&gt; -- Attaching packages ----------------------------- tidyverse 1.3.0 --</span>
+<span class="c">#&gt; v ggplot2 3.3.1     v purrr   0.3.4</span>
+<span class="c">#&gt; v tibble  3.0.1     v dplyr   1.0.0</span>
+<span class="c">#&gt; v tidyr   1.1.0     v stringr 1.4.0</span>
+<span class="c">#&gt; v readr   1.3.1     v forcats 0.5.0</span>
+<span class="c">#&gt; -- Conflicts -------------------------------- tidyverse_conflicts() --</span>
+<span class="c">#&gt; x dplyr::filter() masks stats::filter()</span>
+<span class="c">#&gt; x dplyr::lag()    masks stats::lag()</span>
+
+<span class="k">tidy_anscombe</span> <span class="o">&lt;-</span> <span class="k">anscombe</span> <span class="o">%&gt;%</span>
+ <span class="nf">pivot_longer</span>(cols = <span class="nf">everything</span>(),
+              names_to = <span class="nf">c</span>(<span class="s">".value"</span>, <span class="s">"set"</span>),
+              names_pattern = <span class="s">"(.)(.)"</span>)
+
+<span class="k">tidy_anscombe</span>
+<span class="c">#&gt; # A tibble: 44 x 3</span>
+<span class="c">#&gt;    set       x     y</span>
+<span class="c">#&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c">#&gt;  1 1        10  8.04</span>
+<span class="c">#&gt;  2 2        10  9.14</span>
+<span class="c">#&gt;  3 3        10  7.46</span>
+<span class="c">#&gt;  4 4         8  6.58</span>
+<span class="c">#&gt;  5 1         8  6.95</span>
+<span class="c">#&gt;  6 2         8  8.14</span>
+<span class="c">#&gt;  7 3         8  6.77</span>
+<span class="c">#&gt;  8 4         8  5.76</span>
+<span class="c">#&gt;  9 1        13  7.58</span>
+<span class="c">#&gt; 10 2        13  8.74</span>
+<span class="c">#&gt; # ... with 34 more rows</span></code></pre>
+</div>
+<p>So, what happened there? Let’s break it down.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">=</span> <span class="fu">everything</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>We pivot the data into a longer format, selecting <em>every column</em> with:</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>names_to <span class="ot">=</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"set"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>We specify how we want to create the new names of the data with:</p>
+</blockquote>
+<p>Now this includes a nice bit of <strong>magic</strong> here, the “.value” command indicates a component of the name is also in the value. What does that mean? Well we go from:</p>
+<div class="highlight">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">x1</th>
+<th style="text-align: right;">x2</th>
+<th style="text-align: right;">y1</th>
+<th style="text-align: right;">y2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">8.04</td>
+<td style="text-align: right;">9.14</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">6.95</td>
+<td style="text-align: right;">8.14</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>to</p>
+<div class="highlight">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">set</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">8.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">6.95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">9.14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8.14</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Because the names <code>x1</code> and <code>y1</code> are tied to both the “names” that we want to create (“x” and “y”), and the values we want create (set - 1…4). We are actually doing two steps here:</p>
+<ol type="1">
+<li>Splitting up the variables “x1” into “x” and</li>
+<li>A value “1” in the variable in “set”.</li>
+</ol>
+<p>So, the:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>names_to <span class="ot">=</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"set"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Tells us there is something special about the current names, but now we need a way to specify how to break up the names. We need to split up the variables, “x1, x2, … y3, y4”, and we need to describe how to do that using <code>names_pattern</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>names_pattern <span class="ot">=</span> <span class="st">"(.)(.)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>The names and values are separated by two characters</p>
+</blockquote>
+<p>I don’t speak regex good, so I looked it up on <a href="https://regexr.com/">“regexr”</a>, and basically this translates to “two characters”, so it will create a column for each character. You could equivalently write:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>names_pattern <span class="ot">=</span> <span class="st">"([a-z])([1-9])"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Which would more explicitly say: "The first thing is a character, the second thing is a number.</p>
+<p>This means that we end up with:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="k">tidy_anscombe</span>
+<span class="c">#&gt; # A tibble: 44 x 3</span>
+<span class="c">#&gt;    set       x     y</span>
+<span class="c">#&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c">#&gt;  1 1        10  8.04</span>
+<span class="c">#&gt;  2 2        10  9.14</span>
+<span class="c">#&gt;  3 3        10  7.46</span>
+<span class="c">#&gt;  4 4         8  6.58</span>
+<span class="c">#&gt;  5 1         8  6.95</span>
+<span class="c">#&gt;  6 2         8  8.14</span>
+<span class="c">#&gt;  7 3         8  6.77</span>
+<span class="c">#&gt;  8 4         8  5.76</span>
+<span class="c">#&gt;  9 1        13  7.58</span>
+<span class="c">#&gt; 10 2        13  8.74</span>
+<span class="c">#&gt; # ... with 34 more rows</span></code></pre>
+</div>
+<p>Also just to give you a sense of the improvement of <code>pivot_longer</code> / <code>pivot_wider</code> over <code>gather</code> / <code>spread</code>, this is how I previously wrote this example (this blog post was started on 2017-12-08 and published on 2020-06-01) - and it didn’t actually quite work and I gave up. (Although <a href="https://rpubs.com/dgrtwo/tidy-anscombe">David Robinsons’s post on tidyverse plotting of Anscombe’s quartet</a> could have helped in retrospect).</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r">
+<span class="k">old_tidy_anscombe</span> <span class="o">&lt;-</span> <span class="k">anscombe</span> <span class="o">%&gt;%</span>
+  <span class="nf">gather</span>(key = <span class="s">"variable"</span>,
+         value = <span class="s">"value"</span>) <span class="o">%&gt;%</span>
+  <span class="nf">as_tibble</span>() <span class="o">%&gt;%</span>
+  <span class="c"># So now we need to split this out into groups based on the number.</span>
+  <span class="nf">mutate</span>(group = <span class="k">readr</span>::<span class="nf"><a href="https://readr.tidyverse.org/reference/parse_number.html">parse_number</a></span>(<span class="k">variable</span>),
+         variable = <span class="k">stringr</span>::<span class="nf"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span>(<span class="k">variable</span>, <span class="s">"[1-9]"</span>)) <span class="o">%&gt;%</span>
+  <span class="nf">select</span>(<span class="k">variable</span>,
+         <span class="k">group</span>,
+         <span class="k">value</span>) <span class="o">%&gt;%</span>
+  <span class="c"># And then we actually want to spread out the variable column</span>
+  <span class="nf">rowid_to_column</span>() <span class="o">%&gt;%</span>
+  <span class="nf">spread</span>(key = <span class="k">variable</span>,
+         value = <span class="k">value</span>)
+
+<span class="k">old_tidy_anscombe</span>
+<span class="c">#&gt; # A tibble: 88 x 4</span>
+<span class="c">#&gt;    rowid group     x     y</span>
+<span class="c">#&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c">#&gt;  1     1     1    10    NA</span>
+<span class="c">#&gt;  2     2     1     8    NA</span>
+<span class="c">#&gt;  3     3     1    13    NA</span>
+<span class="c">#&gt;  4     4     1     9    NA</span>
+<span class="c">#&gt;  5     5     1    11    NA</span>
+<span class="c">#&gt;  6     6     1    14    NA</span>
+<span class="c">#&gt;  7     7     1     6    NA</span>
+<span class="c">#&gt;  8     8     1     4    NA</span>
+<span class="c">#&gt;  9     9     1    12    NA</span>
+<span class="c">#&gt; 10    10     1     7    NA</span>
+<span class="c">#&gt; # ... with 78 more rows</span></code></pre>
+</div>
+</section>
+</section>
+<section id="explore-the-summary-statistics-of-each-group" class="level1">
+<h1>Explore the summary statistics of each group</h1>
+<p>So we want to be able to do:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">summary</span>(<span class="k">anscombe</span>)
+<span class="c">#&gt;        x1             x2             x3             x4           y1        </span>
+<span class="c">#&gt;  Min.   : 4.0   Min.   : 4.0   Min.   : 4.0   Min.   : 8   Min.   : 4.260  </span>
+<span class="c">#&gt;  1st Qu.: 6.5   1st Qu.: 6.5   1st Qu.: 6.5   1st Qu.: 8   1st Qu.: 6.315  </span>
+<span class="c">#&gt;  Median : 9.0   Median : 9.0   Median : 9.0   Median : 8   Median : 7.580  </span>
+<span class="c">#&gt;  Mean   : 9.0   Mean   : 9.0   Mean   : 9.0   Mean   : 9   Mean   : 7.501  </span>
+<span class="c">#&gt;  3rd Qu.:11.5   3rd Qu.:11.5   3rd Qu.:11.5   3rd Qu.: 8   3rd Qu.: 8.570  </span>
+<span class="c">#&gt;  Max.   :14.0   Max.   :14.0   Max.   :14.0   Max.   :19   Max.   :10.840  </span>
+<span class="c">#&gt;        y2              y3              y4        </span>
+<span class="c">#&gt;  Min.   :3.100   Min.   : 5.39   Min.   : 5.250  </span>
+<span class="c">#&gt;  1st Qu.:6.695   1st Qu.: 6.25   1st Qu.: 6.170  </span>
+<span class="c">#&gt;  Median :8.140   Median : 7.11   Median : 7.040  </span>
+<span class="c">#&gt;  Mean   :7.501   Mean   : 7.50   Mean   : 7.501  </span>
+<span class="c">#&gt;  3rd Qu.:8.950   3rd Qu.: 7.98   3rd Qu.: 8.190  </span>
+<span class="c">#&gt;  Max.   :9.260   Max.   :12.74   Max.   :12.500</span></code></pre>
+</div>
+<p>But in a tidyverse way?</p>
+<p>We can take this opportunity to use some of the new features in <code>dplyr</code> 1.0.0, <code>across</code> and co, combined with <a href="https://tibble.tidyverse.org/reference/lst.html"><code>tibble::lst()</code></a> to give us nice column names:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span>(<span class="k"><a href="https://dplyr.tidyverse.org/reference">dplyr</a></span>)
+
+<span class="k">tidy_anscombe_summary</span> <span class="o">&lt;-</span> <span class="k">tidy_anscombe</span> <span class="o">%&gt;%</span>
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="k">set</span>) <span class="o">%&gt;%</span>
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="nf"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span>(.cols = <span class="nf"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span>(),
+                   .fns = <span class="nf"><a href="https://tibble.tidyverse.org/reference/lst.html">lst</a></span>(<span class="k">min</span>,<span class="k">max</span>,<span class="k">median</span>,<span class="k">mean</span>,<span class="k">sd</span>,<span class="k">var</span>),
+                   .names = <span class="s">"{col}_{fn}"</span>))
+<span class="c">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
+
+<span class="k">tidy_anscombe_summary</span>
+<span class="c">#&gt; # A tibble: 4 x 13</span>
+<span class="c">#&gt;   set   x_min x_max x_median x_mean  x_sd x_var y_min y_max y_median y_mean</span>
+<span class="c">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="c">#&gt; 1 1         4    14        9      9  3.32    11  4.26 10.8      7.58   7.50</span>
+<span class="c">#&gt; 2 2         4    14        9      9  3.32    11  3.1   9.26     8.14   7.50</span>
+<span class="c">#&gt; 3 3         4    14        9      9  3.32    11  5.39 12.7      7.11   7.5 </span>
+<span class="c">#&gt; 4 4         8    19        8      9  3.32    11  5.25 12.5      7.04   7.50</span>
+<span class="c">#&gt; # ... with 2 more variables: y_sd &lt;dbl&gt;, y_var &lt;dbl&gt;</span></code></pre>
+</div>
+<p>Let’s break that down.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tidy_anscombe <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(set)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>For each set</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">everything</span>(),</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Calculate a one row summary (per group), across every variable:</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>.fns <span class="ot">=</span> <span class="fu">lst</span>(min,max,median,mean,sd,var),</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Apply these functions</p>
+</blockquote>
+<p>(<code>lst</code> automatically names the functions after their input)</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">names</span>(<span class="k">tibble</span>::<span class="nf"><a href="https://tibble.tidyverse.org/reference/lst.html">lst</a></span>(<span class="k">max</span>))
+<span class="c">#&gt; [1] "max"</span></code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>.names <span class="ot">=</span> <span class="st">"{col}_{fn}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Then produce column names that inherit the column name, then the function name (thanks to our friend <code>lst</code>).</p>
+</blockquote>
+<p>One more time, this is what we get:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="k">tidy_anscombe_summary</span>
+<span class="c">#&gt; # A tibble: 4 x 13</span>
+<span class="c">#&gt;   set   x_min x_max x_median x_mean  x_sd x_var y_min y_max y_median y_mean</span>
+<span class="c">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="c">#&gt; 1 1         4    14        9      9  3.32    11  4.26 10.8      7.58   7.50</span>
+<span class="c">#&gt; 2 2         4    14        9      9  3.32    11  3.1   9.26     8.14   7.50</span>
+<span class="c">#&gt; 3 3         4    14        9      9  3.32    11  5.39 12.7      7.11   7.5 </span>
+<span class="c">#&gt; 4 4         8    19        8      9  3.32    11  5.25 12.5      7.04   7.50</span>
+<span class="c">#&gt; # ... with 2 more variables: y_sd &lt;dbl&gt;, y_var &lt;dbl&gt;</span></code></pre>
+</div>
+<p>There’s no getting around the fact that <code>summary(anscombe)</code> is less work, in this instance. Like, it is actually amazing.</p>
+<p>But, what you trade off there is the fact that you need data in an inherently inconvenient format for other parts of data analysis, and gain tools that allow you to express yourselve in a variety of circumstance well beyond <code>summary</code> can do.</p>
+<p>I think this is pretty dang neat!</p>
+<section id="fit-a-model-to-each-group" class="level2">
+<h2 class="anchored" data-anchor-id="fit-a-model-to-each-group">Fit a model to each group</h2>
+<p>This is a good one.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="c">##-- now some "magic" to do the 4 regressions in a loop:</span>
+<span class="k">ff</span> <span class="o">&lt;-</span> <span class="k">y</span> <span class="o">~</span> <span class="k">x</span>
+<span class="k">mods</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span>(<span class="nf">as.list</span>(<span class="m">1</span><span class="o">:</span><span class="m">4</span>), <span class="nf">paste0</span>(<span class="s">"lm"</span>, <span class="m">1</span><span class="o">:</span><span class="m">4</span>))
+<span class="kr">for</span>(<span class="k">i</span> <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span>) {
+  <span class="k">ff</span>[<span class="m">2</span><span class="o">:</span><span class="m">3</span>] <span class="o">&lt;-</span> <span class="nf">lapply</span>(<span class="nf">paste0</span>(<span class="nf">c</span>(<span class="s">"y"</span>,<span class="s">"x"</span>), <span class="k">i</span>), <span class="k">as.name</span>)
+  <span class="k">mods</span>[[<span class="k">i</span>]] <span class="o">&lt;-</span> <span class="k">lmi</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="k">ff</span>, data = <span class="k">anscombe</span>)
+  <span class="nf">print</span>(<span class="nf"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span>(<span class="k">lmi</span>))
+}
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y1</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value  Pr(&gt;F)   </span>
+<span class="c">#&gt; x1         1 27.510 27.5100   17.99 0.00217 **</span>
+<span class="c">#&gt; Residuals  9 13.763  1.5292                   </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y2</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value   Pr(&gt;F)   </span>
+<span class="c">#&gt; x2         1 27.500 27.5000  17.966 0.002179 **</span>
+<span class="c">#&gt; Residuals  9 13.776  1.5307                    </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y3</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value   Pr(&gt;F)   </span>
+<span class="c">#&gt; x3         1 27.470 27.4700  17.972 0.002176 **</span>
+<span class="c">#&gt; Residuals  9 13.756  1.5285                    </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="c">#&gt; Analysis of Variance Table</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Response: y4</span>
+<span class="c">#&gt;           Df Sum Sq Mean Sq F value   Pr(&gt;F)   </span>
+<span class="c">#&gt; x4         1 27.490 27.4900  18.003 0.002165 **</span>
+<span class="c">#&gt; Residuals  9 13.742  1.5269                    </span>
+<span class="c">#&gt; ---</span>
+<span class="c">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+
+<span class="c">## See how close they are (numerically!)</span>
+<span class="nf">sapply</span>(<span class="k">mods</span>, <span class="k">coef</span>)
+<span class="c">#&gt;                   lm1      lm2       lm3       lm4</span>
+<span class="c">#&gt; (Intercept) 3.0000909 3.000909 3.0024545 3.0017273</span>
+<span class="c">#&gt; x1          0.5000909 0.500000 0.4997273 0.4999091</span>
+<span class="nf">lapply</span>(<span class="k">mods</span>, <span class="nf">function</span>(<span class="k">fm</span>) <span class="nf"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="nf">summary</span>(<span class="k">fm</span>)))
+<span class="c">#&gt; $lm1</span>
+<span class="c">#&gt;              Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.0000909  1.1247468 2.667348 0.025734051</span>
+<span class="c">#&gt; x1          0.5000909  0.1179055 4.241455 0.002169629</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; $lm2</span>
+<span class="c">#&gt;             Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.000909  1.1253024 2.666758 0.025758941</span>
+<span class="c">#&gt; x2          0.500000  0.1179637 4.238590 0.002178816</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; $lm3</span>
+<span class="c">#&gt;              Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.0024545  1.1244812 2.670080 0.025619109</span>
+<span class="c">#&gt; x3          0.4997273  0.1178777 4.239372 0.002176305</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; $lm4</span>
+<span class="c">#&gt;              Estimate Std. Error  t value    Pr(&gt;|t|)</span>
+<span class="c">#&gt; (Intercept) 3.0017273  1.1239211 2.670763 0.025590425</span>
+<span class="c">#&gt; x4          0.4999091  0.1178189 4.243028 0.002164602</span></code></pre>
+</div>
+<p>How to do this in tidyverse?</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span>(<span class="k"><a href="https://rdrr.io/pkg/broom/man">broom</a></span>)
+
+<span class="k">tidy_anscombe_models</span> <span class="o">&lt;-</span> <span class="k">tidy_anscombe</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_nest.html">group_nest</a></span>(<span class="k">set</span>) <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(fit = <span class="nf">map</span>(<span class="k">data</span>, <span class="o">~</span><span class="nf"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(<span class="k">y</span> <span class="o">~</span> <span class="k">x</span>, data = <span class="k">.x</span>)),
+         tidy = <span class="nf">map</span>(<span class="k">fit</span>, <span class="k">tidy</span>),
+         glance = <span class="nf">map</span>(<span class="k">fit</span>, <span class="k">glance</span>))</code></pre>
+</div>
+<p>What this is doing is fitting a linear model to each of the groups in <code>set</code>, and then calculating summaries on the statistical model. Briefly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_nest</span>(set)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Nest the data into groups based on set, which we can then do cool things with:</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">map</span>(data, <span class="sc">~</span><span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> .x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Fit a linear model to each of the datasets in <code>set</code></p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tidy <span class="ot">=</span> <span class="fu">map</span>(fit, tidy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Tidy up each of the linear models in <code>set</code> to get the coefficient information</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>glance <span class="ot">=</span> <span class="fu">map</span>(fit, glance)<span class="er">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Get the model fit statistics for each of the models.</p>
+</blockquote>
+<p>Now, we unnest the <code>tidy_anscombe_models</code>:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="k">tidy_anscombe_models</span> <span class="o">%&gt;%</span> 
+  <span class="nf">unnest</span>(cols = <span class="nf">c</span>(<span class="k">tidy</span>)) 
+<span class="c">#&gt; # A tibble: 8 x 9</span>
+<span class="c">#&gt;   set          data fit    term   estimate std.error statistic p.value glance   </span>
+<span class="c">#&gt;   &lt;chr&gt; &lt;list&lt;tbl_&gt; &lt;list&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;list&gt;   </span>
+<span class="c">#&gt; 1 1        [11 x 2] &lt;lm&gt;   (Inte~    3.00      1.12       2.67 0.0257  &lt;tibble ~</span>
+<span class="c">#&gt; 2 1        [11 x 2] &lt;lm&gt;   x         0.500     0.118      4.24 0.00217 &lt;tibble ~</span>
+<span class="c">#&gt; 3 2        [11 x 2] &lt;lm&gt;   (Inte~    3.00      1.13       2.67 0.0258  &lt;tibble ~</span>
+<span class="c">#&gt; 4 2        [11 x 2] &lt;lm&gt;   x         0.5       0.118      4.24 0.00218 &lt;tibble ~</span>
+<span class="c">#&gt; 5 3        [11 x 2] &lt;lm&gt;   (Inte~    3.00      1.12       2.67 0.0256  &lt;tibble ~</span>
+<span class="c">#&gt; 6 3        [11 x 2] &lt;lm&gt;   x         0.500     0.118      4.24 0.00218 &lt;tibble ~</span>
+<span class="c">#&gt; 7 4        [11 x 2] &lt;lm&gt;   (Inte~    3.00      1.12       2.67 0.0256  &lt;tibble ~</span>
+<span class="c">#&gt; 8 4        [11 x 2] &lt;lm&gt;   x         0.500     0.118      4.24 0.00216 &lt;tibble ~</span></code></pre>
+</div>
+<p>But we’ll need to make the dataset wider with <code>pivot_wider</code>:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="k">tidy_anscombe_models</span> <span class="o">%&gt;%</span> 
+  <span class="nf">unnest</span>(cols = <span class="nf">c</span>(<span class="k">tidy</span>)) <span class="o">%&gt;%</span> 
+  <span class="nf">pivot_wider</span>(id_cols = <span class="nf">c</span>(<span class="k">set</span>,<span class="k">term</span>),
+              names_from = <span class="k">term</span>,
+              values_from = <span class="k">estimate</span>)
+<span class="c">#&gt; # A tibble: 4 x 3</span>
+<span class="c">#&gt;   set   `(Intercept)`     x</span>
+<span class="c">#&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c">#&gt; 1 1              3.00 0.500</span>
+<span class="c">#&gt; 2 2              3.00 0.5  </span>
+<span class="c">#&gt; 3 3              3.00 0.500</span>
+<span class="c">#&gt; 4 4              3.00 0.500</span></code></pre>
+</div>
+<p>Wow, so…the linear models give us basically the same information? Jeez.</p>
+<blockquote class="blockquote">
+<p>But what do these <code>pivot_wider</code> things do?</p>
+</blockquote>
+<p>I hear you cry?</p>
+<p>Well, briefly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>id_cols <span class="ot">=</span> <span class="fu">c</span>(set,term)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Which columns give us unique rows that you want to make wider?</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>names_from <span class="ot">=</span> term</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Which column contains the information we want to take names from?</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>values_from <span class="ot">=</span> estimate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Which column contains information we want to take the values from?</p>
+</blockquote>
+<p>OK so maybe the model coefficients are bad, but surely some of the other model fit statistics help identify differences between the sets? Right?</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="k">tidy_anscombe_models</span> <span class="o">%&gt;%</span> 
+  <span class="nf">unnest</span>(cols = <span class="nf">c</span>(<span class="k">glance</span>)) <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="k">set</span>, <span class="k">r.squared</span><span class="o">:</span><span class="k">df.residual</span>)
+<span class="c">#&gt; # A tibble: 4 x 12</span>
+<span class="c">#&gt;   set   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC</span>
+<span class="c">#&gt;   &lt;chr&gt;     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c">#&gt; 1 1         0.667         0.629  1.24      18.0 0.00217     2  -16.8  39.7  40.9</span>
+<span class="c">#&gt; 2 2         0.666         0.629  1.24      18.0 0.00218     2  -16.8  39.7  40.9</span>
+<span class="c">#&gt; 3 3         0.666         0.629  1.24      18.0 0.00218     2  -16.8  39.7  40.9</span>
+<span class="c">#&gt; 4 4         0.667         0.630  1.24      18.0 0.00216     2  -16.8  39.7  40.9</span>
+<span class="c">#&gt; # ... with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</span></code></pre>
+</div>
+<p>Oh, dear. They’re all the same.</p>
+</section>
+</section>
+<section id="make-the-plots-in-ggplot-which-you-should-have-done-in-the-first-place." class="level1">
+<h1>Make the plots in ggplot (which you should have done in the first place).</h1>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">library</span>(<span class="k"><a href="https://ggplot2.tidyverse.org/reference">ggplot2</a></span>)
+<span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="k">tidy_anscombe</span>,
+       <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="k">x</span>,
+           y = <span class="k">y</span>)) <span class="o">+</span>
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() <span class="o">+</span> 
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="o">~</span><span class="k">set</span>) <span class="o">+</span>
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span>(method = <span class="s">"lm"</span>, se = <span class="m">FALSE</span>)
+<span class="c">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+</code></pre>
+<p><img src="figs/anscombe-plot-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Yeah wow, the data really is quite different. Should have done that first!</p>
+</section>
+<section id="some-thoughts" class="level1">
+<h1>Some thoughts</h1>
+<p>In writing this I noticed that, well, this is actually pretty dang hard. It covers a large chunk of skills you need to do a data analysis:</p>
+<ol type="1">
+<li>Tidy up data</li>
+<li>Explore summary statistics</li>
+<li>Fit a (or many!) model(s)</li>
+<li>Make some plots.</li>
+</ol>
+<p>It certainly packs a punch, for such a small dataset.</p>
+<section id="the-state-of-the-tools" class="level2">
+<h2 class="anchored" data-anchor-id="the-state-of-the-tools">The state of the tools</h2>
+<p>I think it’s easy to look at the base R code in the helpfile for <code>?anscombe</code> and say “oh, there’s better ways to write that code now!”.</p>
+<p>Well, sure, there might be. But I can’t help but think there are <em>always</em> going to be better ways to write the code. I’m certain that there are better ways to write the code I created for this blog post.</p>
+<p>But that’s kind of not the point, the point is to demonstrate how to explore a dataset. The authors of the helpfile provided that for us. And if I wanted to explore the data myself without that helpfile, it would have actually been harder.</p>
+<p>Let’s reflect on this for a moment. R include the <code>anscombe</code> dataset <strong>in it’s base (well, datasets) distribution</strong>, and not only that, <strong>in the help file, provide code that replicates the summary statistics and graphics presented by Anscombe in 1973</strong>.</p>
+<p>We absolutely get the point of the summaries and the graphics.</p>
+<p>And I think that is something to celebrate, I’m not sure who wrote that help file, but I think that was very kind of them.</p>
+</section>
+</section>
+<section id="further-reading" class="level1">
+<h1>Further reading</h1>
+<p>Check out <a href="http://www.sumsar.net/blog/2013/06/bayesian-modeling-of-anscombes-quartet/">Rasmus Bååth’s post on fitting a Bayesian spike-slab model to accurately fit to anscombe’s quartet</a>. Cool stuff!</p>
+<p><a href="https://rpubs.com/dgrtwo/tidy-anscombe">David Robinsons’s RPubs on tidyverse plotting of Anscombe’s quartet</a>. I wish I read this back in 2017.</p>
+<p><a href="https://www.autodeskresearch.com/publications/samestats">Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics through Simulated Annealing</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2020-06-01-tidy-anscombe/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-08-09">
+
+<title>Population Pyramid Plots in ggplot2 – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link active" data-scroll-target="#the-data">The data</a></li>
+  <li><a href="#the-data-wrangling" id="toc-the-data-wrangling" class="nav-link" data-scroll-target="#the-data-wrangling">The data wrangling</a></li>
+  <li><a href="#basepretty" id="toc-basepretty" class="nav-link" data-scroll-target="#basepretty"><code>base::pretty()</code></a>
+  <ul class="collapse">
+  <li><a href="#scalescomma" id="toc-scalescomma" class="nav-link" data-scroll-target="#scalescomma"><code>scales::comma()</code></a></li>
+  </ul></li>
+  <li><a href="#this-doesnt-generalise-to-other-data" id="toc-this-doesnt-generalise-to-other-data" class="nav-link" data-scroll-target="#this-doesnt-generalise-to-other-data">This doesn’t generalise to other data</a></li>
+  <li><a href="#end" id="toc-end" class="nav-link" data-scroll-target="#end">End</a></li>
+  <li><a href="#bonus---centering" id="toc-bonus---centering" class="nav-link" data-scroll-target="#bonus---centering">Bonus - centering</a></li>
+  <li><a href="#bonus-bonus---per-capita" id="toc-bonus-bonus---per-capita" class="nav-link" data-scroll-target="#bonus-bonus---per-capita">Bonus Bonus - per capita</a></li>
+  <li><a href="#ps" id="toc-ps" class="nav-link" data-scroll-target="#ps">PS</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2022-08-09-pyramid-plots-in-ggplot2/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Population Pyramid Plots in <code>ggplot2</code></h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">data visualisation</div>
+    <div class="quarto-category">covid19</div>
+    <div class="quarto-category">ggplot2</div>
+    <div class="quarto-category">colour palette</div>
+    <div class="quarto-category">rstats</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2022-08-09</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="highlight">
+<p><img src="imgs/two-shopping-carts.jpg" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p><em>Two Abandoned Trolleys, Nick Tierney, Film, Olympus XA</em></p>
+<p>I recently had to make some pyramid plots in R. They are a useful way to compare age structures of populations. They look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figs/show-pop-pyramid-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Age population structure of Sydney vs Melbourne"><img src="figs/show-pop-pyramid-1.png" class="img-fluid figure-img" alt="Age population structure of Sydney vs Melbourne"></a></p>
+<figcaption>Age population structure of Sydney vs Melbourne</figcaption>
+</figure>
+</div>
+<p>It’s been a while since I had to make them, and in the past I’ve cooked them up in a relatively bespoke way. This time I needed to be able to have some level of programming to them - I wanted to be able to provide any two LGAs in Australia and then make a pyramid plot of them that looked nice.</p>
+<p>I started by looking at this <a href="https://stackoverflow.com/questions/14680075/simpler-population-pyramid-in-ggplot2">SO thread</a> - overall this gave me what I wanted, but I thought I’d walk through my solution, as it is a little different, and might hopefully be useful to others.</p>
+<section id="the-data" class="level1">
+<h1>The data</h1>
+<p>The data is comes from the Australian Bureau of Statistics, which is then cleaned up, and packaged in the <a href="https://github.com/njtierney/conmat">conmat</a> R package, which I maintain. Before I show that, I’ll load the packages I need, <code>tidyverse</code> , and <code>conmat</code>:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="o">)</span></span><span><span class="c">#&gt; ── <span style="font-weight: bold;">Attaching packages</span> ───────────────────────────── tidyverse 1.3.1 ──</span></span><span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2</span> 3.3.6     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr  </span> 0.3.4</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble </span> 3.1.7     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr  </span> 1.0.9</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr  </span> 1.2.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr</span> 1.4.0</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr  </span> 2.1.2     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats</span> 0.5.1</span></span><span><span class="c">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ──────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span><span class="c">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
+<span><span class="c">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span><span><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv">conmat</span><span class="o">)</span></span><span><span class="c">#&gt; Warning: package 'conmat' was built under R version 4.2.1</span></span></code></pre>
+</div>
+<p>You can access the age structured population for a given LGA like so:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="c"># |label: LGA-hobart</span></span>
+<span><span class="nf"><a href="https://rdrr.io/pkg/conmat/man/abs_age_lga.html">abs_age_lga</a></span><span class="o">(</span><span class="s">"Hobart (C)"</span><span class="o">)</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 18 × 4</span></span></span>
+<span><span class="c">#&gt;    lga        lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Hobart (C)               0  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>442</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Hobart (C)               5  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>833</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Hobart (C)              10  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>771</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Hobart (C)              15  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>038</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Hobart (C)              20  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>982</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Hobart (C)              25  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">5</span>132</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Hobart (C)              30  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>196</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Hobart (C)              35  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>510</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Hobart (C)              40  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>214</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Hobart (C)              45  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>428</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">11</span> Hobart (C)              50  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>202</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">12</span> Hobart (C)              55  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>381</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">13</span> Hobart (C)              60  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>291</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">14</span> Hobart (C)              65  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>036</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">15</span> Hobart (C)              70  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>512</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">16</span> Hobart (C)              75  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">1</span>721</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">17</span> Hobart (C)              80  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">1</span>189</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">18</span> Hobart (C)              85  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">1</span>372</span></span></code></pre>
+</div>
+<p>In our case, we want to combine two LGAs and compare them. So let’s write a little helper function, <code>two_abs_age_lga</code>:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">two_abs_age_lga</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">lga_1</span>, <span class="nv">lga_2</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="o">(</span></span>
+<span>    <span class="nf"><a href="https://rdrr.io/pkg/conmat/man/abs_age_lga.html">abs_age_lga</a></span><span class="o">(</span><span class="nv">lga_1</span><span class="o">)</span>,</span>
+<span>    <span class="nf"><a href="https://rdrr.io/pkg/conmat/man/abs_age_lga.html">abs_age_lga</a></span><span class="o">(</span><span class="nv">lga_2</span><span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>So now we can get say, Melbourne and Sydney, like so:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o">&lt;-</span> <span class="nf">two_abs_age_lga</span><span class="o">(</span><span class="s">"Melbourne (C)"</span>, <span class="s">"Sydney (C)"</span><span class="o">)</span></span>
+<span><span class="nv">melb_syd</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 4</span></span></span>
+<span><span class="c">#&gt;    lga           lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C)               0  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>882</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C)               5  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>450</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C)              10  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>675</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C)              15  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">9</span>396</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C)              20  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>434</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C)              25  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>546</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C)              30  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">25</span>834</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C)              35  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">15</span>072</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C)              40  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">8</span>554</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C)              45  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">6</span>753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span><span><span class="nf"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="o">(</span><span class="nv">melb_syd</span><span class="o">)</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 6 × 4</span></span></span>
+<span><span class="c">#&gt;   lga        lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;   <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">1</span> Sydney (C)              60  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">8</span>950</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">2</span> Sydney (C)              65  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">7</span>377</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">3</span> Sydney (C)              70  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">6</span>308</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">4</span> Sydney (C)              75  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>002</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">5</span> Sydney (C)              80  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>583</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">6</span> Sydney (C)              85  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>506</span></span></code></pre>
+</div>
+</section>
+<section id="the-data-wrangling" class="level1">
+<h1>The data wrangling</h1>
+<p>Now, to get the data into this plot, what we want is a plot of the population against each age group. To illustrate this I’ll just use Melbourne data:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/pkg/conmat/man/abs_age_lga.html">abs_age_lga</a></span><span class="o">(</span><span class="s">"Melbourne (C)"</span><span class="o">)</span></span>
+<span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">melb</span>,</span>
+<span>       <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>           y <span class="o">=</span> <span class="nv">lower.age.limit</span>,</span>
+<span>           fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/gg-melbourne-popn-oops-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Ack, we need the <code>y</code> variable to be a factor</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">melb</span>,</span>
+<span>       <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>           y <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="o">(</span><span class="nv">lower.age.limit</span><span class="o">)</span>,</span>
+<span>           fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/gg-melbourne-popn-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>But what we actually want are two plots, one going the other way for the other group. We can make this happen by making the population negative:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">syd</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/pkg/conmat/man/abs_age_lga.html">abs_age_lga</a></span><span class="o">(</span><span class="s">"Sydney (C)"</span><span class="o">)</span></span>
+<span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">syd</span>,</span>
+<span>       <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="o">-</span><span class="nv">population</span>,</span>
+<span>           y <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="o">(</span><span class="nv">lower.age.limit</span><span class="o">)</span>,</span>
+<span>           fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/gg-sydney-popn-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>And then we want to combine those two plots - so we can write something bespoke, like this. Let’s also make that age limit data a factor while we are here</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd_pyramid</span> <span class="o">&lt;-</span> <span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    population <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span></span>
+<span>      <span class="nv">lga</span> <span class="o">==</span> <span class="s">"Sydney (C)"</span> <span class="o">~</span> <span class="o">-</span><span class="nv">population</span>,</span>
+<span>      <span class="kc">TRUE</span> <span class="o">~</span> <span class="nv">population</span></span>
+<span>    <span class="o">)</span>,</span>
+<span>    lower.age.limit <span class="o">=</span> <span class="nf"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="o">(</span><span class="nv">lower.age.limit</span><span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+<span></span>
+<span><span class="nv">melb_syd_pyramid</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 4</span></span></span>
+<span><span class="c">#&gt;    lga           lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #555555; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C) 0                <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>882</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C) 5                <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>450</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C) 10               <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>675</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C) 15               <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">9</span>396</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C) 20               <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>434</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C) 25               <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>546</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C) 30               <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">25</span>834</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C) 35               <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">15</span>072</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C) 40               <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">8</span>554</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C) 45               <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">6</span>753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span></code></pre>
+</div>
+<p>So now we can get this:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">melb_syd_pyramid</span>,</span>
+<span>         <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">lower.age.limit</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> </span></code></pre>
+<p><img src="figs/beta-version-pyramid-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>And that’s pretty good!</p>
+<p>Let’s tidy it up a little bit - we want to change the axis on the bottom to be positive in both directions, so we’ll need to specify the break points for the axis marks, as well as the labels. So we want a sequence from one end to the other, but for it to be symmetric. Let’s start by getting the range, by using the <code>range</code> function:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">pop_range</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">melb_syd_pyramid</span><span class="o">$</span><span class="nv">population</span><span class="o">)</span></span>
+<span><span class="nv">pop_range</span></span><span><span class="c">#&gt; [1] -45686  38546</span></span></code></pre>
+</div>
+<p>Now we want a sequence from there to the end value. We can use <code>seq</code> to make a sequence</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">pop_range_seq</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="o">(</span><span class="nv">pop_range</span><span class="o">[</span><span class="m">1</span><span class="o">]</span>, <span class="nv">pop_range</span><span class="o">[</span><span class="m">2</span><span class="o">]</span>, by <span class="o">=</span> <span class="m">15000</span><span class="o">)</span></span>
+<span><span class="nv">pop_range_seq</span></span><span><span class="c">#&gt; [1] -45686 -30686 -15686   -686  14314  29314</span></span></code></pre>
+</div>
+<p>Briefly, what we want to do is something like this:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">melb_syd_pyramid</span>,</span>
+<span>         <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">lower.age.limit</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="o">(</span>breaks  <span class="o">=</span> <span class="nv">pop_range_seq</span>,</span>
+<span>                       labels <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="o">(</span><span class="nv">pop_range_seq</span><span class="o">)</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/first-pass-pyramid-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Ugh, but the numbers aren’t very nice. We want some nicer numbers. We can use a negative number in <code>round</code> to give us something slightly better.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="o">(</span><span class="nv">pop_range</span>, <span class="o">-</span><span class="m">2</span><span class="o">)</span></span><span><span class="c">#&gt; [1] -45700  38500</span></span></code></pre>
+</div>
+<p>But I’d like to round to the nearest 500…and we also need to have a 0 in there as well.</p>
+</section>
+<section id="basepretty" class="level1">
+<h1><code>base::pretty()</code></h1>
+<p>Turns out this is a pretty common thing to do, and base R has us covered, with <a href="https://rdrr.io/r/base/pretty.html"><code>pretty()</code></a>! It even includes 0!</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/base/pretty.html">pretty</a></span><span class="o">(</span><span class="nv">pop_range</span><span class="o">)</span></span><span><span class="c">#&gt; [1] -60000 -40000 -20000      0  20000  40000</span></span></code></pre>
+</div>
+<p>There are loads of options, but we’ll just specify <code>n</code> to change the number of breaks</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">pop_range_breaks</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/pretty.html">pretty</a></span><span class="o">(</span><span class="nv">pop_range</span>, n <span class="o">=</span> <span class="m">7</span><span class="o">)</span></span></code></pre>
+</div>
+<p>So now we have something that looks pretty good</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">melb_syd_pyramid</span>,</span>
+<span>         <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">lower.age.limit</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="o">(</span>breaks  <span class="o">=</span> <span class="nv">pop_range_breaks</span>,</span>
+<span>                       labels <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="o">(</span><span class="nv">pop_range_breaks</span><span class="o">)</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/pretty-good-pyramid-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>OK, but a few more gripes:</p>
+<ul>
+<li><p>The numbers are a bit hard to read - we can add a comma into them to improve that with <a href="https://scales.r-lib.org/reference/comma.html"><code>scales::comma</code></a></p></li>
+<li><p>the legend needs to be on top</p></li>
+<li><p>The colour scale should be colourblind friendly</p></li>
+</ul>
+<section id="scalescomma" class="level2">
+<h2 class="anchored" data-anchor-id="scalescomma"><code>scales::comma()</code></h2>
+<p>A really cool function! It takes number input and adds commas into them.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="m">10</span><span class="o">)</span></span><span><span class="c">#&gt; [1] "10"</span></span><span><span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="m">100</span><span class="o">)</span></span><span><span class="c">#&gt; [1] "100"</span></span><span><span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="m">1000</span><span class="o">)</span></span><span><span class="c">#&gt; [1] "1,000"</span></span><span><span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="m">1000000</span><span class="o">)</span></span><span><span class="c">#&gt; [1] "1,000,000"</span></span></code></pre>
+</div>
+<p>Let’s add that in, along with the changes to the legend, as well as an improved colour scale</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">melb_syd_pyramid</span>,</span>
+<span>         <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">lower.age.limit</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="o">(</span>breaks  <span class="o">=</span> <span class="nv">pop_range_breaks</span>,</span>
+<span>                       labels <span class="o">=</span> <span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="o">(</span><span class="nv">pop_range_breaks</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="o">(</span>palette <span class="o">=</span> <span class="s">"Dark2"</span><span class="o">)</span> <span class="o">+</span></span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="o">(</span>legend.position <span class="o">=</span> <span class="s">"top"</span><span class="o">)</span> </span></code></pre>
+<p><img src="figs/improved-pyramid-scale-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+</section>
+</section>
+<section id="this-doesnt-generalise-to-other-data" class="level1">
+<h1>This doesn’t generalise to other data</h1>
+<p>Unfortunately, if I want to do this to another dataset, which doesn’t have Sydney and Melbourne, I’ll need to write custom code each time. We can do a little better, let’s write this as a function, which takes two inputs, the name of each of the LGAs we want to explore.</p>
+<p>This involves a few steps - first, we need to modify the data as we’ve done above. Let’s call this a <code>prep_pop_pyramid</code> function. First let’s scratch out what it will do.</p>
+<p>So we need to get the data.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o">&lt;-</span> <span class="nf">two_abs_age_lga</span><span class="o">(</span><span class="s">"Melbourne (C)"</span>, <span class="s">"Sydney (C)"</span><span class="o">)</span></span></code></pre>
+</div>
+<p>Then we need to multiply one of the populations by -1, so that we get the reflected population in the other direction. We had previously done:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    population <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span></span>
+<span>      <span class="nv">lga</span> <span class="o">==</span> <span class="s">"Sydney (C)"</span> <span class="o">~</span> <span class="o">-</span><span class="nv">population</span>,</span>
+<span>      <span class="kc">TRUE</span> <span class="o">~</span> <span class="nv">population</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">)</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 4</span></span></span>
+<span><span class="c">#&gt;    lga           lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C)               0  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>882</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C)               5  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>450</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C)              10  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>675</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C)              15  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">9</span>396</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C)              20  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>434</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C)              25  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>546</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C)              30  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">25</span>834</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C)              35  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">15</span>072</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C)              40  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">8</span>554</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C)              45  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">6</span>753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span></code></pre>
+</div>
+<p>But this will not generalise to <em>any</em> two LGA names. So instead we can assign one of the LGAs to a number, which we can do by first grouping by lga, then using <a href="https://dplyr.tidyverse.org/reference/context.html"><code>cur_group_id()</code></a>, to label the groups as a number.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="o">(</span><span class="nv">lga</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/context.html">cur_group_id</a></span><span class="o">(</span><span class="o">)</span>,</span>
+<span>      .after <span class="o">=</span> <span class="nv">lga</span></span>
+<span>    <span class="o">)</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 5</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># Groups:   lga [2]</span></span></span>
+<span><span class="c">#&gt;    lga           age_multiplier lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #555555; font-style: italic;">&lt;int&gt;</span>           <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C)              1               0  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>882</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C)              1               5  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>450</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C)              1              10  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>675</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C)              1              15  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">9</span>396</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C)              1              20  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>434</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C)              1              25  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>546</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C)              1              30  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">25</span>834</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C)              1              35  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">15</span>072</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C)              1              40  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">8</span>554</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C)              1              45  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">6</span>753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span></code></pre>
+</div>
+<p>This then gives us a 1 or a 2. We can then set this to be negative if it is the second group.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="o">(</span><span class="nv">lga</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/context.html">cur_group_id</a></span><span class="o">(</span><span class="o">)</span>,</span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span><span class="nv">age_multiplier</span> <span class="o">==</span> <span class="m">2</span> <span class="o">~</span> <span class="m">1</span>,</span>
+<span>                                 <span class="kc">TRUE</span> <span class="o">~</span> <span class="o">-</span><span class="m">1</span><span class="o">)</span>,</span>
+<span>      .after <span class="o">=</span> <span class="nv">lga</span></span>
+<span>    <span class="o">)</span> </span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 5</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># Groups:   lga [2]</span></span></span>
+<span><span class="c">#&gt;    lga           age_multiplier lower.age.limit  year population</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>               0  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">4</span>882</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>               5  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">3</span>450</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              10  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">2</span>675</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              15  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">9</span>396</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              20  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>434</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              25  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">38</span>546</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              30  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">25</span>834</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              35  <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">15</span>072</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              40  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">8</span>554</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              45  <span style="text-decoration: underline;">2</span>020       <span style="text-decoration: underline;">6</span>753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span></code></pre>
+</div>
+<p>Then, we have something that we can use to multiply the population by -1 ! Let’s also take this chance to turn age into a factor.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="o">(</span><span class="nv">lga</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/context.html">cur_group_id</a></span><span class="o">(</span><span class="o">)</span>,</span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span><span class="nv">age_multiplier</span> <span class="o">==</span> <span class="m">2</span> <span class="o">~</span> <span class="m">1</span>,</span>
+<span>                                 <span class="kc">TRUE</span> <span class="o">~</span> <span class="o">-</span><span class="m">1</span><span class="o">)</span>,</span>
+<span>      .after <span class="o">=</span> <span class="nv">lga</span></span>
+<span>    <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>age <span class="o">=</span> <span class="nf"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="o">(</span><span class="nv">lower.age.limit</span><span class="o">)</span>,</span>
+<span>           population <span class="o">=</span> <span class="nv">population</span> <span class="o">*</span> <span class="nv">age_multiplier</span><span class="o">)</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 6</span></span></span>
+<span><span class="c">#&gt;    lga           age_multiplier lower.age.limit  year population age  </span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;fct&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>               0  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">4</span><span style="color: #BB0000;">882</span> 0    </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>               5  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">3</span><span style="color: #BB0000;">450</span> 5    </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              10  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">2</span><span style="color: #BB0000;">675</span> 10   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              15  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">9</span><span style="color: #BB0000;">396</span> 15   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              20  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">38</span><span style="color: #BB0000;">434</span> 20   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              25  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">38</span><span style="color: #BB0000;">546</span> 25   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              30  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">25</span><span style="color: #BB0000;">834</span> 30   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              35  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">15</span><span style="color: #BB0000;">072</span> 35   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              40  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">8</span><span style="color: #BB0000;">554</span> 40   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              45  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">6</span><span style="color: #BB0000;">753</span> 45   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span></code></pre>
+</div>
+<p>And then let’s wrap this into a function:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">prep_pop_pyramid</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">data</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="o">(</span><span class="nv">lga</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/context.html">cur_group_id</a></span><span class="o">(</span><span class="o">)</span>,</span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span><span class="nv">age_multiplier</span> <span class="o">==</span> <span class="m">2</span> <span class="o">~</span> <span class="m">1</span>,</span>
+<span>                                 <span class="kc">TRUE</span> <span class="o">~</span> <span class="o">-</span><span class="m">1</span><span class="o">)</span>,</span>
+<span>      .after <span class="o">=</span> <span class="nv">lga</span></span>
+<span>    <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>age <span class="o">=</span> <span class="nf"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="o">(</span><span class="nv">lower.age.limit</span><span class="o">)</span>,</span>
+<span>           population <span class="o">=</span> <span class="nv">population</span> <span class="o">*</span> <span class="nv">age_multiplier</span><span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>OK so now let’s put those two parts together:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o">&lt;-</span> <span class="nf">two_abs_age_lga</span><span class="o">(</span></span>
+<span>  <span class="s">"Melbourne (C)"</span>,</span>
+<span>  <span class="s">"Sydney (C)"</span></span>
+<span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">melb_syd</span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 36 × 6</span></span></span>
+<span><span class="c">#&gt;    lga           age_multiplier lower.age.limit  year population age  </span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;fct&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>               0  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">4</span><span style="color: #BB0000;">882</span> 0    </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>               5  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">3</span><span style="color: #BB0000;">450</span> 5    </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              10  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">2</span><span style="color: #BB0000;">675</span> 10   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              15  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">9</span><span style="color: #BB0000;">396</span> 15   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              20  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">38</span><span style="color: #BB0000;">434</span> 20   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              25  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">38</span><span style="color: #BB0000;">546</span> 25   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              30  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">25</span><span style="color: #BB0000;">834</span> 30   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              35  <span style="text-decoration: underline;">2</span>020     -<span style="color: #BB0000; text-decoration: underline;">15</span><span style="color: #BB0000;">072</span> 35   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              40  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">8</span><span style="color: #BB0000;">554</span> 40   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> Melbourne (C)             -<span style="color: #BB0000;">1</span>              45  <span style="text-decoration: underline;">2</span>020      -<span style="color: #BB0000; text-decoration: underline;">6</span><span style="color: #BB0000;">753</span> 45   </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 26 more rows</span></span></span></code></pre>
+</div>
+<p>And now let’s wrap the plotting code into a function:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">plot_pop_pyramid</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">pop_range</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">data</span><span class="o">$</span><span class="nv">population</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">age_range_seq</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/pretty.html">pretty</a></span><span class="o">(</span><span class="nv">pop_range</span>, n <span class="o">=</span> <span class="m">10</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">data</span>,</span>
+<span>         <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">age</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="o">(</span>breaks  <span class="o">=</span> <span class="nv">age_range_seq</span>,</span>
+<span>                       labels <span class="o">=</span> <span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="o">(</span><span class="nv">age_range_seq</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="o">(</span>palette <span class="o">=</span> <span class="s">"Dark2"</span>,</span>
+<span>                      guide <span class="o">=</span> <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="o">(</span></span>
+<span>                        title <span class="o">=</span> <span class="s">""</span></span>
+<span>                      <span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="o">(</span>legend.position <span class="o">=</span> <span class="s">"top"</span><span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">plot_pop_pyramid</span><span class="o">(</span><span class="nv">melb_syd</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/show-pop-pyramid-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+</section>
+<section id="end" class="level1">
+<h1>End</h1>
+<p>And that was the end of this blog post. But something about the plots kind of bothered me…</p>
+</section>
+<section id="bonus---centering" class="level1">
+<h1>Bonus - centering</h1>
+<p>Well, there’s actually one final step here that you might be interested in - which is centering the “0” of the population. Perhaps there is another way around this, but the approach that I ended up doing was the following:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">pretty_symmetric</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">range</span>, <span class="nv">n</span> <span class="o">=</span> <span class="m">5</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">range_1</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="o">-</span><span class="nv">range</span><span class="o">[</span><span class="m">1</span><span class="o">]</span>, <span class="nv">range</span><span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="o">)</span></span>
+<span>  <span class="nv">range_2</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="nv">range</span><span class="o">[</span><span class="m">1</span><span class="o">]</span>, <span class="o">-</span><span class="nv">range</span><span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">pretty_vec_1</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/pretty.html">pretty</a></span><span class="o">(</span><span class="nv">range_1</span><span class="o">)</span></span>
+<span>  <span class="nv">pretty_vec_2</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/pretty.html">pretty</a></span><span class="o">(</span><span class="nv">range_2</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nf"><a href="https://rdrr.io/r/base/pretty.html">pretty</a></span><span class="o">(</span></span>
+<span>    <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="nv">pretty_vec_1</span>, <span class="nv">pretty_vec_2</span><span class="o">)</span>, </span>
+<span>    n <span class="o">=</span> <span class="nv">n</span></span>
+<span>  <span class="o">)</span></span>
+<span>  </span>
+<span><span class="o">}</span></span>
+<span></span>
+<span><span class="nf">pretty_symmetric</span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="o">-</span><span class="m">5000</span>, <span class="m">10000</span><span class="o">)</span><span class="o">)</span></span><span><span class="c">#&gt; [1] -10000  -5000      0   5000  10000</span></span></code></pre>
+</div>
+<p>So then we replace <code>pretty</code>, with <code>pretty_symmetric</code> , and then need to add this other bit, <code>expand_limits</code> which ensures the limits are kept</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">plot_pop_pyramid</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">pop_range</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">data</span><span class="o">$</span><span class="nv">population</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">age_range_seq</span> <span class="o">&lt;-</span> <span class="nf">pretty_symmetric</span><span class="o">(</span><span class="nv">pop_range</span>, n <span class="o">=</span> <span class="m">5</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nv">data</span>,</span>
+<span>         <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">population</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">age</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="o">(</span>breaks  <span class="o">=</span> <span class="nv">age_range_seq</span>,</span>
+<span>                       labels <span class="o">=</span> <span class="nf">scales</span><span class="nf">::</span><span class="nf"><a href="https://scales.r-lib.org/reference/comma.html">comma</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="o">(</span><span class="nv">age_range_seq</span><span class="o">)</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">age_range_seq</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="o">(</span>palette <span class="o">=</span> <span class="s">"Dark2"</span>,</span>
+<span>                      guide <span class="o">=</span> <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="o">(</span></span>
+<span>                        title <span class="o">=</span> <span class="s">""</span></span>
+<span>                      <span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="o">(</span>legend.position <span class="o">=</span> <span class="s">"top"</span><span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">plot_pop_pyramid</span><span class="o">(</span><span class="nv">melb_syd</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/init-pyramid-demo-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>This has a nice benefit of facilitating stacking the plots with something like <code>patchwork</code> and the 0s will be aligned.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o">&lt;-</span> <span class="nf">two_abs_age_lga</span><span class="o">(</span></span>
+<span>  <span class="s">"Melbourne (C)"</span>,</span>
+<span>  <span class="s">"Sydney (C)"</span></span>
+<span><span class="o">)</span> </span>
+<span></span>
+<span><span class="nv">bris_hobart</span> <span class="o">&lt;-</span> <span class="nf">two_abs_age_lga</span><span class="o">(</span></span>
+<span>  <span class="s">"Brisbane (C)"</span>,</span>
+<span>  <span class="s">"Hobart (C)"</span></span>
+<span><span class="o">)</span></span>
+<span><span class="nv">alice_perth</span> <span class="o">&lt;-</span> <span class="nf">two_abs_age_lga</span><span class="o">(</span></span>
+<span>  <span class="s">"Alice Springs (T)"</span>,</span>
+<span>  <span class="s">"Perth (C)"</span></span>
+<span><span class="o">)</span> </span></code></pre>
+</div>
+<p>Then we can stack them together with patchwork</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="o">)</span></span>
+<span><span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">plot_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o">/</span></span>
+<span><span class="nv">bris_hobart</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">plot_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o">/</span></span>
+<span><span class="nv">alice_perth</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">plot_pop_pyramid</span><span class="o">(</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/patchwork-plot-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+</section>
+<section id="bonus-bonus---per-capita" class="level1">
+<h1>Bonus Bonus - per capita</h1>
+<p>Ugh. OK. These plots are nice, but really, these should be normalised by the total population.</p>
+<p>What does that mean? Why would we want to do that? Well, if you have two cities, one with HEAPS of people, and other with 1000 times less people - the numbers are going to be harder to compare. And if the point you are trying to convey is:</p>
+<blockquote class="blockquote">
+<p>Hey, these two cities have very different population <em>sizes</em></p>
+</blockquote>
+<p>Then we’ve done that above.</p>
+<p>But what we actually kind of care about the most is:</p>
+<blockquote class="blockquote">
+<p>Hey, do these two cities have similar age distributions?</p>
+</blockquote>
+<p>So like, do they have the same proportion of 20-somethings in both cities? Regardless of the fact that one city has like 100 or 1000 times more people?</p>
+<p>So, we should fix it.</p>
+<p>Where do we fix it? We need to change the data creation function. Adding a new column, <code>population_per_capita</code>, with something like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">population_per_capita =</span> population <span class="sc">/</span> <span class="fu">sum</span>(population))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Which divides the population by the total population. This is sometimes called “normalising”. Effectively, we are comparing each age population to the total population.</p>
+<p>Also importantly, we need to do this still in the <code>group_by(lga)</code> below</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">prep_pop_pyramid</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">data</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="o">(</span><span class="nv">lga</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/context.html">cur_group_id</a></span><span class="o">(</span><span class="o">)</span>,</span>
+<span>      age_multiplier <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span></span>
+<span>        <span class="nv">age_multiplier</span> <span class="o">==</span> <span class="m">2</span> <span class="o">~</span> <span class="m">1</span>,</span>
+<span>        <span class="kc">TRUE</span> <span class="o">~</span> <span class="o">-</span><span class="m">1</span></span>
+<span>      <span class="o">)</span>,</span>
+<span>      .after <span class="o">=</span> <span class="nv">lga</span></span>
+<span>    <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>population_per_capita <span class="o">=</span> <span class="nv">population</span> <span class="o">/</span> <span class="nf"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="o">(</span><span class="nv">population</span><span class="o">)</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>      age <span class="o">=</span> <span class="nf"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="o">(</span><span class="nv">lower.age.limit</span><span class="o">)</span>,</span>
+<span>      population <span class="o">=</span> <span class="nv">population</span> <span class="o">*</span> <span class="nv">age_multiplier</span>,</span>
+<span>      population_per_capita <span class="o">=</span> <span class="nv">population_per_capita</span> <span class="o">*</span> <span class="nv">age_multiplier</span></span>
+<span>    <span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>And since we’ve changed the data that we are using now - we aren’t using <code>population</code> anymore, and I hard coded the plotting code, we need to re-write the function. Perhaps with the benefit of hindsight it would have been better to not hard code variables in the plotting function, but here we are.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">plot_pop_pyramid_per_capita</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">pop_range</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">data</span><span class="o">$</span><span class="nv">population_per_capita</span><span class="o">)</span></span>
+<span></span>
+<span>  <span class="nv">age_range_seq</span> <span class="o">&lt;-</span> <span class="nf">pretty_symmetric</span><span class="o">(</span><span class="nv">pop_range</span>, n <span class="o">=</span> <span class="m">5</span><span class="o">)</span></span>
+<span></span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span></span>
+<span>    <span class="nv">data</span>,</span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span></span>
+<span>      x <span class="o">=</span> <span class="nv">population_per_capita</span>,</span>
+<span>      y <span class="o">=</span> <span class="nv">age</span>,</span>
+<span>      fill <span class="o">=</span> <span class="nv">lga</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="o">(</span></span>
+<span>      breaks <span class="o">=</span> <span class="nv">age_range_seq</span>,</span>
+<span>      labels <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="o">(</span><span class="nv">age_range_seq</span><span class="o">)</span></span>
+<span>    <span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">age_range_seq</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="o">(</span></span>
+<span>      palette <span class="o">=</span> <span class="s">"Dark2"</span>,</span>
+<span>      guide <span class="o">=</span> <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="o">(</span></span>
+<span>        title <span class="o">=</span> <span class="s">""</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="o">(</span>legend.position <span class="o">=</span> <span class="s">"top"</span><span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>All together now</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">melb_syd</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">plot_pop_pyramid_per_capita</span><span class="o">(</span><span class="o">)</span> <span class="o">/</span></span>
+<span><span class="nv">bris_hobart</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">plot_pop_pyramid_per_capita</span><span class="o">(</span><span class="o">)</span> <span class="o">/</span></span>
+<span><span class="nv">alice_perth</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">plot_pop_pyramid_per_capita</span><span class="o">(</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/patchwork-plot-per-capita-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>And now for comparison to drive home the difference between the per capita pyramid and the raw population pyramid - most notably, there is a huge difference between brisbane and hobart - previously the population numbers in Brisbane drowned out the differnces in Hobart</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">bris_hobart_pyramid</span> <span class="o">&lt;-</span> <span class="nv">bris_hobart</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="nf">prep_pop_pyramid</span><span class="o">(</span><span class="o">)</span></span>
+<span><span class="nf">plot_pop_pyramid</span><span class="o">(</span><span class="nv">bris_hobart_pyramid</span><span class="o">)</span> <span class="o">/</span></span>
+<span>  <span class="nf">plot_pop_pyramid_per_capita</span><span class="o">(</span><span class="nv">bris_hobart_pyramid</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/patchwork-plot-per-capita-brisbane-hobart-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Another way to present this is as a regular bar graph, which more strongly places our focus on comparison between age groups.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">bris_hobart_pyramid</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    <span class="c"># reverse age_multiplier</span></span>
+<span>    population <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span></span>
+<span>      <span class="nv">age_multiplier</span> <span class="o">==</span> <span class="o">-</span><span class="m">1</span> <span class="o">~</span> <span class="nv">population</span> <span class="o">*</span> <span class="o">-</span><span class="m">1</span>,</span>
+<span>      <span class="kc">TRUE</span> <span class="o">~</span> <span class="nv">population</span></span>
+<span>    <span class="o">)</span>,</span>
+<span>    population_per_capita <span class="o">=</span> <span class="nf"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="o">(</span></span>
+<span>      <span class="nv">age_multiplier</span> <span class="o">==</span> <span class="o">-</span><span class="m">1</span> <span class="o">~</span> <span class="nv">population_per_capita</span> <span class="o">*</span> <span class="o">-</span><span class="m">1</span>,</span>
+<span>      <span class="kc">TRUE</span> <span class="o">~</span> <span class="nv">population_per_capita</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="o">(</span></span>
+<span>    cols <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="nv">population</span>,</span>
+<span>             <span class="nv">population_per_capita</span><span class="o">)</span>,</span>
+<span>    names_to <span class="o">=</span> <span class="s">"pop_type"</span>,</span>
+<span>    values_to <span class="o">=</span> <span class="s">"pop_value"</span></span>
+<span>  <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="o">(</span>x <span class="o">=</span> <span class="nv">age</span>,</span>
+<span>             y <span class="o">=</span> <span class="nv">pop_value</span>,</span>
+<span>             fill <span class="o">=</span> <span class="nv">lga</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="o">(</span>position <span class="o">=</span> <span class="s">"dodge"</span><span class="o">)</span> <span class="o">+</span></span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="o">(</span><span class="o">~</span><span class="nv">pop_type</span>,</span>
+<span>             scales <span class="o">=</span> <span class="s">"free_y"</span>,</span>
+<span>             ncol <span class="o">=</span> <span class="m">1</span><span class="o">)</span> <span class="o">+</span> </span>
+<span>  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="o">(</span></span>
+<span>      palette <span class="o">=</span> <span class="s">"Dark2"</span>,</span>
+<span>      guide <span class="o">=</span> <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="o">(</span></span>
+<span>        title <span class="o">=</span> <span class="s">""</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span></span>
+<span>    <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="o">(</span>legend.position <span class="o">=</span> <span class="s">"top"</span><span class="o">)</span></span></code></pre>
+<p><img src="figs/plot-per-capita-brisbane-hobart-bar-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>In some ways, I think I prefer this graph - there are many ways to present information, and in this case it helps us more clearly compare the differences between two places. It also strongly highlights the difference between using per capita and raw population values.</p>
+</section>
+<section id="ps" class="level1">
+<h1>PS</h1>
+<p>I actually wrote this up initially to make a figure for a grant. Then, unhappy with the fact that I had to alter the code 2 times to make the figure, I converted it into a targets pipeline, which you can see here on github: <a href="https://github.com/njtierney/target-pop-pyramid" class="uri">https://github.com/njtierney/target-pop-pyramid</a></p>
+<p>Also fun fact, the figure didn’t make it into the grant. But now you’ve got this blog post, so that’s pretty neat, I guess?</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2022-08-09-pyramid-plots-in-ggplot2/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

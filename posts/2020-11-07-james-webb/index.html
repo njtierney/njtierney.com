@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-11-07">
+
+<title>James Webb and the XKCD-inspired Wikipedia Scraping – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-packages" id="toc-the-packages" class="nav-link active" data-scroll-target="#the-packages">The packages</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2020-11-07-james-webb/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">James Webb and the XKCD-inspired Wikipedia Scraping</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2020-11-07</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>I was talking (well, via video) to a friend about the <a href="https://en.wikipedia.org/wiki/James_Webb_Space_Telescope">James Webb Telescope</a>. The James Webb is going to be a pretty big deal when it launches. It is one of the most complex things designed by humans, and it will do a lot more than the Hubble telescope, which means we can learn more about space, and, well, who knows?</p>
+<p>When is it due to launch? It’s been delayed quite a few times. There’s even a relevant XKCD on this:</p>
+<div class="highlight">
+<p><img src="https://imgs.xkcd.com/comics/jwst_delays.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>And, looking at this, I was wondering how accurate the plot <a href="https://xkcd.com/about/">Randall Munroe</a> made was? Turns out this was an interesting exercise in itself!</p>
+<p>This blog post covers how to scrape some tables from Wikipedia, tidy them up, perform some basic modelling, make some forecasts, and plot them.</p>
+<section id="the-packages" class="level1">
+<h1>The packages</h1>
+<p>First let’s load up a few libraries:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://github.com/dmi3kno/polite">polite</a></span><span class="o">)</span>
+<span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="http://rvest.tidyverse.org/">rvest</a></span><span class="o">)</span>
+
+<span class="c">#&gt; Loading required package: xml2</span>
+
+<span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="o">)</span>
+
+<span class="c">#&gt; ── <span style="font-weight: bold;">Attaching packages</span><span> ───────────────────────────── tidyverse 1.3.0 ──</span></span>
+
+<span class="c">#&gt; <span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">ggplot2</span><span> 3.3.2     </span><span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">purrr  </span><span> 0.3.4</span></span>
+<span class="c">#&gt; <span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">tibble </span><span> 3.0.4     </span><span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">dplyr  </span><span> 1.0.2</span></span>
+<span class="c">#&gt; <span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">tidyr  </span><span> 1.1.2     </span><span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">stringr</span><span> 1.4.0</span></span>
+<span class="c">#&gt; <span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">readr  </span><span> 1.4.0     </span><span style="color: #00BB00;">✔</span><span> </span><span style="color: #0000BB;">forcats</span><span> 0.5.0</span></span>
+
+<span class="c">#&gt; ── <span style="font-weight: bold;">Conflicts</span><span> ──────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span class="c">#&gt; <span style="color: #BB0000;">✖</span><span> </span><span style="color: #0000BB;">dplyr</span><span>::</span><span style="color: #00BB00;">filter()</span><span>         masks </span><span style="color: #0000BB;">stats</span><span>::filter()</span></span>
+<span class="c">#&gt; <span style="color: #BB0000;">✖</span><span> </span><span style="color: #0000BB;">readr</span><span>::</span><span style="color: #00BB00;">guess_encoding()</span><span> masks </span><span style="color: #0000BB;">rvest</span><span>::guess_encoding()</span></span>
+<span class="c">#&gt; <span style="color: #BB0000;">✖</span><span> </span><span style="color: #0000BB;">dplyr</span><span>::</span><span style="color: #00BB00;">lag()</span><span>            masks </span><span style="color: #0000BB;">stats</span><span>::lag()</span></span>
+<span class="c">#&gt; <span style="color: #BB0000;">✖</span><span> </span><span style="color: #0000BB;">purrr</span><span>::</span><span style="color: #00BB00;">pluck()</span><span>          masks </span><span style="color: #0000BB;">rvest</span><span>::pluck()</span></span>
+
+<span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://github.com/sfirke/janitor">janitor</a></span><span class="o">)</span>
+
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Attaching package: 'janitor'</span>
+
+<span class="c">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt;     chisq.test, fisher.test</span>
+
+<span class="nf">conflicted</span><span class="nf">::</span><span class="nf"><a href="https://rdrr.io/pkg/conflicted/man/conflict_prefer.html">conflict_prefer</a></span><span class="o">(</span><span class="s">"pluck"</span>, <span class="s">"purrr"</span><span class="o">)</span>
+
+<span class="c">#&gt; [conflicted] Will prefer <span style="color: #0000BB;">purrr::pluck</span><span> over any other package</span></span>
+</code></pre>
+</div>
+<ul>
+<li><code>polite</code> and <code>rvest</code> are the webscraping tools</li>
+<li><code>tidyverse</code> gives us many data analysis tools</li>
+<li><code>janitor</code> provides some extra data cleaning powers.</li>
+</ul>
+<p>We also use <code>conflicted</code> to state we prefer <code>pluck</code> from the <code>purrr</code> package (as there is a <code>pluck</code> in <code>rvest</code>, which has caught me out many a time).</p>
+<p>First, let’s take a look at the <a href="https://en.wikipedia.org/wiki/James_Webb_Space_Telescope">Wiki article</a> to get the data and the dates.</p>
+<p>It looks like this table is what we want:</p>
+<div class="highlight">
+<p><img src="figs/wiki-james-web.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>But how do we download the table into R?</p>
+<p>We “inspect element” to identify the table (CMD + Shift + C on Chrome):</p>
+<div class="highlight">
+<p><img src="figs/wiki-james-web-element.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Mousing over the table we see that this has the class: “wikitable”. We can use this information to help extract out the right part of the website.</p>
+<p>First, let’s use the <code>polite</code> package to check we can download the data:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">wiki_url</span> <span class="o">&lt;-</span> <span class="s">"https://en.wikipedia.org/wiki/James_Webb_Space_Telescope"</span>
+
+<span class="nf"><a href="https://rdrr.io/pkg/polite/man/bow.html">bow</a></span><span class="o">(</span><span class="nv">wiki_url</span><span class="o">)</span>
+
+<span class="c">#&gt; &lt;polite session&gt; https://en.wikipedia.org/wiki/James_Webb_Space_Telescope</span>
+<span class="c">#&gt;     User-agent: polite R package - https://github.com/dmi3kno/polite</span>
+<span class="c">#&gt;     robots.txt: 456 rules are defined for 33 bots</span>
+<span class="c">#&gt;    Crawl delay: 5 sec</span>
+<span class="c">#&gt;   The path is scrapable for this user-agent</span>
+</code></pre>
+</div>
+<p>Ok looks like we are all good! Now let’s <code>scrape</code> it.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">jwebb_data</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/pkg/polite/man/bow.html">bow</a></span><span class="o">(</span><span class="nv">wiki_url</span><span class="o">)</span> <span class="o">%&gt;%</span> <span class="nf"><a href="https://rdrr.io/pkg/polite/man/scrape.html">scrape</a></span><span class="o">(</span><span class="o">)</span>
+
+<span class="nv">jwebb_data</span>
+
+<span class="c">#&gt; {html_document}</span>
+<span class="c">#&gt; &lt;html class="client-nojs" lang="en" dir="ltr"&gt;</span>
+<span class="c">#&gt; [1] &lt;head&gt;\n&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8 ...</span>
+<span class="c">#&gt; [2] &lt;body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject  ...</span>
+</code></pre>
+</div>
+<p>We use tools from <code>rvest</code> to identify particular parts. In our case, we want to use <code>html_nodes</code> and tell it to get the <code>.wikitable</code> that we saw earlier.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">jwebb_data</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/html_nodes.html">html_nodes</a></span><span class="o">(</span><span class="s">".wikitable"</span><span class="o">)</span>
+
+<span class="c">#&gt; {xml_nodeset (3)}</span>
+<span class="c">#&gt; [1] &lt;table class="wikitable" style="text-align:center; float:center; margin:1 ...</span>
+<span class="c">#&gt; [2] &lt;table class="wikitable" style="font-size:88%; float:right; margin-left:0 ...</span>
+<span class="c">#&gt; [3] &lt;table class="wikitable" style="font-size:0.9em; float:right; margin-left ...</span>
+</code></pre>
+</div>
+<p>We see here that we have three tables, let’s extract the tables from each of these, using <code>map</code> to run <code>html_table</code> on each, using <code>fill = TRUE</code> to fill rows with fewer than max columns with NAs, to ensure we get proper data back.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">jwebb_data</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/html_nodes.html">html_nodes</a></span><span class="o">(</span><span class="s">".wikitable"</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">map</span><span class="o">(</span><span class="nv">html_table</span>, fill <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span>
+
+<span class="c">#&gt; [[1]]</span>
+<span class="c">#&gt;                                                                    X1</span>
+<span class="c">#&gt; 1                       Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                                                Name</span>
+<span class="c">#&gt; 3                                                                 IRT</span>
+<span class="c">#&gt; 4                                Infrared Space Observatory (ISO)[57]</span>
+<span class="c">#&gt; 5                  Hubble Space Telescope Imaging Spectrograph (STIS)</span>
+<span class="c">#&gt; 6  Hubble Near Infrared Camera and Multi-Object Spectrometer (NICMOS)</span>
+<span class="c">#&gt; 7                                             Spitzer Space Telescope</span>
+<span class="c">#&gt; 8                                   Hubble Wide Field Camera 3 (WFC3)</span>
+<span class="c">#&gt; 9                                          Herschel Space Observatory</span>
+<span class="c">#&gt; 10                                                               JWST</span>
+<span class="c">#&gt;                                               X2</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                           Year</span>
+<span class="c">#&gt; 3                                           1985</span>
+<span class="c">#&gt; 4                                           1995</span>
+<span class="c">#&gt; 5                                           1997</span>
+<span class="c">#&gt; 6                                           1997</span>
+<span class="c">#&gt; 7                                           2003</span>
+<span class="c">#&gt; 8                                           2009</span>
+<span class="c">#&gt; 9                                           2009</span>
+<span class="c">#&gt; 10                                          2021</span>
+<span class="c">#&gt;                                               X3</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                     Wavelength</span>
+<span class="c">#&gt; 3                                     1.7–118 μm</span>
+<span class="c">#&gt; 4                                     2.5–240 μm</span>
+<span class="c">#&gt; 5                                  0.115–1.03 μm</span>
+<span class="c">#&gt; 6                                     0.8–2.4 μm</span>
+<span class="c">#&gt; 7                                       3–180 μm</span>
+<span class="c">#&gt; 8                                     0.2–1.7 μm</span>
+<span class="c">#&gt; 9                                      55–672 μm</span>
+<span class="c">#&gt; 10                                   0.6–28.5 μm</span>
+<span class="c">#&gt;                                               X4</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                       Aperture</span>
+<span class="c">#&gt; 3                                         0.15 m</span>
+<span class="c">#&gt; 4                                         0.60 m</span>
+<span class="c">#&gt; 5                                          2.4 m</span>
+<span class="c">#&gt; 6                                          2.4 m</span>
+<span class="c">#&gt; 7                                         0.85 m</span>
+<span class="c">#&gt; 8                                          2.4 m</span>
+<span class="c">#&gt; 9                                          3.5 m</span>
+<span class="c">#&gt; 10                                         6.5 m</span>
+<span class="c">#&gt;                                               X5</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                        Cooling</span>
+<span class="c">#&gt; 3                                         Helium</span>
+<span class="c">#&gt; 4                                         Helium</span>
+<span class="c">#&gt; 5                                        Passive</span>
+<span class="c">#&gt; 6                     Nitrogen, later cryocooler</span>
+<span class="c">#&gt; 7                                         Helium</span>
+<span class="c">#&gt; 8                 Passive + Thermo-electric [58]</span>
+<span class="c">#&gt; 9                                         Helium</span>
+<span class="c">#&gt; 10                   Passive + cryocooler (MIRI)</span>
+<span class="c">#&gt;                                               X6</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 3                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 4                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 5                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 6                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 7                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 8                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 9                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 10                                          &lt;NA&gt;</span>
+<span class="c">#&gt;                                               X7</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 3                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 4                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 5                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 6                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 7                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 8                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 9                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 10                                          &lt;NA&gt;</span>
+<span class="c">#&gt;                                               X8</span>
+<span class="c">#&gt; 1  Selected space telescopes and instruments[56]</span>
+<span class="c">#&gt; 2                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 3                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 4                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 5                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 6                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 7                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 8                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 9                                           &lt;NA&gt;</span>
+<span class="c">#&gt; 10                                          &lt;NA&gt;</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; [[2]]</span>
+<span class="c">#&gt;   Year               Events</span>
+<span class="c">#&gt; 1 1996        NGST started.</span>
+<span class="c">#&gt; 2 2002 named JWST, 8 to 6 m</span>
+<span class="c">#&gt; 3 2004 NEXUS cancelled [60]</span>
+<span class="c">#&gt; 4 2007         ESA/NASA MOU</span>
+<span class="c">#&gt; 5 2010          MCDR passed</span>
+<span class="c">#&gt; 6 2011      Proposed cancel</span>
+<span class="c">#&gt; 7 2021       Planned launch</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; [[3]]</span>
+<span class="c">#&gt;                               Year                   Plannedlaunch</span>
+<span class="c">#&gt; 1                             1997                       2007 [80]</span>
+<span class="c">#&gt; 2                             1998                       2007 [85]</span>
+<span class="c">#&gt; 3                             1999               2007 to 2008 [86]</span>
+<span class="c">#&gt; 4                             2000                       2009 [44]</span>
+<span class="c">#&gt; 5                             2002                       2010 [87]</span>
+<span class="c">#&gt; 6                             2003                       2011 [88]</span>
+<span class="c">#&gt; 7                             2005                            2013</span>
+<span class="c">#&gt; 8                             2006                            2014</span>
+<span class="c">#&gt; 9  2008, Preliminary Design Review 2008, Preliminary Design Review</span>
+<span class="c">#&gt; 10                            2008                            2014</span>
+<span class="c">#&gt; 11    2010, Critical Design Review    2010, Critical Design Review</span>
+<span class="c">#&gt; 12                            2010                    2015 to 2016</span>
+<span class="c">#&gt; 13                            2011                            2018</span>
+<span class="c">#&gt; 14                            2013                            2018</span>
+<span class="c">#&gt; 15                            2017                       2019 [94]</span>
+<span class="c">#&gt; 16                            2018                       2020 [95]</span>
+<span class="c">#&gt; 17                            2018                       2021 [96]</span>
+<span class="c">#&gt; 18                            2020                        2021 [3]</span>
+<span class="c">#&gt;           Budget Plan(Billion USD)</span>
+<span class="c">#&gt; 1                         0.5 [80]</span>
+<span class="c">#&gt; 2                           1 [59]</span>
+<span class="c">#&gt; 3                           1 [59]</span>
+<span class="c">#&gt; 4                         1.8 [59]</span>
+<span class="c">#&gt; 5                         2.5 [59]</span>
+<span class="c">#&gt; 6                         2.5 [59]</span>
+<span class="c">#&gt; 7                           3 [89]</span>
+<span class="c">#&gt; 8                         4.5 [90]</span>
+<span class="c">#&gt; 9  2008, Preliminary Design Review</span>
+<span class="c">#&gt; 10                        5.1 [91]</span>
+<span class="c">#&gt; 11    2010, Critical Design Review</span>
+<span class="c">#&gt; 12            6.5[citation needed]</span>
+<span class="c">#&gt; 13                        8.7 [92]</span>
+<span class="c">#&gt; 14                        8.8 [93]</span>
+<span class="c">#&gt; 15                             8.8</span>
+<span class="c">#&gt; 16                            ≥8.8</span>
+<span class="c">#&gt; 17                            9.66</span>
+<span class="c">#&gt; 18                        ≥10 [34]</span>
+</code></pre>
+</div>
+<p>We want the third table, so we use <code>pluck</code>, and convert it to a <code>tibble</code> for nice printing</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">jwebb_data</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/html_nodes.html">html_nodes</a></span><span class="o">(</span><span class="s">".wikitable"</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">map</span><span class="o">(</span><span class="nv">html_table</span>, fill <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/pluck.html">pluck</a></span><span class="o">(</span><span class="m">3</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">as_tibble</span><span class="o">(</span><span class="o">)</span>
+
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 18 x 3</span></span>
+<span class="c">#&gt;    Year                     Plannedlaunch             `Budget Plan(Billion USD)`</span>
+<span class="c">#&gt;    <span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>                    </span><span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>                     </span><span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>                     </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 1</span><span> 1997                     2007 [80]                 0.5 [80]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 2</span><span> 1998                     2007 [85]                 1 [59]                    </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 3</span><span> 1999                     2007 to 2008 [86]         1 [59]                    </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 4</span><span> 2000                     2009 [44]                 1.8 [59]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 5</span><span> 2002                     2010 [87]                 2.5 [59]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 6</span><span> 2003                     2011 [88]                 2.5 [59]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 7</span><span> 2005                     2013                      3 [89]                    </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 8</span><span> 2006                     2014                      4.5 [90]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 9</span><span> 2008, Preliminary Desig… 2008, Preliminary Design… 2008, Preliminary Design …</span></span>
+<span class="c">#&gt; <span style="color: #555555;">10</span><span> 2008                     2014                      5.1 [91]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;">11</span><span> 2010, Critical Design R… 2010, Critical Design Re… 2010, Critical Design Rev…</span></span>
+<span class="c">#&gt; <span style="color: #555555;">12</span><span> 2010                     2015 to 2016              6.5[citation needed]      </span></span>
+<span class="c">#&gt; <span style="color: #555555;">13</span><span> 2011                     2018                      8.7 [92]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;">14</span><span> 2013                     2018                      8.8 [93]                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;">15</span><span> 2017                     2019 [94]                 8.8                       </span></span>
+<span class="c">#&gt; <span style="color: #555555;">16</span><span> 2018                     2020 [95]                 ≥8.8                      </span></span>
+<span class="c">#&gt; <span style="color: #555555;">17</span><span> 2018                     2021 [96]                 9.66                      </span></span>
+<span class="c">#&gt; <span style="color: #555555;">18</span><span> 2020                     2021 [3]                  ≥10 [34]</span></span>
+</code></pre>
+</div>
+<p>We get rid of rows 9 and 11 as they are rows that span the full table and aren’t proper data in this context, and then run <code>clean_names</code> from <code>janitor</code> to make the variable names nicer.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">jwebb_data</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/html_nodes.html">html_nodes</a></span><span class="o">(</span><span class="s">".wikitable"</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">map</span><span class="o">(</span><span class="nv">html_table</span>, fill <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/pluck.html">pluck</a></span><span class="o">(</span><span class="m">3</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">as_tibble</span><span class="o">(</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">slice</span><span class="o">(</span><span class="o">-</span><span class="m">9</span>, 
+        <span class="o">-</span><span class="m">11</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html">clean_names</a></span><span class="o">(</span><span class="o">)</span>
+
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 16 x 3</span></span>
+<span class="c">#&gt;    year  plannedlaunch     budget_plan_billion_usd</span>
+<span class="c">#&gt;    <span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>             </span><span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>                  </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 1</span><span> 1997  2007 [80]         0.5 [80]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 2</span><span> 1998  2007 [85]         1 [59]                 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 3</span><span> 1999  2007 to 2008 [86] 1 [59]                 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 4</span><span> 2000  2009 [44]         1.8 [59]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 5</span><span> 2002  2010 [87]         2.5 [59]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 6</span><span> 2003  2011 [88]         2.5 [59]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 7</span><span> 2005  2013              3 [89]                 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 8</span><span> 2006  2014              4.5 [90]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 9</span><span> 2008  2014              5.1 [91]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;">10</span><span> 2010  2015 to 2016      6.5[citation needed]   </span></span>
+<span class="c">#&gt; <span style="color: #555555;">11</span><span> 2011  2018              8.7 [92]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;">12</span><span> 2013  2018              8.8 [93]               </span></span>
+<span class="c">#&gt; <span style="color: #555555;">13</span><span> 2017  2019 [94]         8.8                    </span></span>
+<span class="c">#&gt; <span style="color: #555555;">14</span><span> 2018  2020 [95]         ≥8.8                   </span></span>
+<span class="c">#&gt; <span style="color: #555555;">15</span><span> 2018  2021 [96]         9.66                   </span></span>
+<span class="c">#&gt; <span style="color: #555555;">16</span><span> 2020  2021 [3]          ≥10 [34]</span></span>
+</code></pre>
+</div>
+<p>Finally we <code>parse_number</code> over all columns, using <code>across</code> and friends:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">jwebb</span> <span class="o">&lt;-</span> <span class="nv">jwebb_data</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/html_nodes.html">html_nodes</a></span><span class="o">(</span><span class="s">".wikitable"</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">map</span><span class="o">(</span><span class="nv">html_table</span>, fill <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rvest.tidyverse.org/reference/pluck.html">pluck</a></span><span class="o">(</span><span class="m">3</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">as_tibble</span><span class="o">(</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">slice</span><span class="o">(</span><span class="o">-</span><span class="m">9</span>,
+        <span class="o">-</span><span class="m">11</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html">clean_names</a></span><span class="o">(</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf">mutate</span><span class="o">(</span><span class="nf">across</span><span class="o">(</span><span class="nf">everything</span><span class="o">(</span><span class="o">)</span>, <span class="nv">parse_number</span><span class="o">)</span><span class="o">)</span>
+
+<span class="nv">jwebb</span>
+
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 16 x 3</span></span>
+<span class="c">#&gt;     year plannedlaunch budget_plan_billion_usd</span>
+<span class="c">#&gt;    <span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>         </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span><span>                   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 1</span><span>  </span><span style="text-decoration: underline;">1</span><span>997          </span><span style="text-decoration: underline;">2</span><span>007                    0.5 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 2</span><span>  </span><span style="text-decoration: underline;">1</span><span>998          </span><span style="text-decoration: underline;">2</span><span>007                    1   </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 3</span><span>  </span><span style="text-decoration: underline;">1</span><span>999          </span><span style="text-decoration: underline;">2</span><span>007                    1   </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 4</span><span>  </span><span style="text-decoration: underline;">2</span><span>000          </span><span style="text-decoration: underline;">2</span><span>009                    1.8 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 5</span><span>  </span><span style="text-decoration: underline;">2</span><span>002          </span><span style="text-decoration: underline;">2</span><span>010                    2.5 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 6</span><span>  </span><span style="text-decoration: underline;">2</span><span>003          </span><span style="text-decoration: underline;">2</span><span>011                    2.5 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 7</span><span>  </span><span style="text-decoration: underline;">2</span><span>005          </span><span style="text-decoration: underline;">2</span><span>013                    3   </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 8</span><span>  </span><span style="text-decoration: underline;">2</span><span>006          </span><span style="text-decoration: underline;">2</span><span>014                    4.5 </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 9</span><span>  </span><span style="text-decoration: underline;">2</span><span>008          </span><span style="text-decoration: underline;">2</span><span>014                    5.1 </span></span>
+<span class="c">#&gt; <span style="color: #555555;">10</span><span>  </span><span style="text-decoration: underline;">2</span><span>010          </span><span style="text-decoration: underline;">2</span><span>015                    6.5 </span></span>
+<span class="c">#&gt; <span style="color: #555555;">11</span><span>  </span><span style="text-decoration: underline;">2</span><span>011          </span><span style="text-decoration: underline;">2</span><span>018                    8.7 </span></span>
+<span class="c">#&gt; <span style="color: #555555;">12</span><span>  </span><span style="text-decoration: underline;">2</span><span>013          </span><span style="text-decoration: underline;">2</span><span>018                    8.8 </span></span>
+<span class="c">#&gt; <span style="color: #555555;">13</span><span>  </span><span style="text-decoration: underline;">2</span><span>017          </span><span style="text-decoration: underline;">2</span><span>019                    8.8 </span></span>
+<span class="c">#&gt; <span style="color: #555555;">14</span><span>  </span><span style="text-decoration: underline;">2</span><span>018          </span><span style="text-decoration: underline;">2</span><span>020                    8.8 </span></span>
+<span class="c">#&gt; <span style="color: #555555;">15</span><span>  </span><span style="text-decoration: underline;">2</span><span>018          </span><span style="text-decoration: underline;">2</span><span>021                    9.66</span></span>
+<span class="c">#&gt; <span style="color: #555555;">16</span><span>  </span><span style="text-decoration: underline;">2</span><span>020          </span><span style="text-decoration: underline;">2</span><span>021                   10</span></span>
+</code></pre>
+</div>
+<p>We now want to check we can make a similar plot to XKCD, let’s plot the data, with a linear model fit overlayed:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">gg_jwebb</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="o">(</span><span class="nv">jwebb</span>,
+       <span class="nf">aes</span><span class="o">(</span>x <span class="o">=</span> <span class="nv">year</span>,
+           y <span class="o">=</span> <span class="nv">plannedlaunch</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf">geom_point</span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf">geom_smooth</span><span class="o">(</span>method <span class="o">=</span> <span class="s">"lm"</span>,
+              se <span class="o">=</span> <span class="kc">FALSE</span><span class="o">)</span>
+<span class="nv">gg_jwebb</span>
+
+<span class="c">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+
+</code></pre>
+<p><img src="figs/jwebb-plot-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>OK but now we need to extend out the plot to get a sense of where it can extrapolate to. Let’s extend the limits, and add an abline, a line with slope of 1 and intercept through 0.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">gg_jwebb</span> <span class="o">+</span>
+  <span class="nf">lims</span><span class="o">(</span>x <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="m">1997</span>,<span class="m">2030</span><span class="o">)</span>,
+       y <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="m">1997</span>,<span class="m">2030</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf">geom_abline</span><span class="o">(</span>linetype <span class="o">=</span> <span class="m">2</span><span class="o">)</span>
+
+<span class="c">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+
+</code></pre>
+<p><img src="figs/jwebb-plot-abline-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>We want to extend that fitted line ahead, so let’s fit a linear model to the data with <code>plannedlaunch</code> being predicted by <code>year</code> (which is what <code>geom_smooth(method = "lm")</code> does under the hood):</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">lm_jwebb</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="o">(</span><span class="nv">plannedlaunch</span> <span class="o">~</span> <span class="nv">year</span>, <span class="nv">jwebb</span><span class="o">)</span>
+</code></pre>
+</div>
+<p>Then we use <code>augment</code> to predict some new data for 1997 through to 2030:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://broom.tidymodels.org/">broom</a></span><span class="o">)</span>
+<span class="nv">new_data</span> <span class="o">&lt;-</span> <span class="nf">tibble</span><span class="o">(</span>year <span class="o">=</span> <span class="m">1997</span><span class="o">:</span><span class="m">2030</span><span class="o">)</span>
+<span class="nv">jwebb_predict</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="o">(</span><span class="nv">lm_jwebb</span>, newdata <span class="o">=</span> <span class="nv">new_data</span><span class="o">)</span>
+<span class="nv">jwebb_predict</span>
+
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 34 x 2</span></span>
+<span class="c">#&gt;     year .fitted</span>
+<span class="c">#&gt;    <span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span>   </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 1</span><span>  </span><span style="text-decoration: underline;">1</span><span>997   </span><span style="text-decoration: underline;">2</span><span>007.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 2</span><span>  </span><span style="text-decoration: underline;">1</span><span>998   </span><span style="text-decoration: underline;">2</span><span>008.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 3</span><span>  </span><span style="text-decoration: underline;">1</span><span>999   </span><span style="text-decoration: underline;">2</span><span>008.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 4</span><span>  </span><span style="text-decoration: underline;">2</span><span>000   </span><span style="text-decoration: underline;">2</span><span>009.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 5</span><span>  </span><span style="text-decoration: underline;">2</span><span>001   </span><span style="text-decoration: underline;">2</span><span>010.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 6</span><span>  </span><span style="text-decoration: underline;">2</span><span>002   </span><span style="text-decoration: underline;">2</span><span>010.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 7</span><span>  </span><span style="text-decoration: underline;">2</span><span>003   </span><span style="text-decoration: underline;">2</span><span>011.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 8</span><span>  </span><span style="text-decoration: underline;">2</span><span>004   </span><span style="text-decoration: underline;">2</span><span>012.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 9</span><span>  </span><span style="text-decoration: underline;">2</span><span>005   </span><span style="text-decoration: underline;">2</span><span>012.</span></span>
+<span class="c">#&gt; <span style="color: #555555;">10</span><span>  </span><span style="text-decoration: underline;">2</span><span>006   </span><span style="text-decoration: underline;">2</span><span>013.</span></span>
+<span class="c">#&gt; <span style="color: #555555;"># … with 24 more rows</span></span>
+</code></pre>
+</div>
+<p>Now we can add that to our plot:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">gg_jwebb_pred</span> <span class="o">&lt;-</span> <span class="nv">gg_jwebb</span> <span class="o">+</span>
+  <span class="nf">lims</span><span class="o">(</span>x <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="m">1997</span>,<span class="m">2030</span><span class="o">)</span>,
+       y <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="m">1997</span>,<span class="m">2030</span><span class="o">)</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf">geom_abline</span><span class="o">(</span>linetype <span class="o">=</span> <span class="m">2</span><span class="o">)</span> <span class="o">+</span>
+  <span class="nf">geom_line</span><span class="o">(</span>data <span class="o">=</span> <span class="nv">jwebb_predict</span>,
+            colour <span class="o">=</span> <span class="s">"steelblue"</span>,
+            linetype <span class="o">=</span> <span class="m">3</span>,
+            size <span class="o">=</span> <span class="m">1</span>,
+            <span class="nf">aes</span><span class="o">(</span>x <span class="o">=</span> <span class="nv">year</span>,
+                y <span class="o">=</span> <span class="nv">.fitted</span><span class="o">)</span><span class="o">)</span>
+<span class="nv">gg_jwebb_pred</span>
+
+<span class="c">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+
+</code></pre>
+<p><img src="figs/lm-add-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>And finally add some extra details that XKCD had, using <code>geom_vline</code> and <code>geom_label_rep</code></p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="http://github.com/slowkow/ggrepel">ggrepel</a></span><span class="o">)</span>
+
+<span class="nv">gg_jwebb_pred</span> <span class="o">+</span> 
+  <span class="nf">geom_vline</span><span class="o">(</span>xintercept <span class="o">=</span> <span class="m">2026.5</span>,
+             linetype <span class="o">=</span> <span class="m">2</span>,
+             colour <span class="o">=</span> <span class="s">"orange"</span><span class="o">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="o">(</span>title <span class="o">=</span> <span class="s">"Predicted James Webb Launch"</span>,
+       subtitle <span class="o">=</span> <span class="s">"Did Randell Munroe get it right?"</span><span class="o">)</span> <span class="o">+</span>
+  <span class="nf"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span><span class="o">(</span>data <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="o">(</span>year <span class="o">=</span> <span class="m">2026.5</span>,
+                               plannedlaunch <span class="o">=</span> <span class="m">2026.5</span><span class="o">)</span>,
+             label <span class="o">=</span> <span class="s">"2026"</span>,
+             nudge_x <span class="o">=</span> <span class="o">-</span><span class="m">2</span>,
+             nudge_y <span class="o">=</span> <span class="m">3</span>,
+             segment.colour <span class="o">=</span> <span class="s">"gray50"</span><span class="o">)</span>
+
+<span class="c">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+
+</code></pre>
+<p><img src="figs/lm-repel-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Did he get it right?</p>
+<p>Yes, of course. Why did I ever doubt him.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2020-11-07-james-webb/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

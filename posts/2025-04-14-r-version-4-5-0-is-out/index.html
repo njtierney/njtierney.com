@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-04-14">
+
+<title>R Version 4.5.0 is Out! – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#installation-is-now-faster" id="toc-installation-is-now-faster" class="nav-link active" data-scroll-target="#installation-is-now-faster">Installation is now faster</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#blas-and-lapack-update" id="toc-blas-and-lapack-update" class="nav-link" data-scroll-target="#blas-and-lapack-update">BLAS and LAPACK update</a></li>
+  <li><a href="#a-note-on-reading-news-files" id="toc-a-note-on-reading-news-files" class="nav-link" data-scroll-target="#a-note-on-reading-news-files">A note on reading NEWS files</a></li>
+  <li><a href="#yes-it-is-annoying-to-reinstall-r-packages-again." id="toc-yes-it-is-annoying-to-reinstall-r-packages-again." class="nav-link" data-scroll-target="#yes-it-is-annoying-to-reinstall-r-packages-again.">Yes, it <strong>is annoying</strong> to reinstall R packages again.</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2025-04-14-r-version-4-5-0-is-out/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R Version 4.5.0 is Out!</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">CRAN</div>
+    <div class="quarto-category">rse</div>
+    <div class="quarto-category">research software engineer</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2025-04-14</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="highlight">
+<p><img src="figs/windows-olympus-xa-portra-800.jpg" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p><em>Some windows. Olympus XA, Portra 800. Photo by Nicholas Tierney</em></p>
+<p>The new R version 4.5.0 is out, and you should get it!</p>
+<p>I’ve read through <a href="https://cran.r-project.org/doc/manuals/r-release/NEWS.html">the NEWS file</a>, which details every change - there are many! I would recommend having a skim.</p>
+<p>If you’d like to have a skim of the news file, you even use the <a href="https://rdrr.io/r/utils/news.html"><code>news()</code></a> R function, which will open the NEWS file to your help file pane in RStudio. This can also tell us how many news bullets were added:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">news_4_5_0</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/utils/news.html">news</a></span><span class="o">(</span><span class="nv">Version</span> <span class="o">==</span> <span class="s">"4.5.0"</span><span class="o">)</span></span>
+<span><span class="c"># just show the first 5</span></span>
+<span><span class="nf"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="o">(</span><span class="nv">news_4_5_0</span><span class="o">)</span></span>
+<span><span class="c">#&gt;                         Changes in version 4.5.0                        </span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt; NEW FEATURES</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;     o   as.integer(rl) and hence as.raw(rl) now work for a list of</span></span>
+<span><span class="c">#&gt;   raw(1) elements, as proposed by Michael Chirico's PR#18696.</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;     o   graphics' grid() gains optional argument nintLog.</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;     o   New functions check_package_urls() and check_package_dois() in</span></span>
+<span><span class="c">#&gt;   package tools for checking URLs and DOIs in package sources.</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;     o   New head() and tail() methods for class "ts" time series,</span></span>
+<span><span class="c">#&gt;   proposed by Spencer Graves on R-devel.</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;     o   New qr.influence() function, a "bare bones" interface to the</span></span>
+<span><span class="c">#&gt;   lm.influence() leave-one-out diagnostics computations; wished</span></span>
+<span><span class="c">#&gt;   for in PR#18739.</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;     o   Package citation() results auto-generated from the package</span></span>
+<span><span class="c">#&gt;   metadata now also provide package DOIs for CRAN and</span></span>
+<span><span class="c">#&gt;   Bioconductor packages.</span></span>
+<span></span></code></pre>
+</div>
+<p>The work of this release involved many people, and there are 150 changes. I think it’s worthwhile reading over these changes, and I am incredibly grateful to all the amazing volunteers who put their time and energy into continuing to make R stable, and awesome.</p>
+<p>I thought I’d share just a couple of the changes that jumped out at me as I was reading.</p>
+<section id="installation-is-now-faster" class="level1">
+<h1>Installation is now faster</h1>
+<blockquote class="blockquote">
+<p><a href="https://rdrr.io/r/utils/install.packages.html"><code>install.packages()</code></a> and <a href="https://rdrr.io/r/utils/download.packages.html"><code>download.packages()</code></a> download packages simultaneously using <code>libcurl</code>, significantly reducing download times when installing or downloading multiple packages.</p>
+</blockquote>
+<p>This is cool! Installing packages is now much faster! I love this. Generally, I use <a href="https://github.com/r-lib/pak"><code>pak</code></a>, which I believe already does this. But it’s a nice win for vanilla R to know I can download things faster.</p>
+</section>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>There are two new datasets added to R! The last time (that I could find) a new dataset was added to R was in <a href="https://cran.r-project.org/doc/manuals/r-devel/NEWS.3.html">R version 3.0.2</a>, which, <a href="https://cran.r-project.org/bin/windows/base/old/">going to the release dates</a>, was in September 2013. So, nearly 12 years ago! That NEWS item read:</p>
+<blockquote class="blockquote">
+<p>Dataset <code>npk</code> has been copied from MASS to allow more tests to be run without recommended packages being installed.</p>
+</blockquote>
+<p>You might be familiar with one of these new datasets, the penguins data (!) from the <a href="https://github.com/allisonhorst/palmerpenguins/"><code>palmerpenguins</code></a> R package.</p>
+<div class="highlight">
+<p><img src="figs/lter_penguins.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p><em>artwork by <a href="https://allisonhorst.com/">Allison Horst</a></em></p>
+<p>The NEWS item reads:</p>
+<blockquote class="blockquote">
+<p>New datasets penguins and penguins_raw thanks to <a href="https://ellakaye.co.uk/">Ella Kaye</a>, <a href="https://www.heatherturner.net/">Heather Turner</a>, and <a href="https://gormankb.github.io/">Kristen Gorman</a>.</p>
+</blockquote>
+<p>This is huge! Well, I think it is. Now we don’t need to write <a href="https://allisonhorst.github.io/palmerpenguins/"><code>library(palmerpenguins)</code></a> if you want to use the <code>penguins</code> or <code>penguins_raw</code> data. Looking at the examples, we can see the following base visualisations:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="c">## bill depth vs. length by species (color) and sex (symbol):</span></span>
+<span><span class="c">## positive correlations for all species, males tend to have bigger bills</span></span>
+<span><span class="nf"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="o">(</span><span class="nv">penguins</span><span class="o">)</span></span>
+<span><span class="c">#&gt;   species    island bill_len bill_dep flipper_len body_mass    sex year</span></span>
+<span><span class="c">#&gt; 1  Adelie Torgersen     39.1     18.7         181      3750   male 2007</span></span>
+<span><span class="c">#&gt; 2  Adelie Torgersen     39.5     17.4         186      3800 female 2007</span></span>
+<span><span class="c">#&gt; 3  Adelie Torgersen     40.3     18.0         195      3250 female 2007</span></span>
+<span><span class="c">#&gt; 4  Adelie Torgersen       NA       NA          NA        NA   &lt;NA&gt; 2007</span></span>
+<span><span class="c">#&gt; 5  Adelie Torgersen     36.7     19.3         193      3450 female 2007</span></span>
+<span><span class="c">#&gt; 6  Adelie Torgersen     39.3     20.6         190      3650   male 2007</span></span>
+<span></span><span><span class="nf"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="o">(</span><span class="nv">penguins</span><span class="o">)</span></span>
+<span><span class="c">#&gt; [1] "species"     "island"      "bill_len"    "bill_dep"    "flipper_len"</span></span>
+<span><span class="c">#&gt; [6] "body_mass"   "sex"         "year"</span></span>
+<span></span><span><span class="nv">sym</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="m">1</span>, <span class="m">16</span><span class="o">)</span></span>
+<span><span class="nv">pal</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>  <span class="s">"darkorange"</span>,</span>
+<span>  <span class="s">"purple"</span>,</span>
+<span>  <span class="s">"cyan4"</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="nf"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="o">(</span></span>
+<span>  <span class="nv">bill_dep</span> <span class="o">~</span> <span class="nv">bill_len</span>, </span>
+<span>  data <span class="o">=</span> <span class="nv">penguins</span>, </span>
+<span>  pch <span class="o">=</span> <span class="nv">sym</span><span class="o">[</span><span class="nv">sex</span><span class="o">]</span>, </span>
+<span>  col <span class="o">=</span> <span class="nv">pal</span><span class="o">[</span><span class="nv">species</span><span class="o">]</span></span>
+<span>  <span class="o">)</span></span>
+</code></pre>
+<p><img src="figs/penguins-plot-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>It is worth noting that the variable names are slightly different in the new base R version - <code>bill_len</code> (not <code>bill_length</code>) <code>bill_dep</code> (not <code>bill_depth</code>), and <code>flipper_len</code> (not <code>flipper_length</code>), which they note in the helpfile: “The penguins data has some shorter variable names than the palmerpenguins version, for compact code and data display.”</p>
+<p>There has been a bit of work done on the penguins data, and I wanted to share the relevant references:</p>
+<ul>
+<li><p>Gorman, K. B., Williams, T. D. and Fraser, W. R. (2014) Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis). PLoS ONE 9, 3, e90081; <a href="https://doi.org/10.1371/journal.pone.0090081">doi:10.1371/journal.pone.0090081</a>.</p></li>
+<li><p>Horst, A. M., Hill, A. P. and Gorman, K. B. (2022) Palmer Archipelago Penguins Data in the palmerpenguins R Package - An Alternative to Anderson’s Irises. R Journal 14, 1; <a href="https://doi.org/10.32614/RJ-2022-020">doi:10.32614/RJ-2022-020</a>.</p></li>
+<li><p>Kaye, E., Turner, H., Gorman, K. B., Horst, A. M. and Hill, A. P. (2025) Preparing the Palmer Penguins Data for the datasets Package in R. <a href="https://doi.org/10.5281/zenodo.14902740">doi:10.5281/zenodo.14902740</a>.</p></li>
+</ul>
+<p>And there’s ANOTHER dataset!</p>
+<blockquote class="blockquote">
+<p>New dataset gait thanks to <a href="">Heather Turner</a> and <a href="">Ella Kaye</a>, used in examples.</p>
+</blockquote>
+<p>I hadn’t come across this before, the helpfile (<a href="https://rdrr.io/r/datasets/gait.html"><code>?gait</code></a>) reads:</p>
+<blockquote class="blockquote">
+<p>Hip and knee angle (in degrees) through a 20 point movement cycle for 39 boys.</p>
+</blockquote>
+<p>Which is stored as a 3D array, as stated in the helpfile:</p>
+<blockquote class="blockquote">
+<p>A 3-dimensional array with dimensions c(20, 39, 2) giving the “Hip Angle” and “Knee Angle” (in degrees) for 39 repetitions of a 20 point gait cycle (over standardized gait times).</p>
+</blockquote>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="o">(</span><span class="nv">gait</span><span class="o">)</span></span>
+<span><span class="c">#&gt; , , Variable = Hip Angle</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy1 boy2 boy3 boy4 boy5 boy6 boy7 boy8 boy9 boy10 boy11 boy12 boy13</span></span>
+<span><span class="c">#&gt;   0.025   37   47   46   37   20   57   46   46   46    35    38    35    34</span></span>
+<span><span class="c">#&gt;   0.075   36   46   44   36   18   48   38   46   42    34    37    31    31</span></span>
+<span><span class="c">#&gt;   0.125   33   42   39   27   11   44   33   43   37    29    33    29    27</span></span>
+<span><span class="c">#&gt;   0.175   29   34   34   20    8   35   25   40   34    28    29    26    23</span></span>
+<span><span class="c">#&gt;   0.225   23   27   33   15    7   31   18   36   31    19    26    22    19</span></span>
+<span><span class="c">#&gt;   0.275   18   21   27   15    5   27   15   30   25    15    20    19    15</span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy14 boy15 boy16 boy17 boy18 boy19 boy20 boy21 boy22 boy23 boy24 boy25</span></span>
+<span><span class="c">#&gt;   0.025    43    43    40    51    52    36    35    46    43    55    39    37</span></span>
+<span><span class="c">#&gt;   0.075    41    37    41    49    46    33    37    38    41    51    38    34</span></span>
+<span><span class="c">#&gt;   0.125    36    35    36    45    41    28    33    30    37    47    31    30</span></span>
+<span><span class="c">#&gt;   0.175    31    28    32    39    35    22    27    23    30    41    27    27</span></span>
+<span><span class="c">#&gt;   0.225    26    26    27    31    31    18    22    17    24    35    21    26</span></span>
+<span><span class="c">#&gt;   0.275    20    21    20    23    24    13    14    13    16    30    14    19</span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy26 boy27 boy28 boy29 boy30 boy31 boy32 boy33 boy34 boy35 boy36 boy37</span></span>
+<span><span class="c">#&gt;   0.025    36    36    42    38    46    54    52    32    46    46    48    44</span></span>
+<span><span class="c">#&gt;   0.075    33    33    40    34    47    48    44    28    41    44    42    41</span></span>
+<span><span class="c">#&gt;   0.125    28    30    40    30    44    44    44    26    38    40    42    38</span></span>
+<span><span class="c">#&gt;   0.175    22    28    34    23    37    37    33    22    31    35    35    32</span></span>
+<span><span class="c">#&gt;   0.225    18    21    23    17    29    30    28    19    25    31    30    24</span></span>
+<span><span class="c">#&gt;   0.275    13    15    15    12    23    27    27    13    20    25    23    18</span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy38 boy39</span></span>
+<span><span class="c">#&gt;   0.025    55    48</span></span>
+<span><span class="c">#&gt;   0.075    56    50</span></span>
+<span><span class="c">#&gt;   0.125    51    47</span></span>
+<span><span class="c">#&gt;   0.175    46    42</span></span>
+<span><span class="c">#&gt;   0.225    41    37</span></span>
+<span><span class="c">#&gt;   0.275    36    29</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt; , , Variable = Knee Angle</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy1 boy2 boy3 boy4 boy5 boy6 boy7 boy8 boy9 boy10 boy11 boy12 boy13</span></span>
+<span><span class="c">#&gt;   0.025   10   16   18    5    2   15   13   14   15     9    13     7     9</span></span>
+<span><span class="c">#&gt;   0.075   15   25   27   14    6   17   16   17   20    22    24     8    14</span></span>
+<span><span class="c">#&gt;   0.125   18   28   32   16    6   23   22   18   23    25    27    11    16</span></span>
+<span><span class="c">#&gt;   0.175   18   25   32   17    6   23   17   19   26    21    23    12    15</span></span>
+<span><span class="c">#&gt;   0.225   15   18   28   10    5   20   12   19   25    10    18     8    15</span></span>
+<span><span class="c">#&gt;   0.275   14   12   23    8    6   19    9   15   21     9    13     6    12</span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy14 boy15 boy16 boy17 boy18 boy19 boy20 boy21 boy22 boy23 boy24 boy25</span></span>
+<span><span class="c">#&gt;   0.025    15     6    11    24    16    16     7    21    11    12     8    11</span></span>
+<span><span class="c">#&gt;   0.075    20    11    19    32    20    20    13    24    14    17    12    20</span></span>
+<span><span class="c">#&gt;   0.125    22    20    30    35    21    22    14    25    14    20    14    22</span></span>
+<span><span class="c">#&gt;   0.175    22    18    28    33    20    21    17    21    11    20    13    21</span></span>
+<span><span class="c">#&gt;   0.225    21    13    25    29    18    20    14    16     8    18    12    21</span></span>
+<span><span class="c">#&gt;   0.275    19     9    17    24    14    20     8     9     5    12     9    17</span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy26 boy27 boy28 boy29 boy30 boy31 boy32 boy33 boy34 boy35 boy36 boy37</span></span>
+<span><span class="c">#&gt;   0.025    16    19    13    11    17    20    18     9     8     9    13    19</span></span>
+<span><span class="c">#&gt;   0.075    20    26    23    15    25    20    18    12    10    18    18    23</span></span>
+<span><span class="c">#&gt;   0.125    22    28    30    19    30    22    25    16    17    19    27    26</span></span>
+<span><span class="c">#&gt;   0.175    21    28    28    20    30    16    23    15    16    19    26    25</span></span>
+<span><span class="c">#&gt;   0.225    20    24    19    18    27    10    18    14    12    19    25    21</span></span>
+<span><span class="c">#&gt;   0.275    20    18    10    17    22    10    19    11    10    15    18    18</span></span>
+<span><span class="c">#&gt;        Subject</span></span>
+<span><span class="c">#&gt; Time    boy38 boy39</span></span>
+<span><span class="c">#&gt;   0.025    16    14</span></span>
+<span><span class="c">#&gt;   0.075    23    25</span></span>
+<span><span class="c">#&gt;   0.125    28    32</span></span>
+<span><span class="c">#&gt;   0.175    28    34</span></span>
+<span><span class="c">#&gt;   0.225    25    30</span></span>
+<span><span class="c">#&gt;   0.275    21    20</span></span>
+<span></span></code></pre>
+</div>
+<p>With the examples having a nifty data visualisation:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="o">(</span></span>
+<span>  <span class="nv">gait</span><span class="o">[</span>, <span class="m">1</span>, <span class="o">]</span>, </span>
+<span>  type <span class="o">=</span> <span class="s">"b"</span>,</span>
+<span>  xlim <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">gait</span><span class="o">[</span>,,<span class="m">1</span><span class="o">]</span><span class="o">)</span>, </span>
+<span>  ylim <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="o">(</span><span class="nv">gait</span><span class="o">[</span>,,<span class="m">2</span><span class="o">]</span><span class="o">)</span>, </span>
+<span>  xlab <span class="o">=</span> <span class="s">"Hip Angle"</span>, </span>
+<span>  ylab <span class="o">=</span> <span class="s">"Knee Angle"</span>, </span>
+<span>  main <span class="o">=</span> <span class="s">"'gait' data : Boy 1"</span></span>
+<span><span class="o">)</span></span>
+<span><span class="nf"><a href="https://rdrr.io/r/graphics/mtext.html">mtext</a></span><span class="o">(</span></span>
+<span>  <span class="s">"all other boys"</span>, </span>
+<span>  col <span class="o">=</span> <span class="s">"thistle"</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="nf"><a href="https://rdrr.io/r/graphics/grid.html">grid</a></span><span class="o">(</span><span class="o">)</span></span>
+<span><span class="nf"><a href="https://rdrr.io/r/graphics/matplot.html">matlines</a></span><span class="o">(</span></span>
+<span>  <span class="nv">gait</span><span class="o">[</span>, <span class="o">-</span><span class="m">1</span>, <span class="m">1</span><span class="o">]</span>, </span>
+<span>  <span class="nv">gait</span><span class="o">[</span>, <span class="o">-</span><span class="m">1</span>, <span class="m">2</span><span class="o">]</span>, </span>
+<span>  type <span class="o">=</span> <span class="s">"l"</span>, </span>
+<span>  lty <span class="o">=</span> <span class="m">1</span>, </span>
+<span>  col <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/grDevices/adjustcolor.html">adjustcolor</a></span><span class="o">(</span><span class="s">"thistle"</span>, <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+</code></pre>
+<p><img src="figs/gait-plot-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>It is worth noting the references for this data:</p>
+<ul>
+<li><p>Olshen, R. A., Biden, E. N., Wyatt, M. P., and Sutherland, D. (1989) Gait Analysis and the Bootstrap. Annals of Statistics 17, 4, 1419–1440. <a href="https://doi.org/10.1214/AOS/1176347372">doi:10.1214/AOS/1176347372</a></p></li>
+<li><p>Ramsay, J. O., and Silverman, B. W. (2006) Functional Data Analysis, 2nd ed., New York: Springer.</p></li>
+<li><p>Ramsay, J. (2023) fda: Functional Data Analysis. R package version 6.1.4, <a href="https://CRAN.R-project.org/package=fda" class="uri">https://CRAN.R-project.org/package=fda</a>.</p></li>
+</ul>
+</section>
+<section id="blas-and-lapack-update" class="level1">
+<h1>BLAS and LAPACK update</h1>
+<blockquote class="blockquote">
+<p>The bundled BLAS and LAPACK sources have been updated to those shipped as part of January 2025’s LAPACK 3.12.1.</p>
+</blockquote>
+<p>These help power many linear algebra operations in R, and there will likely be speed improvements and other efficiencies. So, worth installing for that alone.</p>
+</section>
+<section id="a-note-on-reading-news-files" class="level1">
+<h1>A note on reading NEWS files</h1>
+<p>I have tried to read the R NEWS files since about 2017 or 2018. I believe I heard <a href="https://rdpeng.org/">Roger Peng</a> say he read the R NEWS files on the <a href="https://nssdeviations.com/">Not So Standard Deviations podcast</a> with <a href="https://hilaryparker.com/">Hilary Parker</a>. It seemed like a good idea, so I have tried to do the same.</p>
+<p>It usually involves me reading over the NEWS file and looking out for things that seem relevant to me and my work. I don’t always understand everything, in fact, I would say I don’t understand a lot of it. But every now and again something comes up that is important to me. For example, the NEWS item for <a href="https://cran.r-project.org/doc/manuals/r-release/NEWS.html">R 4.0.0</a> about matrices and arrays:</p>
+<blockquote class="blockquote">
+<p>matrix objects now also inherit from class “array”, so e.g., class(diag(1)) is c(“matrix”, “array”). This invalidates code incorrectly assuming that class(matrix_obj)) has length one.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>S3 methods for class “array” are now dispatched for matrix objects.</p>
+</blockquote>
+<p>Resulted in a breaking change in greta, that I was able <a href="https://github.com/greta-dev/greta/pull/409/files">to identify and fix</a>.</p>
+<p>Another time that I find it useful to know how to look up the NEWS file is remembering when some key new features were introduced. For example, knowing that the native pipe <code>|&gt;</code> was introduced in 4.1.0, but the underscore <code>_</code> placeholder was only introduced in 4.2.0 is really useful if I’m developing packages to know which version of R to depend on.</p>
+<p>I also often visit the <a href="https://cran.r-project.org/bin/windows/base/old/">“Previous releases of R for Windows”</a> page to see <em>when</em> a version of R was released. This is to check if a version of R is more than three years old, which to me, is about old enough that people shouldn’t be depending on it on a regular basis, or if they are and it is mission critical, they would also have other things set up to maintain it. The tidyverse maintains backward compatibility with <a href="https://www.tidyverse.org/blog/2019/04/r-version-support/">the past 5 (minor) versions of R</a> - which ends up being about 4 years. I figure 3 years should be good enough for my work.</p>
+</section>
+<section id="yes-it-is-annoying-to-reinstall-r-packages-again." class="level1">
+<h1>Yes, it <strong>is annoying</strong> to reinstall R packages again.</h1>
+<p>When you install a new <strong>minor version</strong> of R (that is, when you change its minor version, for example going from 4.1.0 to 4.2.0, not 4.1.0 to 4.1.1), you need to install all your R packages again.</p>
+<p>Sure, it’s annoying. But I see it as an opportunity to start afresh. I usually do something like the following</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pak"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pak)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"tidyverse"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"devtools"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"naniar"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"blogdown"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"greta"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"brolgar"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"targets"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"ropensci/geotargets"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">pkg_install</span>(<span class="st">"milesmcbain/datapasta"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And this gets me 90% of the way there.</p>
+<p>It is worth noting that if you’re a windows user, you can use the <a href="https://talgalili.github.io/installr/"><code>installr</code></a> package to update R and other dependencies.</p>
+<p>And on that note it’s ALSO worth mentioning the <a href="https://github.com/r-lib/rig"><code>rig</code></a> command line utility. This allows you to more easily install different, and release versions of R. If you’ve seen <a href="https://github.com/hrbrmstr/RSwitch">Bob Rudis’s RSwitch</a> software, this is the updated version of this (Bob has archived RSwitch).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2025-04-14-r-version-4-5-0-is-out/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-11-10">
+
+<title>How to Get Good with R? – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lets-delve-a-bit-deeper" id="toc-lets-delve-a-bit-deeper" class="nav-link active" data-scroll-target="#lets-delve-a-bit-deeper">Let’s delve a bit deeper</a></li>
+  <li><a href="#from-the-coding-side" id="toc-from-the-coding-side" class="nav-link" data-scroll-target="#from-the-coding-side">From the coding side</a>
+  <ul class="collapse">
+  <li><a href="#try-to-give-things-ok-names" id="toc-try-to-give-things-ok-names" class="nav-link" data-scroll-target="#try-to-give-things-ok-names">Try to give things OK names</a></li>
+  <li><a href="#consistent-naming" id="toc-consistent-naming" class="nav-link" data-scroll-target="#consistent-naming">Consistent naming</a></li>
+  <li><a href="#stick-to-a-style-guide" id="toc-stick-to-a-style-guide" class="nav-link" data-scroll-target="#stick-to-a-style-guide">Stick to a style guide</a></li>
+  <li><a href="#clean-up-your-code-as-you-go-refactor" id="toc-clean-up-your-code-as-you-go-refactor" class="nav-link" data-scroll-target="#clean-up-your-code-as-you-go-refactor">Clean up your code as you go (refactor)</a></li>
+  <li><a href="#learn-how-to-create-a-reproducible-example-a-reprex-and-use-it-a-lot" id="toc-learn-how-to-create-a-reproducible-example-a-reprex-and-use-it-a-lot" class="nav-link" data-scroll-target="#learn-how-to-create-a-reproducible-example-a-reprex-and-use-it-a-lot">Learn how to create a reproducible example (a reprex), and use it a lot</a></li>
+  <li><a href="#use-other-r-packages" id="toc-use-other-r-packages" class="nav-link" data-scroll-target="#use-other-r-packages">Use other R packages</a></li>
+  <li><a href="#write-functions" id="toc-write-functions" class="nav-link" data-scroll-target="#write-functions">Write functions</a></li>
+  <li><a href="#learn-how-to-use-debugging-tools" id="toc-learn-how-to-use-debugging-tools" class="nav-link" data-scroll-target="#learn-how-to-use-debugging-tools">Learn how to use debugging tools</a></li>
+  </ul></li>
+  <li><a href="#not-the-end" id="toc-not-the-end" class="nav-link" data-scroll-target="#not-the-end">(Not) The End</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2023-10-30-how-to-get-good-with-r/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How to Get Good with R?</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-11-10</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="highlight">
+<p><img src="imgs/never-stop-sign.jpg" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p><em>A Stop Sign in Melbourne, Film, Pentax K1000, Nick Tierney</em></p>
+<p>Someone recently asked me, “How do you get good with R?”. It’s a good question. I’m not sure I have a good answer. But I’ve been thinking about it, and I’ve got some ideas. Hopefully they are helpful for people, or can promote discussion on making better ideas. I think you can view “getting good” through two lenses: coding, and non coding. I’ll write about the coding aspects in this blog post, and the non coding aspects in a future one.</p>
+<p>This post assumes that you’re somewhat familiar with R, you can open it, you do some analysis, etc. I should probably write a blog post first on “How to get started with R”. But writing introductory materials takes a bit more time, and I’d rather put out some kind of blog post than continue to add to the pile of blog post drafts that have been sitting there since 2017.</p>
+<p>How to get good, from the coding side:</p>
+<ul>
+<li>Try to give things OK names</li>
+<li>Consistent naming</li>
+<li>Stick to a style guide</li>
+<li>Clean up your code as you go (refactor)</li>
+<li>Learn how to create a reproducible example (a reprex), and use it a lot</li>
+<li>Write functions</li>
+<li>Use the debugger</li>
+</ul>
+<p>How to get good, from the non coding side:</p>
+<ul>
+<li>Find a community of people who use R</li>
+<li>Get better with the keyboard: Typing speed and keyboard shortcuts</li>
+<li>Have a strong desire to improve</li>
+<li>Learn how to, and practice getting unstuck</li>
+<li>Read other peoples code</li>
+<li>Read books and learning material</li>
+<li>Practice reading the documentation</li>
+<li>Ask yourself how much what you are doing now is relevant to the problem you were trying to solve. I get distracted often, this helps me redirect.</li>
+<li>Offload ideas and tasks onto github issues (or another system)</li>
+<li>Write about your work publicly - this forced me to clean up my code and keep a tidy ship</li>
+</ul>
+<section id="lets-delve-a-bit-deeper" class="level1">
+<h1>Let’s delve a bit deeper</h1>
+<p>Let’s give examples of all of these things. I’ve realised now as I’ve been writing this that I won’t have time to write the non-coding aspects, so that will be its own blog post. But I thought it might be useful to outline the points above.</p>
+</section>
+<section id="from-the-coding-side" class="level1">
+<h1>From the coding side</h1>
+<section id="try-to-give-things-ok-names" class="level2">
+<h2 class="anchored" data-anchor-id="try-to-give-things-ok-names">Try to give things OK names</h2>
+<p>There is a quote by Phil Karlton: “There are only two hard things in Computer Science: cache invalidation and naming thing”. We won’t talk about cache invalidation (Although <a href="https://yihui.org/en/2018/06/cache-invalidation/">Yihui has a good post about it if you are interested</a>), but naming things well…is hard. Giving things OK names is a bit easier. Getting in the habit of giving things an OK name will lead to you giving better and better names as you practice. Why should we are about this? Well, compare:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">weight_mean</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span>
+<span><span class="nv">weight_sd</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span></code></pre>
+</div>
+<p>to</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">x</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span>
+<span><span class="nv">y</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span></code></pre>
+</div>
+<p>If I see <code>weight_mean</code> and <code>weight_sd</code> later, I’ve got a clue what they are - the mean and the standard deviation of a thing called weight. I don’t know what <code>x</code> and <code>y</code> are when I see them. A small counter example to this is very small functions. But let’s not get into the weeds.</p>
+</section>
+<section id="consistent-naming" class="level2">
+<h2 class="anchored" data-anchor-id="consistent-naming">Consistent naming</h2>
+<p>Building on the previous point, I think it useful to pick a <em>way</em> to name something, and stick to it.</p>
+<p>Compare:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">weight_mean</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span>
+<span><span class="nv">sd_weight</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span></code></pre>
+</div>
+<p>and</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">weight_mean</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span>
+<span><span class="nv">weight_sd</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span></code></pre>
+</div>
+<p>The first one changes the order of the naming, which is: <code>variable_operation</code> - the first word describes the variable we are measuring, weight, and the second tells us what operation we’ve done to it. It doesn’t matter about the order, necessarily, but the <em>consistency</em>.</p>
+<p>Why? Because if it is consistent we can get benefits in things like tab complete - I can type <code>weight_</code> and hit <code>tab</code> and it tells me all the things related to <code>weight</code> that I’ve done. Similarly, it could also be useful to know all the things I’ve done <code>sd</code> to, <code>sd_</code> could tell me the things with <code>sd</code>. E.g.,</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">sd_height</span> <span class="o">&lt;-</span> <span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">weight</span></span>
+<span><span class="nv">sd_time</span> <span class="o">&lt;-</span> <span class="nv">ChickWeight</span><span class="o">$</span><span class="nv">Time</span></span></code></pre>
+</div>
+<p>It depends what you are doing - do you care more about finding things related to <code>sd</code>, or related to <code>height</code> or <code>weight</code>? My point is that I think it’s worthwhile to stick to a consistent approach. It means you can just remember the more important thing, whether that be things related to <code>weight</code>, or things related to <code>sd</code>.</p>
+</section>
+<section id="stick-to-a-style-guide" class="level2">
+<h2 class="anchored" data-anchor-id="stick-to-a-style-guide">Stick to a style guide</h2>
+<p>Style guides are a thing - they help define a set of rules to keep your code easy to read. To quote Hadley Wickham:</p>
+<blockquote class="blockquote">
+<p>Good coding style is like correct punctuation: you can manage without it, butitsuremakesthingseasiertoread.</p>
+</blockquote>
+<p>There is a comprehensive guide like the <a href="https://style.tidyverse.org/">Tidyverse Style Guide</a>. Or for a shorter guide, you can see the <a href="http://adv-r.had.co.nz/Style.html">style guide from “Advanced R”, 1st edition</a></p>
+<p>I think it is worth your time to read through a style guide once. You’ll notice things that you didn’t before in your code and you’ll see things differently. It is similar to learning about <a href="https://xkcd.com/1015/">kerning</a>. Once you see it, you’ll notice it everywhere.</p>
+<p>So, pick something like <code>snake_case</code> or <code>camelCase</code> or <code>CamelCase</code>, and stick to it. I prefer <code>snake_case</code> because I find it easier to read. But you can do whatever you want! Just be consistent.</p>
+<p>I find it confusing to go through code that mixes it up or combines different approaches. It means you need to spend time remembering which way something was named. Here’s a “good” vs “bad”</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sdWeight</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sdTime</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>weightSd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>timeSd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sd_Weight</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SD_weight</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Long_variable_Name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you want to have a quick way to help style your code, check out <a href="https://github.com/lorenzwalthert">Lorenz Walthert’s</a> <a href="https://github.com/r-lib/styler"><code>styler</code></a> package.</p>
+</section>
+<section id="clean-up-your-code-as-you-go-refactor" class="level2">
+<h2 class="anchored" data-anchor-id="clean-up-your-code-as-you-go-refactor">Clean up your code as you go (refactor)</h2>
+<p>Get into the habit of quickly going back over your code to tidy it up. A kitchen analogy is useful here I think. Professional kitchens clean up as they go. Keeping a tidy workspace helps keep your mind clear. And I rarely write my best code on the first pass. It gets better with iteration. So, iterate on your code briefly as you go. Clean up those random comments that don’t mean anything. Remove those bits of wilted lettuce, these are those commented out bits of code that you <em>might just come back to</em> - you probably won’t, and if they are really important, write a comment explaining why they might be relevant. Clean up the style. Check the names. Consider tidying up the implementation, refactoring it. You might not have time to do all of these things, or do them thoroughly, but doing some of them will help you write better code, and you’ll get better at doing these things the more you practice.</p>
+<p>A word worth explaining - “refactor”. It refers to changing the code but keeping it’s behaviour the same. Kind of like giving a car a service, or replacing key parts in a vehicle that get worn out. For a great talk on a related topic, see <a href="https://www.youtube.com/watch?v=7oyiPBjLAWY">Jenny Bryan’s “Code Smells and Feels”</a></p>
+</section>
+<section id="learn-how-to-create-a-reproducible-example-a-reprex-and-use-it-a-lot" class="level2">
+<h2 class="anchored" data-anchor-id="learn-how-to-create-a-reproducible-example-a-reprex-and-use-it-a-lot">Learn how to create a reproducible example (a reprex), and use it a lot</h2>
+<p>When you run into a problem, or an error, if you can’t work out the answer after some tinkering about, it can be worthwhile spending some time to construct a small example of the code that breaks. This takes a bit of time, and could be its own little blog post. It takes practice. But in the process of reducing the problem down to its core components, I often can solve the problem myself. It’s kind of like that experience of when you talk to someone to try and describe a problem that you are working on, and in talking about it, you arrive at a solution.</p>
+<p>There is a great R package that helps you create these reproducible examples, called <a href="https://reprex.tidyverse.org/"><code>reprex</code></a>, by <a href="https://jennybryan.org/">Jenny Bryan</a>. I’ve written about the reprex package <a href="https://www.njtierney.com/post/2017/01/11/magic-reprex/">here</a></p>
+<p>For the purposes of illustration, let’s briefly tear down a small example using the somewhat large dataset of <code>diamonds</code></p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="o">)</span></span>
+<span><span class="c">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ────────────── tidyverse 2.0.0 ──</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.1.3     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.4</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.5.0</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2  </span> 3.4.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble   </span> 3.2.1</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.2     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.0</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.0.2     </span></span>
+<span><span class="c">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ──────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span><span class="c">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
+<span><span class="c">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
+<span><span class="c">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
+<span></span><span><span class="nv">diamonds</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 53,940 × 10</span></span></span>
+<span><span class="c">#&gt;    carat cut       color clarity depth table price     x     y     z</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span>     <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span> <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span>   <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;int&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>  0.24 Very Good I     VVS1     62.3    57   336  3.95  3.98  2.47</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>  0.26 Very Good H     SI1      61.9    55   337  4.07  4.11  2.53</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>  0.23 Very Good H     VS1      59.4    61   338  4     4.05  2.39</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># ℹ 53,930 more rows</span></span></span>
+<span></span></code></pre>
+</div>
+<p>Let’s say we had a few steps involved in the data summary of diamonds data:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">diamonds</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    price_per_carat <span class="o">=</span> <span class="nv">price</span> <span class="o">/</span> <span class="nv">carat</span></span>
+<span>  <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="o">(</span></span>
+<span>    <span class="nv">cut</span></span>
+<span>    <span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="o">(</span></span>
+<span>    price_mean <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">price_per_carat</span><span class="o">)</span>,</span>
+<span>    price_sd <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">price_per_carat</span><span class="o">)</span>,</span>
+<span>    mean_color <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">color</span><span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="c">#&gt; Warning: There were 5 warnings in `summarise()`.</span></span>
+<span><span class="c">#&gt; The first warning was:</span></span>
+<span><span class="c">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `mean_color = mean(color)`.</span></span>
+<span><span class="c">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 1: `cut = Fair`.</span></span>
+<span><span class="c">#&gt; Caused by warning in `mean.default()`:</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> argument is not numeric or logical: returning NA</span></span>
+<span><span class="c">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings.</span></span>
+<span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 5 × 4</span></span></span>
+<span><span class="c">#&gt;   cut       price_mean price_sd mean_color</span></span>
+<span><span class="c">#&gt;   <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span>          <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">1</span> Fair           <span style="text-decoration: underline;">3</span>767.    <span style="text-decoration: underline;">1</span>540.         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">2</span> Good           <span style="text-decoration: underline;">3</span>860.    <span style="text-decoration: underline;">1</span>830.         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">3</span> Very Good      <span style="text-decoration: underline;">4</span>014.    <span style="text-decoration: underline;">2</span>037.         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">4</span> Premium        <span style="text-decoration: underline;">4</span>223.    <span style="text-decoration: underline;">2</span>035.         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">5</span> Ideal          <span style="text-decoration: underline;">3</span>920.    <span style="text-decoration: underline;">2</span>043.         <span style="color: #BB0000;">NA</span></span></span>
+<span></span></code></pre>
+</div>
+<p>We get a clue that the error is in the line <code>mean_color</code>, so let’s just try and do that line:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">diamonds</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    mean_color <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">color</span><span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="c">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
+<span><span class="c">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `mean_color = mean(color)`.</span></span>
+<span><span class="c">#&gt; Caused by warning in `mean.default()`:</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> argument is not numeric or logical: returning NA</span></span>
+<span></span><span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 53,940 × 11</span></span></span>
+<span><span class="c">#&gt;    carat cut       color clarity depth table price     x     y     z mean_color</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span>     <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span> <span style="color: #555555; font-style: italic;">&lt;ord&gt;</span>   <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;int&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>  0.24 Very Good I     VVS1     62.3    57   336  3.95  3.98  2.47         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>  0.26 Very Good H     SI1      61.9    55   337  4.07  4.11  2.53         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>  0.23 Very Good H     VS1      59.4    61   338  4     4.05  2.39         <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># ℹ 53,930 more rows</span></span></span>
+<span></span></code></pre>
+</div>
+<p>We still get that error, so what if we just do</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">diamonds</span><span class="o">$</span><span class="nv">color</span><span class="o">)</span></span>
+<span><span class="c">#&gt; Warning in mean.default(diamonds$color): argument is not numeric or logical: returning NA</span></span>
+<span></span><span><span class="c">#&gt; [1] NA</span></span>
+<span></span></code></pre>
+</div>
+<p>OK same error. What is in color?</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="o">(</span><span class="nv">diamonds</span><span class="o">$</span><span class="nv">color</span><span class="o">)</span></span>
+<span><span class="c">#&gt; [1] E E E I J J</span></span>
+<span><span class="c">#&gt; Levels: D &lt; E &lt; F &lt; G &lt; H &lt; I &lt; J</span></span>
+<span></span></code></pre>
+</div>
+<p>Does it really make sense to take the mean of some letters? Ah, of course not!</p>
+</section>
+<section id="use-other-r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="use-other-r-packages">Use other R packages</h2>
+<p>You don’t need to write everything yourself from scratch. There are thousands of R packages that people have written to solve problems. Not all of them will suit, but if you find yourself trying to solve a problem, or write a statistical model from scratch, it it worth your time to search google to see if anyone has tried to solve this problem.</p>
+<p>At worst, you’ll see no one has thought about this - this is an opportunity for you to do something cool! Or you might see ways people have tried to solve this, which can help you get started, and you’ll learn the other words people use to describe the problem you are facing, which can help you search this problem better in the future. At best you’ll find an exact answer.</p>
+</section>
+<section id="write-functions" class="level2">
+<h2 class="anchored" data-anchor-id="write-functions">Write functions</h2>
+<p>I don’t think I can overstate this, but learning how to write functions changed how I think about code and how I think about solving problems. I think it is a skill that takes some time to develop, but the payoff is enormous. A function is an abstraction of a problem. Kind of like a shortcut. Save yourself writing many many lines of code and replace them with a function. But that’s an oversimplification.</p>
+<p>Here’s a short primer on why functions are good, adapted from the <a href="https://r4ds.had.co.nz/functions.html#functions">functions chapter of R4DS</a>, which I recommend you read.</p>
+<p>What does the following code do?</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">dat</span> <span class="o">&lt;-</span> <span class="nf">tibble</span><span class="nf">::</span><span class="nf"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="o">(</span></span>
+<span>  weight <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="o">(</span><span class="m">10</span>, mean <span class="o">=</span> <span class="m">80</span>, sd <span class="o">=</span> <span class="m">6</span><span class="o">)</span>,</span>
+<span>  height <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="o">(</span><span class="m">10</span>, mean <span class="o">=</span> <span class="m">165</span>, sd <span class="o">=</span> <span class="m">10</span><span class="o">)</span>,</span>
+<span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">dat</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 10 × 2</span></span></span>
+<span><span class="c">#&gt;    weight height</span></span>
+<span><span class="c">#&gt;     <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>   78.0   167.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>   76.0   152.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>   81.2   173.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>   71.9   156.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>   88.1   160.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>   80.2   180.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>   67.1   168.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>   82.7   180.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>   81.7   160.</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>   81.6   157.</span></span>
+<span></span><span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight_0</span> <span class="o">&lt;-</span> <span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span> <span class="o">-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span><span class="o">)</span> <span class="o">/</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">height_0</span> <span class="o">&lt;-</span> <span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span> <span class="o">-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span><span class="o">)</span> <span class="o">/</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span></code></pre>
+</div>
+<p>This is a kind of transformation called mean centering and scaling. It can be useful in some statistical models to have your data have a mean of 0 and a standard deviation of 1.</p>
+<p>But read through that code it can be hard to understand that is what is happening, and it also leads to potential errors - you have to repeat <code>dat$weight</code> or <code>dat$height</code> many times. And if you copy and paste this code then you might end up with an error. Which there is. for <code>height_0</code>, I divide by the standard deviation of weight, not height.</p>
+<p>A function helps clarify this by <em>abstracting away</em> the need to write the variable in each time. We can break this into two steps:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">mean_center</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">variable</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">variable</span> <span class="o">-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">variable</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span>
+<span><span class="o">}</span></span>
+<span></span>
+<span><span class="nv">scale_sd</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">variable</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">variable</span> <span class="o">/</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">variable</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>Now we can express this as follows:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf">mean_center</span><span class="o">(</span><span class="o">)</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf">scale_sd</span><span class="o">(</span><span class="o">)</span></span>
+<span><span class="c">#&gt;  [1]  0.1832022 -1.3362374  0.7525296 -0.9848021 -0.4937227  1.4924404</span></span>
+<span><span class="c">#&gt;  [7]  0.3021602  1.4477151 -0.5125610 -0.8507242</span></span>
+<span></span></code></pre>
+</div>
+<p>or, we can write a function that does both of these steps:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">center_scale</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">variable</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nv">centered</span> <span class="o">&lt;-</span> <span class="nf">mean_center</span><span class="o">(</span><span class="nv">variable</span><span class="o">)</span></span>
+<span>  <span class="nv">centered_scaled</span> <span class="o">&lt;-</span> <span class="nf">scale_sd</span><span class="o">(</span><span class="nv">centered</span><span class="o">)</span></span>
+<span>  <span class="nv">centered_scaled</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>What is nice about this is that each of the functions <em>describes what it does</em> in its name. So when we look at the code for <code>center_scale</code>, we can see that it does a thing called <code>mean_center</code> first, then <code>scale_sd</code> next. Another useful principle to follow with writing functions is to generally try to aim to get them to do one thing, and to return one thing. There are many exceptions to this rule, but it’s a useful practice to stick to.</p>
+<p>So compare:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight_0</span> <span class="o">&lt;-</span> <span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span> <span class="o">-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span><span class="o">)</span> <span class="o">/</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">height_0</span> <span class="o">&lt;-</span> <span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span> <span class="o">-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span><span class="o">)</span> <span class="o">/</span> <span class="nf"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">dat</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 10 × 4</span></span></span>
+<span><span class="c">#&gt;    weight height weight_0 height_0</span></span>
+<span><span class="c">#&gt;     <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>   78.0   167.   -<span style="color: #BB0000;">0.138</span>    0.308</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>   76.0   152.   -<span style="color: #BB0000;">0.476</span>   -<span style="color: #BB0000;">2.25</span> </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>   81.2   173.    0.394    1.27 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>   71.9   156.   -<span style="color: #BB0000;">1.18</span>    -<span style="color: #BB0000;">1.66</span> </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>   88.1   160.    1.56    -<span style="color: #BB0000;">0.831</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>   80.2   180.    0.224    2.51 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>   67.1   168.   -<span style="color: #BB0000;">1.97</span>     0.508</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>   82.7   180.    0.644    2.44 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>   81.7   160.    0.482   -<span style="color: #BB0000;">0.862</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>   81.6   157.    0.456   -<span style="color: #BB0000;">1.43</span></span></span>
+<span></span></code></pre>
+</div>
+<p>to</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight_0</span> <span class="o">&lt;-</span> <span class="nf">center_scale</span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">height_0</span> <span class="o">&lt;-</span> <span class="nf">center_scale</span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nv">dat</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 10 × 4</span></span></span>
+<span><span class="c">#&gt;    weight height weight_0 height_0</span></span>
+<span><span class="c">#&gt;     <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>   78.0   167.   -<span style="color: #BB0000;">0.138</span>    0.183</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>   76.0   152.   -<span style="color: #BB0000;">0.476</span>   -<span style="color: #BB0000;">1.34</span> </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>   81.2   173.    0.394    0.753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>   71.9   156.   -<span style="color: #BB0000;">1.18</span>    -<span style="color: #BB0000;">0.985</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>   88.1   160.    1.56    -<span style="color: #BB0000;">0.494</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>   80.2   180.    0.224    1.49 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>   67.1   168.   -<span style="color: #BB0000;">1.97</span>     0.302</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>   82.7   180.    0.644    1.45 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>   81.7   160.    0.482   -<span style="color: #BB0000;">0.513</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>   81.6   157.    0.456   -<span style="color: #BB0000;">0.851</span></span></span>
+<span></span></code></pre>
+</div>
+<p>It is worth noting that there is a function called <code>scale</code> in base R that does this, however it returns a matrix, so you’ll need to wrap it in <code>as.numeric</code></p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight_0</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">weight</span><span class="o">)</span><span class="o">)</span></span>
+<span><span class="nv">dat</span><span class="o">$</span><span class="nv">height_0</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="o">(</span><span class="nv">dat</span><span class="o">$</span><span class="nv">height</span><span class="o">)</span><span class="o">)</span></span>
+<span><span class="nv">dat</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 10 × 4</span></span></span>
+<span><span class="c">#&gt;    weight height weight_0 height_0</span></span>
+<span><span class="c">#&gt;     <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>   78.0   167.   -<span style="color: #BB0000;">0.138</span>    0.183</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>   76.0   152.   -<span style="color: #BB0000;">0.476</span>   -<span style="color: #BB0000;">1.34</span> </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>   81.2   173.    0.394    0.753</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>   71.9   156.   -<span style="color: #BB0000;">1.18</span>    -<span style="color: #BB0000;">0.985</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>   88.1   160.    1.56    -<span style="color: #BB0000;">0.494</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>   80.2   180.    0.224    1.49 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>   67.1   168.   -<span style="color: #BB0000;">1.97</span>     0.302</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>   82.7   180.    0.644    1.45 </span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>   81.7   160.    0.482   -<span style="color: #BB0000;">0.513</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>   81.6   157.    0.456   -<span style="color: #BB0000;">0.851</span></span></span>
+<span></span></code></pre>
+</div>
+<p>Which is why it is worthwhile looking to see if a solution to a problem exists :)</p>
+<p>To summarise writing functions:</p>
+<ol type="1">
+<li>Functions help us reason with our code by abstracting away details we don’t need to care about</li>
+<li>Give Functions good names, they should describe what they do</li>
+<li>Functions should do one task</li>
+<li>Functions should return one thing</li>
+</ol>
+</section>
+<section id="learn-how-to-use-debugging-tools" class="level2">
+<h2 class="anchored" data-anchor-id="learn-how-to-use-debugging-tools">Learn how to use debugging tools</h2>
+<p>R is interactive, you can run some code and see the output immediately. It’s a really nice way to code for data analysis. It means that when you encounter a bug or an error, you can poke around and see what the error is. But if you write a function and want to see how it behaves or what goes on inside, you’ll need to use a special tool called a debugger.</p>
+<p>If you’ve found yourself copying the internals of a function over to another script and hard coding the arguments at the top of the script and running the code line by line, then this is especially for you. I say this as someone who did that for years. Ahem.</p>
+<p>Three debugging tools to know about:</p>
+<ol type="1">
+<li><a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a></li>
+<li><a href="https://rdrr.io/r/base/debug.html"><code>debug()</code></a> and <a href="https://rdrr.io/r/base/debug.html"><code>undebug()</code></a></li>
+<li><a href="https://rdrr.io/r/base/debug.html"><code>debugonce()</code></a></li>
+</ol>
+<p><a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a> gets placed inside a function, and then when you run the function, you land at that point in the code. For example:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">mean_center</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">variable</span><span class="o">)</span><span class="o">{</span></span>
+<span>  <span class="nf"><a href="https://rdrr.io/r/base/browser.html">browser</a></span><span class="o">(</span><span class="o">)</span></span>
+<span>  <span class="nv">variable</span> <span class="o">-</span> <span class="nf"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="o">(</span><span class="nv">variable</span>, na.rm <span class="o">=</span> <span class="kc">TRUE</span><span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>If you run this function, and then try and use it later, you will be landed at where the <a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a> line is. Try running the code above and then doing <code>mean_center(1:10)</code> afterwards. An important thing to remember with <a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a> is that you need to remove <a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a> after the fact.</p>
+<p><a href="https://rdrr.io/r/base/debug.html"><code>debug()</code></a> and <a href="https://rdrr.io/r/base/debug.html"><code>undebug()</code></a> are like <a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a>, but you run them on a function and that turns on debugging mode. Just like putting <a href="https://rdrr.io/r/base/browser.html"><code>browser()</code></a> at the top line of a function.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">debug</span>(mean_center)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean_center</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## enter debug mode here, tinker around with the outputs</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## then turn off the debugger</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">undebug</span>(mean_center)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://rdrr.io/r/base/debug.html"><code>debugonce()</code></a> does the <a href="https://rdrr.io/r/base/debug.html"><code>debug()</code></a> step, but just one time. It’s handy because it means you don’t need to run <a href="https://rdrr.io/r/base/debug.html"><code>undebug()</code></a> - sometimes I’ve forgotten I needed to do <a href="https://rdrr.io/r/base/debug.html"><code>undebug()</code></a> and i’ve felt like a madness has descended upon me.</p>
+<p>So what to remember about this? If you want to see where a function is erroring, then you probably want to use <a href="https://rdrr.io/r/base/debug.html"><code>debugonce()</code></a> on it.</p>
+</section>
+</section>
+<section id="not-the-end" class="level1">
+<h1>(Not) The End</h1>
+<p>There’s more to this. I don’t have all the answers. I’m a decent R programmer. But I’m still learning all the time, and I make mistakes a lot. I’m not perfect, far from it! But maybe these things can help you on your journey in improving in R programming.</p>
+<p>I didn’t go into as much detail as I would have liked - there are a lot of topics here, what did I miss? What do you think are the ways to get good with R? Write a comment below :)</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2023-10-30-how-to-get-good-with-r/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

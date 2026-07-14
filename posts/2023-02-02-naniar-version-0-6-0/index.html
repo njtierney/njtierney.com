@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-02-07">
+
+<title>naniar Version 1.0.0 – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#naniar-1.0.0" id="toc-naniar-1.0.0" class="nav-link active" data-scroll-target="#naniar-1.0.0">naniar 1.0.0</a></li>
+  <li><a href="#new-things" id="toc-new-things" class="nav-link" data-scroll-target="#new-things">New things</a>
+  <ul class="collapse">
+  <li><a href="#jss-publication" id="toc-jss-publication" class="nav-link" data-scroll-target="#jss-publication">JSS publication</a></li>
+  <li><a href="#set-missing-values-with-set_n_miss-and-set_prop_miss" id="toc-set-missing-values-with-set_n_miss-and-set_prop_miss" class="nav-link" data-scroll-target="#set-missing-values-with-set_n_miss-and-set_prop_miss">Set missing values with <code>set_n_miss()</code> and <code>set_prop_miss()</code></a></li>
+  <li><a href="#bug-fixes-and-other-small-changes" id="toc-bug-fixes-and-other-small-changes" class="nav-link" data-scroll-target="#bug-fixes-and-other-small-changes">Bug Fixes and other small changes</a></li>
+  </ul></li>
+  <li><a href="#some-thank-yous" id="toc-some-thank-yous" class="nav-link" data-scroll-target="#some-thank-yous">Some thank yous</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2023-02-02-naniar-version-0-6-0/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">naniar Version 1.0.0</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">data visualisation</div>
+    <div class="quarto-category">missing data</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-02-07</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="naniar-1.0.0" class="level1">
+<h1>naniar 1.0.0</h1>
+<p>I’m very pleased to announce that naniar version 1.0.0 is now on CRAN!</p>
+<p>Version 1.0.0 of naniar is to signify that this release is associated with the publication of the associated JSS paper <a href="doi:10.18637/jss.v105.i07" class="uri">doi:10.18637/jss.v105.i07</a> (!!!). This paper has been the labour of a lot of effort between myself and <a href="http://www.dicook.org/">Di Cook</a>, and I am very excited to be able to share it.</p>
+<p>There is still a lot to do in naniar, and this release does not signify that there are no changes upcoming. It is a 1.0.0 release to establish that this is a stable release, and any changes upcoming will go through a more formal deprecation process.</p>
+<p>Here’s a brief description of some of the changes in this release</p>
+</section>
+<section id="new-things" class="level1">
+<h1>New things</h1>
+<section id="jss-publication" class="level2">
+<h2 class="anchored" data-anchor-id="jss-publication">JSS publication</h2>
+<p>You can now retrieve a citation for <code>naniar</code> with <a href="https://rdrr.io/r/utils/citation.html"><code>citation()</code></a>:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="o">(</span><span class="s">"naniar"</span><span class="o">)</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt; To cite naniar in publications use:</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;   Tierney N, Cook D (2023). "Expanding Tidy Data Principles to</span></span>
+<span><span class="c">#&gt;   Facilitate Missing Data Exploration, Visualization and Assessment of</span></span>
+<span><span class="c">#&gt;   Imputations." _Journal of Statistical Software_, *105*(7), 1-31.</span></span>
+<span><span class="c">#&gt;   doi:10.18637/jss.v105.i07 &lt;https://doi.org/10.18637/jss.v105.i07&gt;.</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt; A BibTeX entry for LaTeX users is</span></span>
+<span><span class="c">#&gt; </span></span>
+<span><span class="c">#&gt;   @Article{,</span></span>
+<span><span class="c">#&gt;     title = {Expanding Tidy Data Principles to Facilitate Missing Data Exploration, Visualization and Assessment of Imputations},</span></span>
+<span><span class="c">#&gt;     author = {Nicholas Tierney and Dianne Cook},</span></span>
+<span><span class="c">#&gt;     journal = {Journal of Statistical Software},</span></span>
+<span><span class="c">#&gt;     year = {2023},</span></span>
+<span><span class="c">#&gt;     volume = {105},</span></span>
+<span><span class="c">#&gt;     number = {7},</span></span>
+<span><span class="c">#&gt;     pages = {1--31},</span></span>
+<span><span class="c">#&gt;     doi = {10.18637/jss.v105.i07},</span></span>
+<span><span class="c">#&gt;   }</span></span>
+<span></span></code></pre>
+</div>
+</section>
+<section id="set-missing-values-with-set_n_miss-and-set_prop_miss" class="level2">
+<h2 class="anchored" data-anchor-id="set-missing-values-with-set_n_miss-and-set_prop_miss">Set missing values with <code>set_n_miss()</code> and <code>set_prop_miss()</code></h2>
+<p>These functions allow you to set a random amount of missingness either as a number of values, or as a proportion:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://github.com/njtierney/naniar">naniar</a></span><span class="o">)</span></span>
+<span><span class="nv">vec</span> <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span></span>
+<span><span class="c"># different each time</span></span>
+<span><span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_n_miss</a></span><span class="o">(</span><span class="nv">vec</span>, n <span class="o">=</span> <span class="m">1</span><span class="o">)</span></span>
+<span><span class="c">#&gt;  [1] NA  2  3  4  5  6  7  8  9 10</span></span>
+<span></span><span><span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_n_miss</a></span><span class="o">(</span><span class="nv">vec</span>, n <span class="o">=</span> <span class="m">1</span><span class="o">)</span></span>
+<span><span class="c">#&gt;  [1]  1  2  3  4  5  6  7  8  9 NA</span></span>
+<span></span><span></span>
+<span><span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_prop_miss</a></span><span class="o">(</span><span class="nv">vec</span>, prop <span class="o">=</span> <span class="m">0.2</span><span class="o">)</span></span>
+<span><span class="c">#&gt;  [1] NA  2  3 NA  5  6  7  8  9 10</span></span>
+<span></span><span><span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_prop_miss</a></span><span class="o">(</span><span class="nv">vec</span>, prop <span class="o">=</span> <span class="m">0.6</span><span class="o">)</span></span>
+<span><span class="c">#&gt;  [1]  1 NA NA  4 NA NA NA  8  9 NA</span></span>
+<span></span></code></pre>
+</div>
+<p>I would suggest that these functions are used inside a dataframe. I will provide a few examples below using <code>dplyr</code>. For just one variable, you could set missingness like so:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="o">)</span></span>
+<span><span class="c">#&gt; ── <span style="font-weight: bold;">Attaching packages</span> ───────────────────────────── tidyverse 1.3.2 ──</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2</span> 3.4.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr  </span> 1.0.1</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble </span> 3.1.8     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr  </span> 1.1.0</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr  </span> 1.3.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr</span> 1.5.0</span></span>
+<span><span class="c">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr  </span> 2.1.3     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats</span> 1.0.0</span></span>
+<span><span class="c">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ──────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span><span class="c">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
+<span><span class="c">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
+<span></span><span><span class="nv">mtcars_df</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="o">(</span><span class="nv">mtcars</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nf"><a href="https://docs.ropensci.org/visdat/reference/vis_miss.html">vis_miss</a></span><span class="o">(</span><span class="nv">mtcars_df</span><span class="o">)</span></span>
+</code></pre>
+<img src="figs/miss-one-1.png" width="700px" style="display: block; margin: auto;">
+<pre class="chroma"><code class="language-r" data-lang="r"><span></span>
+<span><span class="nv">mtcars_miss_mpg</span> <span class="o">&lt;-</span> <span class="nv">mtcars_df</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>mpg <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_prop_miss</a></span><span class="o">(</span><span class="nv">mpg</span>, <span class="m">0.5</span><span class="o">)</span><span class="o">)</span></span>
+<span></span>
+<span><span class="nf"><a href="https://docs.ropensci.org/visdat/reference/vis_miss.html">vis_miss</a></span><span class="o">(</span><span class="nv">mtcars_miss_mpg</span><span class="o">)</span></span>
+</code></pre>
+<p><img src="figs/miss-one-2.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Or add missingness to a few variables:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">mtcars_miss_some</span> <span class="o">&lt;-</span> <span class="nv">mtcars_df</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span><span class="nv">mpg</span>, <span class="nv">cyl</span>, <span class="nv">disp</span><span class="o">)</span>,</span>
+<span>      \<span class="o">(</span><span class="nv">x</span><span class="o">)</span> <span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_prop_miss</a></span><span class="o">(</span><span class="nv">x</span>, <span class="m">0.5</span><span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+<span></span>
+<span><span class="nv">mtcars_miss_some</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 32 × 11</span></span></span>
+<span><span class="c">#&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>    110  3.9   2.62  16.5     0     1     4     4</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>  21      <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>    110  3.9   2.88  17.0     0     1     4     4</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>  21.4    <span style="color: #BB0000;">NA</span>  258    110  3.08  3.22  19.4     1     0     3     1</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>    175  3.15  3.44  17.0     0     0     3     2</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>  18.1     6   <span style="color: #BB0000;">NA</span>    105  2.76  3.46  20.2     1     0     3     1</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>  14.3     8   <span style="color: #BB0000;">NA</span>    245  3.21  3.57  15.8     0     0     3     4</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  147.    62  3.69  3.19  20       1     0     4     2</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>  22.8    <span style="color: #BB0000;">NA</span>  141.    95  3.92  3.15  22.9     1     0     4     2</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>  19.2     6   <span style="color: #BB0000;">NA</span>    123  3.92  3.44  18.3     1     0     4     4</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 22 more rows</span></span></span>
+<span></span><span></span>
+<span><span class="nf"><a href="https://docs.ropensci.org/visdat/reference/vis_miss.html">vis_miss</a></span><span class="o">(</span><span class="nv">mtcars_miss_some</span><span class="o">)</span></span>
+</code></pre>
+<p><img src="figs/miss-some-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Or you can add missingness to all variables like so:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">mtcars_miss_all</span> <span class="o">&lt;-</span> <span class="nv">mtcars_df</span> <span class="o"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span></span>
+<span>    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="o">(</span><span class="o">)</span>,</span>
+<span>      \<span class="o">(</span><span class="nv">x</span><span class="o">)</span> <span class="nf"><a href="https://rdrr.io/pkg/naniar/man/set-prop-n-miss.html">set_prop_miss</a></span><span class="o">(</span><span class="nv">x</span>, <span class="m">0.5</span><span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">)</span></span>
+<span></span>
+<span><span class="nv">mtcars_miss_all</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 32 × 11</span></span></span>
+<span><span class="c">#&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  160    110  3.9   2.62  16.5    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     4    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span>  21      <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>    110  3.9   2.88  17.0     0     1    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span>  22.8     4   <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     18.6     1    <span style="color: #BB0000;">NA</span>     4    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>    110 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     19.4    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     1</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span>  <span style="color: #BB0000;">NA</span>       8   <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>     3.44  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     3     2</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span>  18.1     6  225     <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     20.2     1     0     3     1</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>  3.21  3.57  <span style="color: #BB0000;">NA</span>       0    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     4</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span>  24.4    <span style="color: #BB0000;">NA</span>  147.    <span style="color: #BB0000;">NA</span>  3.69  3.19  20      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     4     2</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span>  <span style="color: #BB0000;">NA</span>       4  141.    95  3.92  3.15  22.9    <span style="color: #BB0000;">NA</span>     0    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span>  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  168.   123  3.92 <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     0     4     4</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># … with 22 more rows</span></span></span>
+<span></span><span></span>
+<span><span class="nf"><a href="https://docs.ropensci.org/visdat/reference/vis_miss.html">vis_miss</a></span><span class="o">(</span><span class="nv">mtcars_miss_all</span><span class="o">)</span></span>
+</code></pre>
+<img src="figs/miss-all-1.png" width="700px" style="display: block; margin: auto;">
+<pre class="chroma"><code class="language-r" data-lang="r"><span></span>
+<span><span class="nf"><a href="https://rdrr.io/pkg/naniar/man/miss_var_summary.html">miss_var_summary</a></span><span class="o">(</span><span class="nv">mtcars_miss_all</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"># A tibble: 11 × 3</span></span></span>
+<span><span class="c">#&gt;    variable n_miss pct_miss</span></span>
+<span><span class="c">#&gt;    <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #555555; font-style: italic;">&lt;int&gt;</span>    <span style="color: #555555; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 1</span> mpg          16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 2</span> cyl          16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 3</span> disp         16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 4</span> hp           16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 5</span> drat         16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 6</span> wt           16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 7</span> qsec         16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 8</span> vs           16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;"> 9</span> am           16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">10</span> gear         16       50</span></span>
+<span><span class="c">#&gt; <span style="color: #555555;">11</span> carb         16       50</span></span>
+<span></span></code></pre>
+</div>
+<p>This resolves <a href="https://github.com/njtierney/naniar/issues/298">#298</a>.</p>
+</section>
+<section id="bug-fixes-and-other-small-changes" class="level2">
+<h2 class="anchored" data-anchor-id="bug-fixes-and-other-small-changes">Bug Fixes and other small changes</h2>
+<ul>
+<li><p>Replaced <a href="https://tidyr.tidyverse.org/reference/gather.html"><code>tidyr::gather</code></a> with <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html"><code>tidyr::pivot_longer</code></a> (<a href="https://github.com/njtierney/naniar/issues/301">#301</a>)</p></li>
+<li><p>Fixed bug in <a href="https://rdrr.io/pkg/naniar/man/gg_miss_var.html"><code>gg_miss_var()</code></a> where a warning appears to due change in how to remove legend (<a href="https://github.com/njtierney/naniar/issues/288">#288</a>).</p></li>
+<li><p>Removed package <code>gdtools</code> as it is no longer needed (<a href="https://github.com/njtierney/naniar/issues/302">302</a>).</p></li>
+<li><p>Imported the packages, <code>vctrs</code> and <code>cli</code> to assist with internal checking and error messages. Both of these packages are “free” dependencies, as they imported by existing dependencies, <code>dplyr</code> and <code>ggplot2</code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="some-thank-yous" class="level1">
+<h1>Some thank yous</h1>
+<p>Thank you to everyone who has contributed to this release! Especially the following people: <a href="https://github.com/ddauber"><span class="citation" data-cites="ddauber">@ddauber</span></a>, <a href="https://github.com/davidgohel"><span class="citation" data-cites="davidgohel">@davidgohel</span></a>.</p>
+<p>I am also excited to announce that I have been supported by the R Consortium to improve how R handles missing values! Through this grant, I will be improving the R packages <code>naniar</code> and <code>visdat</code>. I will be posting more details about this soon, but what this means for you the user is that there will be more updates and improvements to both of these packages in the coming months. Stay tuned.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2023-02-02-naniar-version-0-6-0/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

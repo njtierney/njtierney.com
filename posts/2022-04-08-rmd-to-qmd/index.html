@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-04-11">
+
+<title>Notes on Changing from Rmarkdown/Bookdown to Quarto – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-quarto-why-should-i-care" id="toc-what-is-quarto-why-should-i-care" class="nav-link active" data-scroll-target="#what-is-quarto-why-should-i-care">What is quarto? Why should I care?</a>
+  <ul class="collapse">
+  <li><a href="#ok-but-what-does-that-mean" id="toc-ok-but-what-does-that-mean" class="nav-link" data-scroll-target="#ok-but-what-does-that-mean">OK, but what does that mean?</a></li>
+  </ul></li>
+  <li><a href="#ok-but-why-should-i-care" id="toc-ok-but-why-should-i-care" class="nav-link" data-scroll-target="#ok-but-why-should-i-care">OK, but why should I care?</a></li>
+  <li><a href="#moving-from-rmarkdown-to-quarto" id="toc-moving-from-rmarkdown-to-quarto" class="nav-link" data-scroll-target="#moving-from-rmarkdown-to-quarto">Moving from rmarkdown to quarto</a>
+  <ul class="collapse">
+  <li><a href="#installing-quarto-latest-rstudio" id="toc-installing-quarto-latest-rstudio" class="nav-link" data-scroll-target="#installing-quarto-latest-rstudio">installing quarto + latest rstudio</a></li>
+  <li><a href="#change-filenames-filename.rmd-filename.qmd" id="toc-change-filenames-filename.rmd-filename.qmd" class="nav-link" data-scroll-target="#change-filenames-filename.rmd-filename.qmd">change filenames: filename.Rmd —&gt; filename.qmd</a></li>
+  <li><a href="#change-_bookdown.yml-to-_quarto.yml-and-remove-_output.yml" id="toc-change-_bookdown.yml-to-_quarto.yml-and-remove-_output.yml" class="nav-link" data-scroll-target="#change-_bookdown.yml-to-_quarto.yml-and-remove-_output.yml">Change <code>_bookdown.yml</code> to <code>_quarto.yml</code> and remove <code>_output.yml</code></a></li>
+  <li><a href="#build-preview" id="toc-build-preview" class="nav-link" data-scroll-target="#build-preview">build? preview?</a></li>
+  <li><a href="#repeat-build-preview" id="toc-repeat-build-preview" class="nav-link" data-scroll-target="#repeat-build-preview">repeat: build? preview?</a></li>
+  <li><a href="#what-next" id="toc-what-next" class="nav-link" data-scroll-target="#what-next">What next?</a></li>
+  </ul></li>
+  <li><a href="#learning-more" id="toc-learning-more" class="nav-link" data-scroll-target="#learning-more">Learning more</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2022-04-08-rmd-to-qmd/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Notes on Changing from Rmarkdown/Bookdown to Quarto</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">blag</div>
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">rmarkdown</div>
+    <div class="quarto-category">bookdown</div>
+    <div class="quarto-category">quarto</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2022-04-11</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>I’ve recently started transitioning my online book, <a href="https://rmd4sci.njtierney.com/">rmarkdown for scientists</a> from <a href="https://github.com/rstudio/rmarkdown">rmarkdown</a>/<a href="https://github.com/rstudio/bookdown">bookdown</a> to the new <a href="https://quarto.org/">quarto</a>. This will be a new book, called (perhaps not the most original name), <a href="https://github.com/njtierney/qmd4sci">“quarto for scientists”</a>. <a href="https://www.apreshill.com/about/">Alison Hill</a> recently wrote a great post, <a href="https://www.apreshill.com/blog/2022-04-we-dont-talk-about-quarto/">“We don’t talk about quarto”</a> that led me to see the benefits, and also that this will be the new thing we will be using in the future.</p>
+<section id="what-is-quarto-why-should-i-care" class="level1">
+<h1>What is quarto? Why should I care?</h1>
+<p>Alison already covers this well in her post, and you should read that instead. But, somewhat briefly, here is my summary of quarto, and why you might care about it.</p>
+<p>Quarto is a way to write literate programming documents. These are where you combine text and code together into a single document. Sound familiar? Well, yes, it is indeed like rmarkdown. Perhaps it might be easiest to look for comparisons with how they advertise themselves.</p>
+<p>The <a href="https://github.com/rstudio/rmarkdown#rmarkdown-">README for rmarkdown</a> states:</p>
+<blockquote class="blockquote">
+<p>The rmarkdown package helps you create dynamic analysis documents that combine code, rendered output (such as figures), and prose. You bring your data, code, and ideas, and R Markdown renders your content into a polished document that can be used to:</p>
+<ul>
+<li>Do data science interactively within the RStudio IDE,</li>
+<li>Reproduce your analyses,</li>
+<li>Collaborate and share code with others, and</li>
+<li>Communicate your results with others.</li>
+</ul>
+<p>R Markdown documents can be rendered to many output formats including HTML documents, PDFs, Word files, slideshows, and more, allowing you to focus on the content while R Markdown takes care of your presentation.</p>
+</blockquote>
+<p>How is this different to quarto? Well, <a href="https://github.com/quarto-dev/quarto-cli#quarto">the README for quarto</a> says:</p>
+<blockquote class="blockquote">
+<p>Quarto is an open-source scientific and technical publishing system built on <a href="https://pandoc.org/">Pandoc</a>. Quarto documents are authored using <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a>, an easy to write plain text format.</p>
+<p>In addition to the core capabilities of Pandoc, Quarto includes:</p>
+<ol type="1">
+<li><p>Embedding code and output from Python, R, and JavaScript via integration with <a href="https://jupyter.org/">Jupyter</a>, <a href="https://yihui.org/knitr/">Knitr</a>, and <a href="https://github.com/observablehq/">Observable</a>.</p></li>
+<li><p>A variety of extensions to Pandoc markdown useful for technical writing including cross-references, sub-figures, layout panels, hoverable citations and footnotes, callouts, and more.</p></li>
+<li><p>A project system for rendering groups of documents at once, sharing options across documents, and producing aggregate output like <a href="https://quarto.org/docs/websites/">websites</a> and <a href="https://quarto.org/docs/books/">books</a>.</p></li>
+<li><p>Authoring using a wide variety of editors and notebooks including <a href="https://quarto.org/docs/tools/jupyter-lab.html">JupyterLab</a>, <a href="https://quarto.org/docs/tools/rstudio.html">RStudio</a>, and <a href="https://quarto.org/docs/tools/vscode.html">VS Code</a>.</p></li>
+<li><p>A <a href="https://quarto.org/docs/visual-editor/">visual markdown editor</a> that provides a productive writing interface for composing long-form documents.</p></li>
+</ol>
+<p>Learn more about Quarto at <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
+</blockquote>
+<section id="ok-but-what-does-that-mean" class="level2">
+<h2 class="anchored" data-anchor-id="ok-but-what-does-that-mean">OK, but what does that mean?</h2>
+<p>Here’s the way I see it. rmarkdown is awesome, and it isn’t going anywhere. rmarkdown has been able to produce documents that use other software, such as python, bash, stan and many more. However, there are a few points of friction:</p>
+<ol type="1">
+<li>You need to call it from R to use it. No problem for R users, but what if you use python? Or javascript? If you are a python user, using R to use python just might not be in your workflow.</li>
+<li>There are great packages that provide extensions, such as <code>blogdown</code> for blogs, <code>bookdown</code> for books, and <code>xaringan</code> for slides. However, there are differences between these systems that might cause stumbles. Each of these systems is an iteration towards something awesome, and it’s only natural they might be a little bit different.</li>
+</ol>
+<p>quarto, instead of being an R package, is a separate piece of software, that you can call from the command line (terminal). This means other pieces of software can use it to create their own literate programming documents. Well, that’s my understanding.</p>
+<p>Here are some not-particularly-well-drawn diagrams to illustrate this point.</p>
+<p>In rmarkdown, we are working in rmarkdown, and that uses knitr to talk to R and handle the document generation:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="imgs/r-knitr-rmd.jpeg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Diagram showing the relationship between R, knitr, and rmarkdown, blogdown, and bookdown"><img src="imgs/r-knitr-rmd.jpeg" class="img-fluid figure-img" alt="Diagram showing the relationship between R, knitr, and rmarkdown, blogdown, and bookdown"></a></p>
+<figcaption>Diagram showing the relationship between R, knitr, and rmarkdown, blogdown, and bookdown</figcaption>
+</figure>
+</div>
+<p>But with quarto, we have this general interface, where quarto can talk to different programming languages. Not pictured, but the “R engine” is in fact, <code>knitr</code>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="imgs/quarto-all.jpeg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Diagram showing quarto links strongly to all languages"><img src="imgs/quarto-all.jpeg" class="img-fluid figure-img" alt="Diagram showing quarto links strongly to all languages"></a></p>
+<figcaption>Diagram showing quarto links strongly to all languages</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="ok-but-why-should-i-care" class="level1">
+<h1>OK, but why should I care?</h1>
+<p>Well, you might not need to! I cannot imagine rmarkdown going away any time soon. So, you definitely don’t <em>need</em> to change.</p>
+<p>That being said. From what I can tell, quarto appears to be a lot more consistent. For example, instead of having a special <a href="https://github.com/njtierney/rmd4sci/blob/master/_bookdown.yml"><code>_bookdown.yml</code> file</a> for your bookdown, which also needs a special <a href="https://github.com/njtierney/rmd4sci/blob/master/_output.yml">_output.yml</a> file, there is just now one single <a href="https://github.com/njtierney/qmd4sci/blob/master/_quarto.yml">_quarto.yml</a> file. It also means that there will likely be less pain if you need to change from a book to a website, to slides, to something else. So, I care because I like using the latest technology, and this seems like it will in the long run, be something that will be widely used. But I also work as a research software engineer, and caring about the latest and greatest tech is something that is on brand with the job. You don’t need to change to quarto. But it looks pretty cool.</p>
+</section>
+<section id="moving-from-rmarkdown-to-quarto" class="level1">
+<h1>Moving from rmarkdown to quarto</h1>
+<p>Here are the rough steps I went through for going from rmarkdown to quarto</p>
+<section id="installing-quarto-latest-rstudio" class="level3">
+<h3 class="anchored" data-anchor-id="installing-quarto-latest-rstudio">installing quarto + latest rstudio</h3>
+<p>I followed the instructions here to install quarto: <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a></p>
+<p>As of 2022-04-08, it seems best to install the daily build of RStudio, which I did here: <a href="https://dailies.rstudio.com/" class="uri">https://dailies.rstudio.com/</a></p>
+</section>
+<section id="change-filenames-filename.rmd-filename.qmd" class="level3">
+<h3 class="anchored" data-anchor-id="change-filenames-filename.rmd-filename.qmd">change filenames: filename.Rmd —&gt; filename.qmd</h3>
+<p>I used this code to identify the files that ended with “.Rmd” and then renamed them to end with “.qmd”, which is the quarto extension.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://fs.r-lib.org">fs</a></span><span class="o">)</span>
+<span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="o">)</span>
+<span class="nv">rmd_names</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="o">(</span>path <span class="o">=</span> <span class="s">"."</span>, glob <span class="o">=</span> <span class="s">"*.Rmd"</span><span class="o">)</span>
+<span class="nv">qmd_names</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace</a></span><span class="o">(</span>string <span class="o">=</span> <span class="nv">rmd_names</span>,
+                         pattern <span class="o">=</span> <span class="s">"Rmd"</span>,
+                         replacement <span class="o">=</span> <span class="s">"qmd"</span><span class="o">)</span>
+<span class="nf"><a href="https://fs.r-lib.org/reference/file_move.html">file_move</a></span><span class="o">(</span>path <span class="o">=</span> <span class="nv">rmd_names</span>,
+          new_path <span class="o">=</span> <span class="nv">qmd_names</span><span class="o">)</span>
+
+<span class="nf"><a href="https://fs.r-lib.org/reference/file_move.html">file_move</a></span><span class="o">(</span>path <span class="o">=</span> <span class="s">"_bookdown.yml"</span>,
+          new_path <span class="o">=</span> <span class="s">"_quarto.yml"</span><span class="o">)</span>
+</code></pre>
+</div>
+<p>You can see this change in <a href="https://github.com/njtierney/qmd4sci/commit/46da24051b42c092963c19c718a34596ba58e769">this commit of qmd4sci</a>.</p>
+</section>
+<section id="change-_bookdown.yml-to-_quarto.yml-and-remove-_output.yml" class="level3">
+<h3 class="anchored" data-anchor-id="change-_bookdown.yml-to-_quarto.yml-and-remove-_output.yml">Change <code>_bookdown.yml</code> to <code>_quarto.yml</code> and remove <code>_output.yml</code></h3>
+<p>I also needed to change most of the structure of <code>_bookdown.yml</code>, and to do so I followed the guidance of the <a href="https://quarto.org/docs/books/">book</a> guide in quarto, as well as looking at two quarto books they have provided, <a href="https://github.com/jjallaire/hopr">“Hands on Programming with R”</a>, and <a href="https://github.com/uwdata/visualization-curriculum">“Data Visualization Curriculum”</a>.</p>
+<p>One thing I also needed to do was to replace the chapter names I had listed in the chapter as :</p>
+<ul>
+<li><p>“index.Rmd” –&gt; “index.qmd”</p></li>
+<li><p>“license.Rmd” -&gt; “license.qmd”</p></li>
+</ul>
+<p>et cetera.</p>
+<p>I used this code to do that:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://readr.tidyverse.org">readr</a></span><span class="o">)</span>
+<span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="o">)</span>
+<span class="nv">quarto_yaml_rmd</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://readr.tidyverse.org/reference/read_lines.html">read_lines</a></span><span class="o">(</span><span class="s">"_quarto.yml"</span><span class="o">)</span>
+
+<span class="nv">quarto_yaml_qmd</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace_all</a></span><span class="o">(</span>string <span class="o">=</span> <span class="nv">quarto_yaml_rmd</span>,
+                                   pattern <span class="o">=</span> <span class="s">"Rmd"</span>,
+                                   replacement <span class="o">=</span> <span class="s">"qmd"</span><span class="o">)</span>
+
+<span class="nf"><a href="https://readr.tidyverse.org/reference/read_lines.html">write_lines</a></span><span class="o">(</span>
+  x <span class="o">=</span> <span class="nv">quarto_yaml_qmd</span>,
+  file <span class="o">=</span> <span class="s">"_quarto.yml"</span>
+<span class="o">)</span>
+</code></pre>
+</div>
+<p>Which you can see in <a href="https://github.com/njtierney/qmd4sci/commit/aa9f1e8df8795776d9a055c663ff332f24c5f069">this commit</a>.</p>
+</section>
+<section id="build-preview" class="level3">
+<h3 class="anchored" data-anchor-id="build-preview">build? preview?</h3>
+<p>I then tried to click the nifty, “build” tab that appears in the environment pane in RStudio. But this didn’t work. So I turned to the terminal and typed:</p>
+<pre><code>quarto preview</code></pre>
+<p>And then I got some errors.</p>
+<p>Specifically,</p>
+<pre><code>qmd4sci nick$ quarto preview
+Preparing to preview
+[ 1/23] index.qmd
+ERROR: Validation of YAML front matter failed.
+ERROR: In file index.qmd
+(line 11, columns 13--15) Key colorlinks has value yes, which must be `true` or `false`
+
+✖ The value yes is a string.
+ℹ The error happened in location colorlinks.
+ℹ Quarto uses YAML 1.2, which interprets booleans strictly.
+ℹ Try using true instead.</code></pre>
+<p>Which is actually quite helpful!</p>
+<p>This tells me that I need to look at the <code>index.qmd</code> file, which had a bunch of YAML metadata in it like so:</p>
+<pre><code>--- 
+title: "RMarkdown for Scientists"
+author: "Nicholas Tierney"
+date: "2022-04-11"
+knit: "bookdown::render_book"
+description: "A book created for a 3 hour workshop on rmarkdown"
+documentclass: krantz
+site: bookdown::bookdown_site
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+colorlinks: yes
+fontsize: 12pt
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
+link-citations: yes
+url: 'https\://rmd4sci.njtierney.com/'
+---</code></pre>
+<p>It turns out I could remove this, and put most of it into the <code>_quarto.yml</code> file. I think this is a nice example of how quarto can help simplify things. It used to be a thing that you had to have some file that gave some extra metadata, or at least, it seemed like the best thing to do at the time that I wrote that book. But now all of that stuff goes into <code>_quarto.yml</code>.</p>
+<p>(Also, really cool thing about using the latest RStudio daily build that I noticed, is that you get tab-completion when you are inside the YAML. So you can start exploring options for things to add! Neat. But perhaps that was already a feature in regular-rstudio and I didn’t notice.)</p>
+<p>Anyway, these changes are detailed in <a href="this commit">this commit</a>.</p>
+</section>
+<section id="repeat-build-preview" class="level3">
+<h3 class="anchored" data-anchor-id="repeat-build-preview">repeat: build? preview?</h3>
+<p>The <code>build</code> tab doesn’t seem to work for me in RStudio, since it seems to call <code>rmarkdown</code> by default and that doesn’t really work.</p>
+<p>Typing <code>quarto preview</code> into my terminal I get something like this:</p>
+<p><a href="images/paste-44CB621D.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="images/paste-44CB621D.png" class="img-fluid"></a></p>
+<p>Rather neatly, quarto appears to re render whenever I save files, which is pretty awesome!</p>
+</section>
+<section id="what-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-next">What next?</h2>
+<p>I’ll need to update the book to change references from rmarkdown to quarto, as well as change all the details of rmarkdown to quarto, and all the new quarto features. Which is, well, probably a lot.</p>
+</section>
+</section>
+<section id="learning-more" class="level1">
+<h1>Learning more</h1>
+<ul>
+<li><p><a href="https://quarto.org/">The quarto documentation</a></p></li>
+<li><p><a href="https://www.apreshill.com/about/">Alison Hill</a>’s blog post, <a href="https://www.apreshill.com/blog/2022-04-we-dont-talk-about-quarto/">“We don’t talk about quarto”</a></p></li>
+<li><p><a href="https://www.youtube.com/watch?v=6p4vOKS6Xls">Mine Çetinkaya-Rundel’s presentation, “Reproducible authoring with Quarto”, at the Toronto R Workshop</a></p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2022-04-08-rmd-to-qmd/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

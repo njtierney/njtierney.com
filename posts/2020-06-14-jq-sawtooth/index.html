@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-06-14">
+
+<title>Just Quickly: Removing Sawtooth Patterns in Line Graphs – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#setting-group-correctly-addition-as-of-20200622" id="toc-setting-group-correctly-addition-as-of-20200622" class="nav-link active" data-scroll-target="#setting-group-correctly-addition-as-of-20200622">Setting group correctly (Addition as of 2020/06/22)</a></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2020-06-14-jq-sawtooth/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Just Quickly: Removing Sawtooth Patterns in Line Graphs</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">data visualisation</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2020-06-14</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Sometimes you come across a plot that looks like the following:</p>
+<div class="highlight">
+<p><img src="figs/ozbaby-example-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>And you might think:</p>
+<blockquote class="blockquote">
+<p>Something does not look right but I have no idea what is going on here</p>
+</blockquote>
+<p>And that’s OK.</p>
+<p>So, what’s the problem with the plot, and how do you solve it?</p>
+<p>Well, the problem is we have these “sawtooth” patterns in the data, where the data goes up and down.</p>
+<p>Typically, we can solve this problem by including some grouping characteristic into the data visualisation.</p>
+<p>It is also worth noting that this doesn’t always mean a plot is bad - this could actually be the exact type of plot that you might expect to see (for example in a time series with very high periodicity, perhaps).</p>
+<p>But, in our case, we need to understand what our data is first, and what we expect. We are looking at <a href="https://github.com/ropenscilabs/ozbabynames">ozbabynames</a> - the names at birth of people in Australia. So we are plotting the number of names of a person at birth for each year. In our example we can look at the occurrences of the name, “Kim”, like so:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span>(<span class="k">oz_kim</span>,
+       <span class="nf">aes</span>(x = <span class="k">year</span>,
+           y = <span class="k">count</span>)) <span class="o">+</span> 
+  <span class="nf">geom_line</span>()
+</code></pre>
+<p><img src="figs/oz-kim-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>We don’t expect the name “kim” to suddenly crash down each year - especially since this looks to be an exact vertical drop.</p>
+<p>So what do we do?</p>
+<p>This vis problem often means there is some grouping characteristic missing from the graphic. For example, in this case, “sex” is not shown in the data. In showing it, we get:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="k"><a href="http://colorspace.R-Forge.R-project.org">colorspace</a></span>)
+  <span class="nf">ggplot</span>(<span class="k">oz_kim</span>,
+         <span class="nf">aes</span>(x = <span class="k">year</span>,
+             y = <span class="k">count</span>,
+             colour = <span class="k">sex</span>)) <span class="o">+</span> 
+  <span class="nf">geom_line</span>() <span class="o">+</span>
+  <span class="nf"><a href="http://colorspace.R-Forge.R-project.org//reference/scale_colour_discrete_qualitative.html">scale_colour_discrete_qualitative</a></span>()
+</code></pre>
+<p><img src="figs/add-sex-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>So we see that there is still some sawtooth patterns going on. Let’s look at the data to see if there are other variables we are missing:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="k">oz_kim</span>
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 164 x 5</span></span>
+<span class="c">#&gt;    name  sex     year count state          </span>
+<span class="c">#&gt;    <span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>  </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;chr&gt;</span><span>          </span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 1</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>017     2 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 2</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>016     1 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 3</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>015     1 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 4</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>014     2 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 5</span><span> Kim   Male    </span><span style="text-decoration: underline;">2</span><span>014     1 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 6</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>012     1 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 7</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>011     3 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 8</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>010     1 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 9</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>009     1 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;">10</span><span> Kim   Female  </span><span style="text-decoration: underline;">2</span><span>008     3 South Australia</span></span>
+<span class="c">#&gt; <span style="color: #555555;"># … with 154 more rows</span></span></code></pre>
+</div>
+<p>Aha! We can see that there is another grouping characteristic going on - State. Let’s facet the graph for each state, giving us:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span>(<span class="k">oz_kim</span>,
+       <span class="nf">aes</span>(x = <span class="k">year</span>,
+           y = <span class="k">count</span>,
+           colour = <span class="k">sex</span>)) <span class="o">+</span> 
+  <span class="nf">geom_line</span>() <span class="o">+</span> 
+  <span class="nf">facet_wrap</span>(<span class="o">~</span><span class="k">state</span>) <span class="o">+</span>
+  <span class="nf"><a href="http://colorspace.R-Forge.R-project.org//reference/scale_colour_discrete_qualitative.html">scale_colour_discrete_qualitative</a></span>()
+</code></pre>
+<p><img src="figs/add-sex-state-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<section id="setting-group-correctly-addition-as-of-20200622" class="level2">
+<h2 class="anchored" data-anchor-id="setting-group-correctly-addition-as-of-20200622">Setting group correctly (Addition as of 2020/06/22)</h2>
+<p><a href="https://twitter.com/EmmaVitz">Emma Vitz</a> had an interesting example of another sawtooth type problem shared on twitter:</p>
+<blockquote class="twitter-tweet blockquote">
+<a href="https://twitter.com/i/web/status/1272395508309360641"></a>
+</blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>The solution was discussed in the thread, but let’s unpack this. Let’s first recreate the data used (taken by eyeballing the graphic):</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r">
+<span class="k">pageviews</span> <span class="o">&lt;-</span> <span class="nf">tibble</span>(
+  age = <span class="nf"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="nf"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="s">"18-24"</span>,
+                     <span class="s">"25-34"</span>,
+                     <span class="s">"35-44"</span>,
+                     <span class="s">"45-54"</span>,
+                     <span class="s">"55-64"</span>,
+                     <span class="s">"65"</span>), <span class="m">2</span>)),
+  gender = <span class="nf"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(x = <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="nf"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="s">"Female"</span>, <span class="m">6</span>),
+                        <span class="nf"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="s">"Male"</span>, <span class="m">6</span>))),
+  pageviews = <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="m">2750</span>, <span class="m">4200</span>, <span class="m">1750</span>, <span class="m">750</span>, <span class="m">450</span>, <span class="m">500</span>,
+                <span class="m">2500</span>, <span class="m">4200</span>, <span class="m">900</span>, <span class="m">350</span>, <span class="m">180</span>, <span class="m">150</span>)
+)
+
+<span class="k">pageviews</span>
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 12 x 3</span></span>
+<span class="c">#&gt;    age   gender pageviews</span>
+<span class="c">#&gt;    <span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span> </span><span style="color: #555555;font-style: italic;">&lt;fct&gt;</span><span>      </span><span style="color: #555555;font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 1</span><span> 18-24 Female      </span><span style="text-decoration: underline;">2</span><span>750</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 2</span><span> 25-34 Female      </span><span style="text-decoration: underline;">4</span><span>200</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 3</span><span> 35-44 Female      </span><span style="text-decoration: underline;">1</span><span>750</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 4</span><span> 45-54 Female       750</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 5</span><span> 55-64 Female       450</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 6</span><span> 65    Female       500</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 7</span><span> 18-24 Male        </span><span style="text-decoration: underline;">2</span><span>500</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 8</span><span> 25-34 Male        </span><span style="text-decoration: underline;">4</span><span>200</span></span>
+<span class="c">#&gt; <span style="color: #555555;"> 9</span><span> 35-44 Male         900</span></span>
+<span class="c">#&gt; <span style="color: #555555;">10</span><span> 45-54 Male         350</span></span>
+<span class="c">#&gt; <span style="color: #555555;">11</span><span> 55-64 Male         180</span></span>
+<span class="c">#&gt; <span style="color: #555555;">12</span><span> 65    Male         150</span></span></code></pre>
+</div>
+<p>So here is the warning given for the first of Emma’s plots:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span>(<span class="k">pageviews</span>,
+       <span class="nf">aes</span>(x = <span class="k">age</span>,
+           y = <span class="k">pageviews</span>,
+           colour = <span class="k">gender</span>)) <span class="o">+</span> 
+  <span class="nf">geom_line</span>()
+<span class="c">#&gt; geom_path: Each group consists of only one observation. Do you need to adjust</span>
+<span class="c">#&gt; the group aesthetic?</span>
+</code></pre>
+<p><img src="figs/emma-plot-warning-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>What to do? One way to get the lines to appear is to set <code>group = 1</code></p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span>(<span class="k">pageviews</span>,
+       <span class="nf">aes</span>(x = <span class="k">age</span>,
+           y = <span class="k">pageviews</span>,
+           colour = <span class="k">gender</span>,
+           group = <span class="m">1</span>)) <span class="o">+</span> 
+  <span class="nf">geom_line</span>()
+</code></pre>
+<p><img src="figs/emma-plot-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>But then we get this! That isn’t ideal. The solution proposed on twitter was to set <code>group = gender</code> as well as <code>colour = gender</code>.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">ggplot</span>(<span class="k">pageviews</span>,
+       <span class="nf">aes</span>(x = <span class="k">age</span>,
+           y = <span class="k">pageviews</span>,
+           colour = <span class="k">gender</span>,
+           group = <span class="k">gender</span>)) <span class="o">+</span> 
+  <span class="nf">geom_line</span>()
+</code></pre>
+<p><img src="figs/emma-plot-fix-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>The answer was provided by <a href="https://twitter.com/pitakakariki">Peter Green</a>, who said:</p>
+<blockquote class="blockquote">
+<p>Looks like since x=age is a factor, ggplot is “helpfully” making age the group instead of gender? Which would explain why fixing it with the explicit group=gender works?</p>
+</blockquote>
+<p>My take on this is that since there are two factors here, it causes <code>ggplot</code> some confusion. The default behaviour of <code>ggplot</code> when setting <code>colour</code> is to use the same grouping, but in this case, as there are two factors, it doesn’t know what to pick. By setting the <code>group</code> explicitly, you get the right plot.</p>
+</section>
+<section id="wrapping-up" class="level1">
+<h1>Wrapping Up</h1>
+<p>So, <strong>how to remove sawtooth patterns in a plot?</strong></p>
+<ol type="1">
+<li>Understand what sort of graphic you are expecting</li>
+<li>Explore and potentially include all grouping features into the graphic</li>
+<li>Ensure that if you have factors in some of your aesthetics (<code>x</code>, <code>y</code>, <code>colour</code>, <code>size</code>), that you specify <code>group</code> to the right variable in your dataset.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2020-06-14-jq-sawtooth/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2018-02-28">
+
+<title>naniar version 0.2.0 on CRAN – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#so-what-is-naniar" id="toc-so-what-is-naniar" class="nav-link active" data-scroll-target="#so-what-is-naniar">So, what is naniar?</a></li>
+  <li><a href="#what-is-new-in-version-0.2.0" id="toc-what-is-new-in-version-0.2.0" class="nav-link" data-scroll-target="#what-is-new-in-version-0.2.0">What is new in version 0.2.0?</a>
+  <ul class="collapse">
+  <li><a href="#scan-for-possible-missing-values-with-miss_scan_count." id="toc-scan-for-possible-missing-values-with-miss_scan_count." class="nav-link" data-scroll-target="#scan-for-possible-missing-values-with-miss_scan_count.">Scan for possible missing values with <code>miss_scan_count</code>.</a></li>
+  <li><a href="#replace-values-with-na" id="toc-replace-values-with-na" class="nav-link" data-scroll-target="#replace-values-with-na">Replace values with NA</a>
+  <ul class="collapse">
+  <li><a href="#replace_with_na_all" id="toc-replace_with_na_all" class="nav-link" data-scroll-target="#replace_with_na_all"><code>replace_with_na_all</code></a></li>
+  <li><a href="#replace_with_na_at" id="toc-replace_with_na_at" class="nav-link" data-scroll-target="#replace_with_na_at"><code>replace_with_na_at</code></a></li>
+  <li><a href="#replace_with_na_if" id="toc-replace_with_na_if" class="nav-link" data-scroll-target="#replace_with_na_if"><code>replace_with_na_if</code></a></li>
+  </ul></li>
+  <li><a href="#speed-improvements" id="toc-speed-improvements" class="nav-link" data-scroll-target="#speed-improvements">Speed improvements:</a></li>
+  <li><a href="#convenience-functions" id="toc-convenience-functions" class="nav-link" data-scroll-target="#convenience-functions">Convenience functions</a>
+  <ul class="collapse">
+  <li><a href="#n_miss_row" id="toc-n_miss_row" class="nav-link" data-scroll-target="#n_miss_row"><code>n_miss_row</code></a></li>
+  <li><a href="#n_complete_row" id="toc-n_complete_row" class="nav-link" data-scroll-target="#n_complete_row"><code>n_complete_row</code></a></li>
+  <li><a href="#prop_miss_row" id="toc-prop_miss_row" class="nav-link" data-scroll-target="#prop_miss_row"><code>prop_miss_row</code></a></li>
+  <li><a href="#prop_complete_row" id="toc-prop_complete_row" class="nav-link" data-scroll-target="#prop_complete_row"><code>prop_complete_row</code></a></li>
+  </ul></li>
+  <li><a href="#calculate-missingness-clusters" id="toc-calculate-missingness-clusters" class="nav-link" data-scroll-target="#calculate-missingness-clusters">Calculate missingness clusters</a>
+  <ul class="collapse">
+  <li><a href="#add_miss_cluster" id="toc-add_miss_cluster" class="nav-link" data-scroll-target="#add_miss_cluster"><code>add_miss_cluster</code></a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#little-things" id="toc-little-things" class="nav-link" data-scroll-target="#little-things">Little things</a>
+  <ul class="collapse">
+  <li><a href="#which_na" id="toc-which_na" class="nav-link" data-scroll-target="#which_na"><code>which_na</code></a></li>
+  <li><a href="#where_na" id="toc-where_na" class="nav-link" data-scroll-target="#where_na"><code>where_na</code></a></li>
+  <li><a href="#bind_shadow-gains-an-only_miss-argument." id="toc-bind_shadow-gains-an-only_miss-argument." class="nav-link" data-scroll-target="#bind_shadow-gains-an-only_miss-argument."><code>bind_shadow</code> gains an <code>only_miss</code> argument.</a></li>
+  <li><a href="#cleaned-up-the-visualisation-of-gg_miss_case" id="toc-cleaned-up-the-visualisation-of-gg_miss_case" class="nav-link" data-scroll-target="#cleaned-up-the-visualisation-of-gg_miss_case">Cleaned up the visualisation of <code>gg_miss_case</code></a></li>
+  <li><a href="#added-a-facet-argument-to-gg_miss_var-gg_miss_case-and-gg_miss_span." id="toc-added-a-facet-argument-to-gg_miss_var-gg_miss_case-and-gg_miss_span." class="nav-link" data-scroll-target="#added-a-facet-argument-to-gg_miss_var-gg_miss_case-and-gg_miss_span.">Added a <code>facet</code> argument to <code>gg_miss_var</code>, <code>gg_miss_case</code>, and <code>gg_miss_span</code>.</a></li>
+  </ul></li>
+  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug fixes</a></li>
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
+  <li><a href="#thank-you" id="toc-thank-you" class="nav-link" data-scroll-target="#thank-you">Thank you!</a></li>
+  <li><a href="#feedback-wanted" id="toc-feedback-wanted" class="nav-link" data-scroll-target="#feedback-wanted">Feedback wanted!</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2018-02-28-naniar-v020/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">naniar version 0.2.0 on CRAN</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2018-02-28</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>It is with great pleasure that I can say that naniar version 0.2.0 (“The First Joke and Other Matters”) is now on CRAN!</p>
+<p><img src="https://gifs.njtierney.com/naniar-aslan.gif" width="100%" style="display: block; margin: auto;"></p>
+<p>While I’m at it - naniar also has a nice hex sticker, thanks to <a href="https://twitter.com/cthulhucreates">Oz Locke of Cuddly Cthulhu</a> for the design, I’m super happy with it!</p>
+<p><img src="https://imgs.njtierney.com/hex-naniar.png" width="30%" style="display: block; margin: auto;"></p>
+<p>It is inspired by the lampost from CS Lewis’ “Narnia”, and highlights that it focusses on NA values, as well as this idea of “shining a light” on missing data, whilst containing a missing piece.</p>
+<p><img src="https://gifs.njtierney.com/narnia-lampost.gif" width="50%" style="display: block; margin: auto;"></p>
+<p>If you’d like a hex sticker, send me an email and I’ll happily mail one to you!</p>
+<section id="so-what-is-naniar" class="level1">
+<h1>So, what is naniar?</h1>
+<p>naniar is a <a href="https://www.tidyverse.org/">tidyverse</a> friendly package for exploring and analysing missing data in R. The current goals of the naniar package is to make it easier for users to:</p>
+<ol type="1">
+<li>Clean up, tidy, and recode missing values</li>
+<li>Find where missing data is</li>
+<li>Establish how much missing data they is</li>
+<li>Explore why data is missing</li>
+<li>Evaluate imputed values</li>
+</ol>
+<p>I’ve described this process in the vignette <a href="http://naniar.njtierney.com/articles/getting-started-w-naniar.html">“getting started”</a>, which I recommend you take a look at to get a quick overview of the capabilities in naniar.</p>
+</section>
+<section id="what-is-new-in-version-0.2.0" class="level1">
+<h1>What is new in version 0.2.0?</h1>
+<section id="scan-for-possible-missing-values-with-miss_scan_count." class="level2">
+<h2 class="anchored" data-anchor-id="scan-for-possible-missing-values-with-miss_scan_count.">Scan for possible missing values with <code>miss_scan_count</code>.</h2>
+<p><code>miss_scan_count</code> makes it easier for users to search for particular occurences of values in a dataset, across variables. This is handy when you think you might have some suspect values in your dataset and you want to see if they appear in the dataset.</p>
+<p>Let’s create a small dataframe containing some offending features, such as -99, and “N/A”, to show how this works:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dat_test <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(<span class="sc">~</span>x,  <span class="sc">~</span>y,    <span class="sc">~</span>z,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">1</span>,   <span class="st">"A"</span>,   <span class="sc">-</span><span class="dv">100</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">3</span>,   <span class="st">"N/A"</span>, <span class="sc">-</span><span class="dv">99</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">NA</span>,  <span class="cn">NA</span>,    <span class="sc">-</span><span class="dv">98</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                            <span class="sc">-</span><span class="dv">99</span>, <span class="st">"E"</span>,   <span class="sc">-</span><span class="dv">101</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                            <span class="sc">-</span><span class="dv">98</span>, <span class="st">"F"</span>,   <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You specify the things you want to scan for with the “search” argument, which takes a vector, and counts the number of times those features appear in each column.</p>
+<p>So, for example, we cna look at the number of times that -99 appears in a dataset.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">miss_scan_count</span>(<span class="at">data =</span> dat_test, <span class="at">search =</span> <span class="sc">-</span><span class="dv">99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 3 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 x            1
+## 2 y            0
+## 3 z            1</code></pre>
+<p>This tells us that we have -99 appearing in the variables <code>x</code> and <code>z</code>.</p>
+<p>We can also look at the number of times that we have -99, -98, and “N/A”.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">miss_scan_count</span>(<span class="at">data =</span> dat_test, <span class="at">search =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">99</span>,<span class="sc">-</span><span class="dv">98</span>,<span class="st">"N/A"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 3 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 x            2
+## 2 y            1
+## 3 z            2</code></pre>
+<p>This tells us that at least one of these values appears in <code>x</code> twice, <code>y</code> once, and <code>z</code> twice.</p>
+<p>What to do once you find these values?</p>
+</section>
+<section id="replace-values-with-na" class="level2">
+<h2 class="anchored" data-anchor-id="replace-values-with-na">Replace values with NA</h2>
+<p>You can use the new <a href="http://dplyr.tidyverse.org/reference/scoped.html">“scoped variants”</a> of <code>replace_with_na</code> to find and replace particular values with an NA value. Thankyou to <a href="http://colinfay.me/">Colin Fay</a> for his valuable work on this!</p>
+<section id="replace_with_na_all" class="level3">
+<h3 class="anchored" data-anchor-id="replace_with_na_all"><code>replace_with_na_all</code></h3>
+<p>Replace all NAs across the dataframe that meet a specified condition, using the syntax <code>~.x == -99</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_test <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_with_na_all</span>(<span class="sc">~</span>.x <span class="sc">==</span> <span class="sc">-</span><span class="dv">99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 5 x 3
+##        x y           z
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1   1.00 A     -100   
+## 2   3.00 N/A     NA   
+## 3  NA    &lt;NA&gt;  - 98.0 
+## 4  NA    E     -101   
+## 5 -98.0  F     -  1.00</code></pre>
+</section>
+<section id="replace_with_na_at" class="level3">
+<h3 class="anchored" data-anchor-id="replace_with_na_at"><code>replace_with_na_at</code></h3>
+<p>Replace all NAs across for specified variables</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat_test <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_with_na_at</span>(<span class="at">.vars =</span> <span class="st">"z"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">condition =</span> <span class="sc">~</span>.x <span class="sc">==</span> <span class="sc">-</span><span class="dv">99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 5 x 3
+##        x y           z
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1   1.00 A     -100   
+## 2   3.00 N/A     NA   
+## 3  NA    &lt;NA&gt;  - 98.0 
+## 4 -99.0  E     -101   
+## 5 -98.0  F     -  1.00</code></pre>
+</section>
+<section id="replace_with_na_if" class="level3">
+<h3 class="anchored" data-anchor-id="replace_with_na_if"><code>replace_with_na_if</code></h3>
+<p>Replace all NAs for those variables that satisfy some predicate function (e.g., is.character)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat_test <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_with_na_if</span>(<span class="at">.predicate =</span> is.character,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">condition =</span> <span class="sc">~</span>.x <span class="sc">==</span> <span class="st">"N/A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 5 x 3
+##        x y           z
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1   1.00 A     -100   
+## 2   3.00 &lt;NA&gt;  - 99.0 
+## 3  NA    &lt;NA&gt;  - 98.0 
+## 4 -99.0  E     -101   
+## 5 -98.0  F     -  1.00</code></pre>
+<p>You can read more in the vignette <a href="http://naniar.njtierney.com/articles/replace-with-na.html">“replace with NA”</a></p>
+</section>
+</section>
+<section id="speed-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="speed-improvements">Speed improvements:</h2>
+<p>Thanks to the help, contributions, and discussion with <a href="https://github.com/romainfrancois">Romain François</a> and <a href="https://github.com/jimhester">Jim Hester</a>, naniar now has greatly improved speed for calculating the missingness in each row (at least an order of magnitude!). These speedups should continue to improve in future releases.</p>
+</section>
+<section id="convenience-functions" class="level2">
+<h2 class="anchored" data-anchor-id="convenience-functions">Convenience functions</h2>
+<section id="n_miss_row" class="level3">
+<h3 class="anchored" data-anchor-id="n_miss_row"><code>n_miss_row</code></h3>
+<p>Calculate the number of missing values in each row, returning a vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">n_miss_row</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##   [1] 0 0 0 0 2 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 2 0 0 0 0 1 1 1 1
+##  [36] 1 1 0 1 0 0 1 1 0 1 1 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0
+##  [71] 0 1 0 0 1 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 1 1 0 0
+## [106] 0 1 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [141] 0 0 0 0 0 0 0 0 0 1 0 0 0</code></pre>
+<p>There are also 3 other functions which are similar in spirit.</p>
+</section>
+<section id="n_complete_row" class="level3">
+<h3 class="anchored" data-anchor-id="n_complete_row"><code>n_complete_row</code></h3>
+<p>Return a vector of the number of complete obserations,</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">n_complete_row</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##   [1] 6 6 6 6 4 5 6 6 6 5 5 6 6 6 6 6 6 6 6 6 6 6 6 6 5 5 4 6 6 6 6 5 5 5 5
+##  [36] 5 5 6 5 6 6 5 5 6 5 5 6 6 6 6 6 5 5 5 5 5 5 5 5 5 5 6 6 6 5 6 6 6 6 6
+##  [71] 6 5 6 6 5 6 6 6 6 6 6 6 5 5 6 6 6 6 6 6 6 6 6 6 6 5 5 5 6 6 6 5 5 6 6
+## [106] 6 5 6 6 6 6 6 6 6 5 6 6 6 5 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+## [141] 6 6 6 6 6 6 6 6 6 5 6 6 6</code></pre>
+</section>
+<section id="prop_miss_row" class="level3">
+<h3 class="anchored" data-anchor-id="prop_miss_row"><code>prop_miss_row</code></h3>
+<p>Return the proportion of missings in a row</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop_miss_row</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##   [1] 0.0000000 0.0000000 0.0000000 0.0000000 0.3333333 0.1666667 0.0000000
+##   [8] 0.0000000 0.0000000 0.1666667 0.1666667 0.0000000 0.0000000 0.0000000
+##  [15] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+##  [22] 0.0000000 0.0000000 0.0000000 0.1666667 0.1666667 0.3333333 0.0000000
+##  [29] 0.0000000 0.0000000 0.0000000 0.1666667 0.1666667 0.1666667 0.1666667
+##  [36] 0.1666667 0.1666667 0.0000000 0.1666667 0.0000000 0.0000000 0.1666667
+##  [43] 0.1666667 0.0000000 0.1666667 0.1666667 0.0000000 0.0000000 0.0000000
+##  [50] 0.0000000 0.0000000 0.1666667 0.1666667 0.1666667 0.1666667 0.1666667
+##  [57] 0.1666667 0.1666667 0.1666667 0.1666667 0.1666667 0.0000000 0.0000000
+##  [64] 0.0000000 0.1666667 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+##  [71] 0.0000000 0.1666667 0.0000000 0.0000000 0.1666667 0.0000000 0.0000000
+##  [78] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.1666667 0.1666667
+##  [85] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+##  [92] 0.0000000 0.0000000 0.0000000 0.0000000 0.1666667 0.1666667 0.1666667
+##  [99] 0.0000000 0.0000000 0.0000000 0.1666667 0.1666667 0.0000000 0.0000000
+## [106] 0.0000000 0.1666667 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+## [113] 0.0000000 0.0000000 0.1666667 0.0000000 0.0000000 0.0000000 0.1666667
+## [120] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+## [127] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+## [134] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+## [141] 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+## [148] 0.0000000 0.0000000 0.1666667 0.0000000 0.0000000 0.0000000</code></pre>
+</section>
+<section id="prop_complete_row" class="level3">
+<h3 class="anchored" data-anchor-id="prop_complete_row"><code>prop_complete_row</code></h3>
+<p>Return the proportion of complete obserations in a row.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop_complete_row</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##   [1] 1.0000000 1.0000000 1.0000000 1.0000000 0.6666667 0.8333333 1.0000000
+##   [8] 1.0000000 1.0000000 0.8333333 0.8333333 1.0000000 1.0000000 1.0000000
+##  [15] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+##  [22] 1.0000000 1.0000000 1.0000000 0.8333333 0.8333333 0.6666667 1.0000000
+##  [29] 1.0000000 1.0000000 1.0000000 0.8333333 0.8333333 0.8333333 0.8333333
+##  [36] 0.8333333 0.8333333 1.0000000 0.8333333 1.0000000 1.0000000 0.8333333
+##  [43] 0.8333333 1.0000000 0.8333333 0.8333333 1.0000000 1.0000000 1.0000000
+##  [50] 1.0000000 1.0000000 0.8333333 0.8333333 0.8333333 0.8333333 0.8333333
+##  [57] 0.8333333 0.8333333 0.8333333 0.8333333 0.8333333 1.0000000 1.0000000
+##  [64] 1.0000000 0.8333333 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+##  [71] 1.0000000 0.8333333 1.0000000 1.0000000 0.8333333 1.0000000 1.0000000
+##  [78] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 0.8333333 0.8333333
+##  [85] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+##  [92] 1.0000000 1.0000000 1.0000000 1.0000000 0.8333333 0.8333333 0.8333333
+##  [99] 1.0000000 1.0000000 1.0000000 0.8333333 0.8333333 1.0000000 1.0000000
+## [106] 1.0000000 0.8333333 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+## [113] 1.0000000 1.0000000 0.8333333 1.0000000 1.0000000 1.0000000 0.8333333
+## [120] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+## [127] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+## [134] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+## [141] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+## [148] 1.0000000 1.0000000 0.8333333 1.0000000 1.0000000 1.0000000</code></pre>
+</section>
+</section>
+<section id="calculate-missingness-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-missingness-clusters">Calculate missingness clusters</h2>
+<section id="add_miss_cluster" class="level3">
+<h3 class="anchored" data-anchor-id="add_miss_cluster"><code>add_miss_cluster</code></h3>
+<p>This calculates a cluster of missingnessfor each row, using <code>hclust</code>. This can be useful in exploratory modelling of missingness, similar to <a href="http://bmjopen.bmj.com/content/5/6/e007450">Tierney et al 2015</a>. and <a href="http://bmjopen.bmj.com/content/7/10/e017284">Barnett et al.&nbsp;2017</a></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_miss_cluster</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 153 x 7
+##    Ozone Solar.R  Wind  Temp Month   Day miss_cluster
+##    &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;        &lt;int&gt;
+##  1    41     190  7.40    67     5     1            1
+##  2    36     118  8.00    72     5     2            1
+##  3    12     149 12.6     74     5     3            1
+##  4    18     313 11.5     62     5     4            1
+##  5    NA      NA 14.3     56     5     5            2
+##  6    28      NA 14.9     66     5     6            1
+##  7    23     299  8.60    65     5     7            1
+##  8    19      99 13.8     59     5     8            1
+##  9     8      19 20.1     61     5     9            1
+## 10    NA     194  8.60    69     5    10            2
+## # ... with 143 more rows</code></pre>
+<p>You can constrain the number of clusters with <code>n_clusters</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_miss_cluster</span>(airquality, </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">n_clusters =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 153 x 7
+##    Ozone Solar.R  Wind  Temp Month   Day miss_cluster
+##    &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;        &lt;int&gt;
+##  1    41     190  7.40    67     5     1            1
+##  2    36     118  8.00    72     5     2            1
+##  3    12     149 12.6     74     5     3            1
+##  4    18     313 11.5     62     5     4            1
+##  5    NA      NA 14.3     56     5     5            2
+##  6    28      NA 14.9     66     5     6            1
+##  7    23     299  8.60    65     5     7            1
+##  8    19      99 13.8     59     5     8            1
+##  9     8      19 20.1     61     5     9            1
+## 10    NA     194  8.60    69     5    10            3
+## # ... with 143 more rows</code></pre>
+<p>And also specify the cluster method, with <code>cluster_method</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_miss_cluster</span>(airquality, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">cluster_method =</span> <span class="st">"ward.D"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 153 x 7
+##    Ozone Solar.R  Wind  Temp Month   Day miss_cluster
+##    &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;        &lt;int&gt;
+##  1    41     190  7.40    67     5     1            1
+##  2    36     118  8.00    72     5     2            1
+##  3    12     149 12.6     74     5     3            1
+##  4    18     313 11.5     62     5     4            1
+##  5    NA      NA 14.3     56     5     5            1
+##  6    28      NA 14.9     66     5     6            1
+##  7    23     299  8.60    65     5     7            1
+##  8    19      99 13.8     59     5     8            1
+##  9     8      19 20.1     61     5     9            1
+## 10    NA     194  8.60    69     5    10            2
+## # ... with 143 more rows</code></pre>
+<p>these options are taken from the <code>stats::hclust</code> helpfile, and include: “ward.D”, “ward.D2”, “single”, “complete”, “average” (= UPGMA), “mcquitty” (= WPGMA), “median” (= WPGMC) or “centroid” (= UPGMC).</p>
+</section>
+</section>
+</section>
+<section id="little-things" class="level1">
+<h1>Little things</h1>
+<section id="which_na" class="level3">
+<h3 class="anchored" data-anchor-id="which_na"><code>which_na</code></h3>
+<p>A replacement for <code>which(is.na(x))</code>,</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which_na</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##  [1]   5  10  25  26  27  32  33  34  35  36  37  39  42  43  45  46  52
+## [18]  53  54  55  56  57  58  59  60  61  65  72  75  83  84 102 103 107
+## [35] 115 119 150 158 159 164 180 249 250 251</code></pre>
+</section>
+<section id="where_na" class="level3">
+<h3 class="anchored" data-anchor-id="where_na"><code>where_na</code></h3>
+<p>A function that returns the positions of NA values.</p>
+<p>For a dataframe it returns a matrix of row and col positions of NAs, and for a vector it returns a vector of positions of NAs.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">where_na</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##       row col
+##  [1,]   5   1
+##  [2,]  10   1
+##  [3,]  25   1
+##  [4,]  26   1
+##  [5,]  27   1
+##  [6,]  32   1
+##  [7,]  33   1
+##  [8,]  34   1
+##  [9,]  35   1
+## [10,]  36   1
+## [11,]  37   1
+## [12,]  39   1
+## [13,]  42   1
+## [14,]  43   1
+## [15,]  45   1
+## [16,]  46   1
+## [17,]  52   1
+## [18,]  53   1
+## [19,]  54   1
+## [20,]  55   1
+## [21,]  56   1
+## [22,]  57   1
+## [23,]  58   1
+## [24,]  59   1
+## [25,]  60   1
+## [26,]  61   1
+## [27,]  65   1
+## [28,]  72   1
+## [29,]  75   1
+## [30,]  83   1
+## [31,]  84   1
+## [32,] 102   1
+## [33,] 103   1
+## [34,] 107   1
+## [35,] 115   1
+## [36,] 119   1
+## [37,] 150   1
+## [38,]   5   2
+## [39,]   6   2
+## [40,]  11   2
+## [41,]  27   2
+## [42,]  96   2
+## [43,]  97   2
+## [44,]  98   2</code></pre>
+</section>
+<section id="bind_shadow-gains-an-only_miss-argument." class="level3">
+<h3 class="anchored" data-anchor-id="bind_shadow-gains-an-only_miss-argument."><code>bind_shadow</code> gains an <code>only_miss</code> argument.</h3>
+<p>When set to FALSE (the default) it will bind a dataframe with all of the variables duplicated with their shadow. Setting this to TRUE will bind variables only those variables that contain missing values.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_shadow</span>(dat_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 5 x 6
+##        x y           z x_NA  y_NA  z_NA 
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;
+## 1   1.00 A     -100    !NA   !NA   !NA  
+## 2   3.00 N/A   - 99.0  !NA   !NA   !NA  
+## 3  NA    &lt;NA&gt;  - 98.0  NA    NA    !NA  
+## 4 -99.0  E     -101    !NA   !NA   !NA  
+## 5 -98.0  F     -  1.00 !NA   !NA   !NA</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_shadow</span>(dat_test, <span class="at">only_miss =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>## # A tibble: 5 x 5
+##        x y           z x_NA  y_NA 
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;
+## 1   1.00 A     -100    !NA   !NA  
+## 2   3.00 N/A   - 99.0  !NA   !NA  
+## 3  NA    &lt;NA&gt;  - 98.0  NA    NA   
+## 4 -99.0  E     -101    !NA   !NA  
+## 5 -98.0  F     -  1.00 !NA   !NA</code></pre>
+</section>
+<section id="cleaned-up-the-visualisation-of-gg_miss_case" class="level3">
+<h3 class="anchored" data-anchor-id="cleaned-up-the-visualisation-of-gg_miss_case">Cleaned up the visualisation of <code>gg_miss_case</code></h3>
+<p>It is now clearer and less cluttered ( <a href="https://github.com/njtierney/naniar/issues/117">#117</a>)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_case</span>(airquality)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="2018-02-28-naniar-v020_files/figure-html/gg-miss-case-1.png" width="672"></p>
+<p>also added n <code>order_cases</code> option to order by cases.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_case</span>(airquality, <span class="at">order_cases =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="2018-02-28-naniar-v020_files/figure-html/gg-miss-case-order-cases-1.png" width="672"></p>
+</section>
+<section id="added-a-facet-argument-to-gg_miss_var-gg_miss_case-and-gg_miss_span." class="level3">
+<h3 class="anchored" data-anchor-id="added-a-facet-argument-to-gg_miss_var-gg_miss_case-and-gg_miss_span.">Added a <code>facet</code> argument to <code>gg_miss_var</code>, <code>gg_miss_case</code>, and <code>gg_miss_span</code>.</h3>
+<p>This makes it easier for users to visualise these plots across the values of another variable. In the future I will consider adding <code>facet</code> to the other shorthand plotting function, but at the moment these seemed to be the ones that would benefit the most from this feature.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_case</span>(airquality, <span class="at">facet =</span> Month)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="2018-02-28-naniar-v020_files/figure-html/gg-miss-facets-1.png" width="672"></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_var</span>(airquality, <span class="at">facet =</span> Month)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="2018-02-28-naniar-v020_files/figure-html/gg-miss-facets-2.png" width="672"></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_span</span>(pedestrian, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>             hourly_counts, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">span_every =</span> <span class="dv">3000</span>, </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">facet =</span> sensor_name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="2018-02-28-naniar-v020_files/figure-html/gg-miss-facets-3.png" width="672"></p>
+<p>Updated the vignette <a href="http://naniar.njtierney.com/articles/naniar-visualisation.html">“Gallery of Missing Data Visualisations”</a> to include the <code>facet</code> features and <code>order_cases</code>.</p>
+<ul>
+<li>Update vignettes to have floating menu and better figure size.</li>
+<li>minor changes to graphics in gg_miss_fct - change legend title from “Percent Missing” to “% Miss”.</li>
+</ul>
+</section>
+</section>
+<section id="bug-fixes" class="level1">
+<h1>Bug fixes</h1>
+<ul>
+<li><code>oceanbuoys</code> now is numeric type for year, latitude, and longitude, previously it was factor. <a href="https://github.com/njtierney/naniar/issues/110">#110</a></li>
+<li>Improved handling of <code>shadow_shift</code> when there are Inf or -Inf values <a href="https://github.com/njtierney/naniar/issues/90">#117</a></li>
+</ul>
+</section>
+<section id="breaking-changes" class="level1">
+<h1>Breaking changes</h1>
+<p>After some consideration, I have deprecated <code>replace_to_na</code>, with <code>replace_with_na</code>, as it is a more natural phrase (“replace coffee to tea” vs “replace coffee with tea”), especially considering the scoped variants. <code>replace_to_na</code> will be made defunct in the next version of naniar.</p>
+<p><code>cast_shadow</code> no longer works when called as <code>cast_shadow(data)</code>. This action used to return all variables, and then shadow variables for the variables that only contained missing values. This was inconsistent with the use of <code>cast_shadow(data, var1, var2)</code>. A new option has been added to <code>bind_shadow</code> that controls this - discussed below. See more details at <a href="https://github.com/njtierney/naniar/issues/106">issue 65</a>.</p>
+<p>Change behaviour of <code>cast_shadow</code> so that the default option is to return only the variables that contain missings. This is different to <code>bind_shadow</code>, which binds a complete shadow matrix to the dataframe. A way to think about this is that the shadow is only cast on variables that contain missing values, whereas a bind is binding a complete shadow to the data. This may change in the future to be the default option for <code>bind_shadow</code>.</p>
+</section>
+<section id="thank-you" class="level1">
+<h1>Thank you!</h1>
+<p>Thank you to everyone who has filed issues, bug reports, made pull requests, and used <code>naniar</code>. The next release of <code>naniar</code>, version 0.3.0 should be released in March, and will include some cool features, which you can read about <a href="https://github.com/njtierney/naniar/projects/4">here</a>.</p>
+</section>
+<section id="feedback-wanted" class="level1">
+<h1>Feedback wanted!</h1>
+<p><img src="https://imgs.njtierney.com/blog-feedback.jpg" width="100%"></p>
+<a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px;" href="https://unsplash.com/@cikstefan?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Štefan Štefančík"><span style="display:inline-block;padding:2px 3px;"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-1px;fill:white;" viewbox="0 0 32 32">
+<title>
+unsplash-logo
+</title>
+</svg></span></a><p><a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px;" href="https://unsplash.com/@cikstefan?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Štefan Štefančík"><path d="M20.8 18.1c0 2.7-2.2 4.8-4.8 4.8s-4.8-2.1-4.8-4.8c0-2.7 2.2-4.8 4.8-4.8 2.7.1 4.8 2.2 4.8 4.8zm11.2-7.4v14.9c0 2.3-1.9 4.3-4.3 4.3h-23.4c-2.4 0-4.3-1.9-4.3-4.3v-15c0-2.3 1.9-4.3 4.3-4.3h3.7l.8-2.3c.4-1.1 1.7-2 2.9-2h8.6c1.2 0 2.5.9 2.9 2l.8 2.4h3.7c2.4 0 4.3 1.9 4.3 4.3zm-8.6 7.5c0-4.1-3.3-7.5-7.5-7.5-4.1 0-7.5 3.4-7.5 7.5s3.3 7.5 7.5 7.5c4.2-.1 7.5-3.4 7.5-7.5z"></path><span style="display:inline-block;padding:2px 3px;">Štefan Štefančík</span></a></p>
+<p>I’m really keen to get feedback on how you use <code>naniar</code> - I want to make this as easy to use for any many people as I can. Please feel free to <a href="https://github.com/njtierney/naniar/issues/new">file an issue on github if you have a bug or feature request</a>, or put something on <a href="https://stackoverflow.com/">stack overflow</a>, which I will be now be monitoring more closely.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2018-02-28-naniar-v020/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

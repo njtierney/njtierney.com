@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2018-06-20">
+
+<title>Naming Things – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#naming-packages" id="toc-naming-packages" class="nav-link active" data-scroll-target="#naming-packages">Naming Packages</a>
+  <ul class="collapse">
+  <li><a href="#the-oldschool-mixedcasers" id="toc-the-oldschool-mixedcasers" class="nav-link" data-scroll-target="#the-oldschool-mixedcasers">The oldschool (mixedCaseRs)</a></li>
+  <li><a href="#the-modern-lowercasers" id="toc-the-modern-lowercasers" class="nav-link" data-scroll-target="#the-modern-lowercasers">The Modern (lowercasers)</a></li>
+  <li><a href="#the-post-modern-names" id="toc-the-post-modern-names" class="nav-link" data-scroll-target="#the-post-modern-names">The Post Modern (names)</a></li>
+  <li><a href="#the-gg" id="toc-the-gg" class="nav-link" data-scroll-target="#the-gg">The “gg”</a></li>
+  <li><a href="#tidy-preface" id="toc-tidy-preface" class="nav-link" data-scroll-target="#tidy-preface">Tidy-preface</a></li>
+  <li><a href="#and-more" id="toc-and-more" class="nav-link" data-scroll-target="#and-more">And more?</a></li>
+  <li><a href="#the-acronyms" id="toc-the-acronyms" class="nav-link" data-scroll-target="#the-acronyms">The Acronyms!</a></li>
+  <li><a href="#the-modifiers" id="toc-the-modifiers" class="nav-link" data-scroll-target="#the-modifiers">The modifiers!</a></li>
+  <li><a href="#the-subcategories" id="toc-the-subcategories" class="nav-link" data-scroll-target="#the-subcategories">The subcategories!</a></li>
+  </ul></li>
+  <li><a href="#adding-a-2" id="toc-adding-a-2" class="nav-link" data-scroll-target="#adding-a-2">Adding a 2</a></li>
+  <li><a href="#how-to-make-a-name" id="toc-how-to-make-a-name" class="nav-link" data-scroll-target="#how-to-make-a-name">How to make a name?</a></li>
+  <li><a href="#further-resources-for-naming" id="toc-further-resources-for-naming" class="nav-link" data-scroll-target="#further-resources-for-naming">Further resources for naming</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2018-06-20-naming-things/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Naming Things</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">teaching</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2018-06-20</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>There are only two hard things in Computer Science: cache invalidation and naming thing – Phil Karlton (<a href="http://r-pkgs.had.co.nz/package.html">seen in r-packages</a>)</p>
+</blockquote>
+<p>I’m not really sure what cache invalidation is, but I certainly agree that naming things is pretty damn hard. I thought it would be interesting to share some thoughts and discussion that I’ve been having about naming packages. There was some <a href="https://twitter.com/sctyner/status/1008794932444884996">recent discussion on tidy names</a> on Twitter, and I felt like this was a good time to discuss this idea. Well, that, and this blog post has been sitting in draft form for 1 year on my computer.</p>
+<section id="naming-packages" class="level1">
+<h1>Naming Packages</h1>
+<p>This initial discussion began at the <a href="http://unconf17.ropensci.org/">rOpenSci Unconf in 2017</a>, where <a href="https://github.com/noamross">Noam Ross</a> and <a href="http://www.jimhester.com/">Jim Hester</a> talked about a few different ways to think about naming packages in R, that fell into several categories. I thought it would be fun to discuss these!</p>
+<section id="the-oldschool-mixedcasers" class="level2">
+<h2 class="anchored" data-anchor-id="the-oldschool-mixedcasers">The oldschool (mixedCaseRs)</h2>
+<p>The oldSchool namer generally mixes case in an R package, often capitalising the “R”, or going all in on ALL CAPS.</p>
+<p>Examples:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/twitteR/">twitteR</a></li>
+<li><a href="https://cran.r-project.org/web/packages/formatR/">formatR</a></li>
+<li><a href="https://cran.r-project.org/web/packages/UpSetR/">UpSetR</a></li>
+<li><a href="https://github.com/ropenscilabs/ochre">ochRe</a></li>
+<li><a href="https://github.com/ropenscilabs/MASS">MASS</a></li>
+<li><a href="https://cran.r-project.org/web/packages/Matrix/">Matrix</a></li>
+</ul>
+<p>Although personally I wouldn’t use this style as it can make it difficult to type, they have a certain charm, and are easy to google - provided you spell it right. And these are still seriously useful - Matrix provides extensive support for modelling, UpSetR produces great plots as an alternative to venn diagrams.</p>
+</section>
+<section id="the-modern-lowercasers" class="level2">
+<h2 class="anchored" data-anchor-id="the-modern-lowercasers">The Modern (lowercasers)</h2>
+<p>The modern namer has everything in lowercase and usually carefully places an <code>r</code>. For example:</p>
+<ul>
+<li><a href="https://github.com/tidyverse/dplyr">dplyr</a></li>
+<li><a href="https://github.com/tidyverse/tidyr">tidyr</a></li>
+<li><a href="https://github.com/tidyverse/purrr">purrr</a></li>
+<li><a href="https://github.com/DavisVaughan/furrr">furrr</a></li>
+<li><a href="https://github.com/tidyverse/knitr">knitr</a></li>
+<li><a href="https://github.com/njtierney/naniar">naniar</a></li>
+</ul>
+<p>These names are pretty popular amongst the <code>tidyverse</code> set of R packages</p>
+</section>
+<section id="the-post-modern-names" class="level2">
+<h2 class="anchored" data-anchor-id="the-post-modern-names">The Post Modern (names)</h2>
+<p>This involves using just the original name, as is. This name must also be a thing, or a person.</p>
+<p>Examples:</p>
+<ul>
+<li><a href="https://github.com/tidyverse/broom">broom</a></li>
+<li><a href="https://cran.r-project.org/web/packages/twitteR/">checkers</a></li>
+<li><a href="https://cran.r-project.org/web/packages/forecast/">forecast</a></li>
+<li><a href="https://cran.r-project.org/web/packages/greta/">greta</a></li>
+<li><a href="https://github.com/tidyverts/fable">fable</a></li>
+<li><a href="https://cran.r-project.org/web/packages/english">english</a></li>
+</ul>
+<p>Notably, <code>forecast</code> and <code>english</code> were postmodern before modern package names existed.</p>
+</section>
+<section id="the-gg" class="level2">
+<h2 class="anchored" data-anchor-id="the-gg">The “gg”</h2>
+<p>The growth of <code>ggplot2</code> packages to add extra themes or geoms, starting with <code>gg</code>, these packages let you know what they’re on about:</p>
+<ul>
+<li><a href="https://github.com/jrnold/ggthemes">ggthemes</a></li>
+<li><a href="https://github.com/AliciaSchep/gglabeller">gglabeller</a></li>
+<li><a href="https://github.com/thomasp85/ggforce">ggforce</a></li>
+<li><a href="https://github.com/thomasp85/gganimate">gganimate</a></li>
+<li><a href="https://github.com/corybrunson/ggalluvial">ggalluvial</a></li>
+<li><a href="https://github.com/GuangchuangYu/ggtree">ggtree</a></li>
+<li><a href="https://github.com/Freguglia/ggfocus">ggfocus</a></li>
+<li><a href="https://github.com/yutannihilation/gghighlight">gghighlight</a></li>
+</ul>
+<p>The variety in all of these packages speaks to the utility, extensibility, and general awesomeness of <code>ggplot2</code>.</p>
+</section>
+<section id="tidy-preface" class="level2">
+<h2 class="anchored" data-anchor-id="tidy-preface">Tidy-preface</h2>
+<p>With the announcement of The Tidyverse being made official by Hadley at UseR! in 2016 (see the <a href="https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/Towards-a-grammar-of-interactive-graphics">video</a> around 44 minutes) - there has been a trend of packages to preface their name with <code>tidy</code>:</p>
+<ul>
+<li><a href="https://github.com/juliasilge/tidytext">tidytext</a></li>
+<li><a href="https://github.com/const-ae/tidygenomics">tidygenomics</a></li>
+<li><a href="https://github.com/ChandlerLutz/tidyZillow">tidyzillow</a></li>
+<li><a href="https://github.com/CoEDL/tidylex">tidylex</a></li>
+<li><a href="https://github.com/ColoradoDemography/tidycensus">tidycensus</a></li>
+<li><a href="https://github.com/ropensci/tidyhydat">tidyhydat</a></li>
+<li><a href="https://github.com/briatte/tidykml">tidykml</a></li>
+</ul>
+<p>This is super cool, and a neat way to find useful packages. It’s also worth mentioning that the tidyverse is only officially about 2 years old - and there has been a lot of really nice, positive <a href="https://github.com/tidyverse">growth in R packages</a>, <a href="https://community.rstudio.com/">community</a>, and <a href="https://github.com/orgs/tidyverse/people">a team</a> of great people working on making great software.</p>
+</section>
+<section id="and-more" class="level2">
+<h2 class="anchored" data-anchor-id="and-more">And more?</h2>
+<p>There are for sure other ways to categorize the names - I don’t think that you can categorize the whole naming process of R packages into just three categories - there is a rich process that happens when you name something, and I won’t want to distill it down to a few labels!</p>
+<blockquote class="blockquote">
+<p>Update on 2018-06-24: The <a href="https://twitter.com/nj_tierney/status/1009435248638058496">twitter thread</a> for this blogpost had some nice discussion and additions from <a href="https://github.com/noamross">Noam Ross</a> and <a href="https://github.com/jennybc/">Jenny Bryan</a>. I ended up using this script to search for some evidence:</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pkg_names <span class="ot">&lt;-</span> <span class="fu">available.packages</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Package)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># package with a "2" in the name</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>pkg_names<span class="sc">$</span>Package[<span class="fu">str_detect</span>(pkg_names<span class="sc">$</span>Package, <span class="st">"2"</span>)]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># package with a "." in the name</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>pkg_names<span class="sc">$</span>Package[<span class="fu">str_detect</span>(pkg_names<span class="sc">$</span>Package, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="the-acronyms" class="level2">
+<h2 class="anchored" data-anchor-id="the-acronyms">The Acronyms!</h2>
+<p>Name your package as an acronym! These were kind of hard to search for so I could only think of three - there are more, I’m sure!</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/brms/">brms</a> - Bayesian Regression Models using Stan</li>
+<li><a href="https://cran.r-project.org/web/packages/mgcv/">mgcv</a> - Mixed GAM Computation Vehicle</li>
+<li><a href="https://cran.r-project.org/web/packages/eechidna/">eechidna</a> - Exploring Election and Census Highly Informative Data Nationally for Australia</li>
+</ul>
+</section>
+<section id="the-modifiers" class="level2">
+<h2 class="anchored" data-anchor-id="the-modifiers">The modifiers!</h2>
+<p>For example, modify the package with “lite” or “Lite” to indicate that this is a stripped down version of something else:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/jsonlite/">jsonlite</a></li>
+<li><a href="https://cran.r-project.org/web/packages/svglite/">svglite</a></li>
+<li><a href="https://cran.r-project.org/web/packages/svglite/">mongolite</a></li>
+<li><a href="https://cran.r-project.org/web/packages/svglite/">viridisLite</a></li>
+</ul>
+</section>
+<section id="the-subcategories" class="level2">
+<h2 class="anchored" data-anchor-id="the-subcategories">The subcategories!</h2>
+<p>Got a package that spans across multiple categories? See for example the <a href="https://cran.r-project.org/web/packages/future">future</a> family of packages and more:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/future.batchtools">future.batchtools</a></li>
+<li><a href="https://cran.r-project.org/web/packages/future.apply">future.apply</a></li>
+<li><a href="https://cran.r-project.org/web/packages/aws.alexa">aws.alexa</a></li>
+<li><a href="https://cran.r-project.org/web/packages/aws.s3">aws.s3</a></li>
+<li><a href="https://cran.r-project.org/web/packages/rpart.plot">rpart.plot</a></li>
+</ul>
+</section>
+</section>
+<section id="adding-a-2" class="level1">
+<h1>Adding a 2</h1>
+<p>Some (approximate) backstory - ggplot was going great, but Hadley Wickham wanted to change the API from a nested function call to using <code>+</code> - the API change was so dramatic that he had to release a separate package, <code>ggplot2</code>. You can also use <code>2</code> to indicate “to” - from X to Y, from R to JAGS, R to virtual reality, R to D3:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/ggplot2">ggplot2</a></li>
+<li><a href="https://cran.r-project.org/web/packages/reshape2">rehape2</a></li>
+<li><a href="https://cran.r-project.org/web/packages/xml2">xml2</a></li>
+<li><a href="https://cran.r-project.org/web/packages/tcltk2">tcltk2</a></li>
+<li><a href="https://cran.r-project.org/web/packages/fpp2">fpp2</a></li>
+<li><a href="https://cran.r-project.org/web/packages/r2vr">r2vr</a></li>
+<li><a href="https://cran.r-project.org/web/packages/r2d3">r2d3</a></li>
+<li><a href="https://cran.r-project.org/web/packages/R2jags">R2jags</a></li>
+<li><a href="https://cran.r-project.org/web/packages/bib2dfå">bib2df</a></li>
+</ul>
+</section>
+<section id="how-to-make-a-name" class="level1">
+<h1>How to make a name?</h1>
+<p>Coming up with package name often takes a lot of time and thought. Personally, I’ve changed the names of the packages <code>visdat</code> and <code>narnia</code> three times. <code>visdat</code> was initially <a href="https://github.com/njtierney/visdat/commit/a350e50d210ab99939b53b22e2e2013e7e492f80"><code>footprintr</code></a>, then <code>vizdat</code>, and then finally <code>visdat</code>. <code>narnia</code> was initiallly <a href="https://github.com/njtierney/narnia/commit/a161b7c5707e0c5041467d8f7228c11afb5e2b29"><code>ggmissing</code></a>, then <code>naniar</code>, then <code>narnia</code>, then back to <code>naniar</code>. Why the changes from <code>narnia</code> and back and forth? Well, mainly I was worried about some awkward cease and desist letters from the estate of CS Lewis once the package got on CRAN, and I’m not really sure how to change the name back on CRAN - I’m pretty sure that once it is on CRAN, that’s it.</p>
+<p>But, my story aside, here are some general tips.</p>
+<p>I find that I generally need to sit on a name for a while and use it, describe it to a few people. I find that once I state the name of the package to them, they often have to ask how to spell it, and if that process feels difficult multiple times, and if I can’t work out how to explain why I named it that, then I generally try and rename it. Often this comes down to a few things:</p>
+<ul>
+<li>Is the package name hard to say?</li>
+<li>Is the package name hard to spell?</li>
+<li>Can you remember the name of the package?</li>
+<li>Does the package name evoke the task it does, or perhaps fit into some sort of larger pun or story.</li>
+</ul>
+</section>
+<section id="further-resources-for-naming" class="level1">
+<h1>Further resources for naming</h1>
+<p>I would look at the <a href="https://github.com/ropenscilabs/available"><code>available</code></a> package for checking if the name exists. Maybe one day this will come up with something creative or unusual.</p>
+<p>Hadley has a <a href="http://r-pkgs.had.co.nz/package.html">good guide</a> to naming packages, but I think that this process requires a few iterations.</p>
+<p>Also another post by <a href="https://yihui.name/en/2017/12/typing-names/">Yihui Xie</a> has a good post on naming things - make sure it is easy to type!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2018-06-20-naming-things/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

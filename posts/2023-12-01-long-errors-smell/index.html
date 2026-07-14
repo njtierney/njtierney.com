@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-12-06">
+
+<title>Code Smell: Error Handling Eclipse – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-the-solution" id="toc-whats-the-solution" class="nav-link active" data-scroll-target="#whats-the-solution">What’s the solution?</a></li>
+  <li><a href="#show-me-the-difference" id="toc-show-me-the-difference" class="nav-link" data-scroll-target="#show-me-the-difference">Show me the difference</a></li>
+  <li><a href="#but-now-the-error-smells" id="toc-but-now-the-error-smells" class="nav-link" data-scroll-target="#but-now-the-error-smells">But now the error smells</a></li>
+  <li><a href="#on-writing-error-messages" id="toc-on-writing-error-messages" class="nav-link" data-scroll-target="#on-writing-error-messages">On writing error messages</a></li>
+  <li><a href="#on-input-checking-functions" id="toc-on-input-checking-functions" class="nav-link" data-scroll-target="#on-input-checking-functions">On input checking functions</a></li>
+  <li><a href="#some-more-thoughts" id="toc-some-more-thoughts" class="nav-link" data-scroll-target="#some-more-thoughts">Some more thoughts</a></li>
+  <li><a href="#functions-are-good" id="toc-functions-are-good" class="nav-link" data-scroll-target="#functions-are-good">Functions are good</a></li>
+  <li><a href="#thanks" id="toc-thanks" class="nav-link" data-scroll-target="#thanks">Thanks</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2023-12-01-long-errors-smell/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Code Smell: Error Handling Eclipse</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">error</div>
+    <div class="quarto-category">functions</div>
+    <div class="quarto-category">rbloggers</div>
+    <div class="quarto-category">research software engineer</div>
+    <div class="quarto-category">rstats</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-12-06</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<figure class="figure">
+<img src="img/no-parking.jpg" alt="An amusing “no parking” sign that threatens to transport your car to another universe. Collingwood, Melbourne" class="figure-img">
+<figcaption aria-hidden="true">
+An amusing “no parking” sign that threatens to transport your car to another universe. Collingwood, Melbourne
+</figcaption>
+</figure>
+<p>Error messages are really important, and really hard to write well. When software authors take the time to check your inputs, and share reasons why it fails, they are doing you a favour. So, writing error messages is good.</p>
+<p>However, this error checking code can sometimes totally eclipse the intent of the code. We can describe these kinds of patterns as a “code smell”. I first heard about code smells in <a href="https://youtu.be/7oyiPBjLAWY?si=WmuA9wKlZ_kq8eGl">Jenny Bryan’s UseR! Keynote in 2018</a>, which I highly recommend watching. The term “code smell”, comes from <a href="https://martinfowler.com/books/refactoring.html">Martin Fowler’s book: Improving the Design of Existing Code</a>). The definition of a code smell that Jenny gives in her talk is:</p>
+<blockquote class="blockquote">
+<p>Structures in code that suggest (or scream for) <strong>refactoring</strong></p>
+</blockquote>
+<p>She then goes on to define refactoring as:</p>
+<blockquote class="blockquote">
+<p>Making code easier to understand for the next person (which might be you), cheaper to modify by the next person who comes through, <strong>without changing behaviour</strong>.</p>
+</blockquote>
+<p>The talk is a delight, and watching it again was really awesome. If you haven’t watched it, you should, and if you haven’t seen it for a while, it’s worth another watch.</p>
+<p>Anyway, I digress.</p>
+<p>I call this code smell, and “Error Handling Eclipse”:</p>
+<blockquote class="blockquote">
+<p>When error checking code totally eclipses the intent of the code.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+</blockquote>
+<p>The code smell looks like this:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">vector_to_square</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">dims</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">squarable_length</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="o">(</span><span class="nv">dims</span><span class="o">)</span> <span class="o">==</span> <span class="nv">dims</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nv">squarable_length</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector is not of a squarable length"</span>,</span>
+<span>        <span class="s">"{.var data} is of length {.num {length(data)}}"</span>,</span>
+<span>        <span class="s">"This cannot be represented as a square"</span>,</span>
+<span>        <span class="s">"Square root of {.var dim(data)} is: {.num {round(dims, 3)}}."</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nf"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector must be {.cls numeric}, not {.cls {class(data)}}"</span>,</span>
+<span>        <span class="s">"We see that {.run is.numeric(data)} returns {.cls {class(data)}}"</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span>  <span class="nf"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="o">(</span></span>
+<span>    data <span class="o">=</span> <span class="nv">data</span>,</span>
+<span>    nrow <span class="o">=</span> <span class="nv">dims</span>,</span>
+<span>    ncol <span class="o">=</span> <span class="nv">dims</span>,</span>
+<span>    byrow <span class="o">=</span> <span class="kc">TRUE</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>The code smell, “error handling eclipse”, can be seen here where the long error messages in the body of a function crow the intent. I believe the refactoring move here is to wrap these error functions into a function. This reduces repetition, and makes the intent of the code clearer, since you don’t need to wade through error checking code. <a href="https://design.tidyverse.org/err-constructor.html">The tidyverse design document on error checking</a>) mentions building these “error checking” functions when the error is used three times. I think there is more benefit to write it out every time.</p>
+<section id="whats-the-solution" class="level2">
+<h2 class="anchored" data-anchor-id="whats-the-solution">What’s the solution?</h2>
+<p>This code can be improved by refactoring the errors as <code>check_*</code> functions, something like, <code>check_array_is_square(x)</code>.</p>
+</section>
+<section id="show-me-the-difference" class="level2">
+<h2 class="anchored" data-anchor-id="show-me-the-difference">Show me the difference</h2>
+<p>To demonstrate this, let’s take a look again at the example code from above, a function that converts a vector into a square matrix:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">vector_to_square</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">dims</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">squarable_length</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="o">(</span><span class="nv">dims</span><span class="o">)</span> <span class="o">==</span> <span class="nv">dims</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nv">squarable_length</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector is not of a squarable length"</span>,</span>
+<span>        <span class="s">"{.var x} is of length {.num {length(data)}}"</span>,</span>
+<span>        <span class="s">"This cannot be represented as a square"</span>,</span>
+<span>        <span class="s">"Square root of {.var dim(data)} is: {.num {round(dims, 3)}}."</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nf"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector must be {.cls numeric}, not {.cls {class(data)}}"</span>,</span>
+<span>        <span class="s">"We see that {.run is.numeric(data)} returns {.cls {class(data)}}"</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span>  <span class="nf"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="o">(</span></span>
+<span>    data <span class="o">=</span> <span class="nv">data</span>,</span>
+<span>    nrow <span class="o">=</span> <span class="nv">dims</span>,</span>
+<span>    ncol <span class="o">=</span> <span class="nv">dims</span>,</span>
+<span>    byrow <span class="o">=</span> <span class="kc">TRUE</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>Now let’s demonstrate its use, and what the errors look like:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">)</span></span>
+<span><span class="c">#&gt;      [,1] [,2]</span></span>
+<span><span class="c">#&gt; [1,]    1    2</span></span>
+<span><span class="c">#&gt; [2,]    3    4</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector is not of a squarable length</span></span>
+<span><span class="c">#&gt; `x` is of length 5</span></span>
+<span><span class="c">#&gt; This cannot be represented as a square</span></span>
+<span><span class="c">#&gt; Square root of `dim(data)` is: 2.236.</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="nv">LETTERS</span><span class="o">[</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">]</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector must be <span style="color: #0000BB;">&lt;numeric&gt;</span>, not <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span><span class="c">#&gt; We see that `is.numeric(data)` returns <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span></span></code></pre>
+</div>
+<p>So we have some input checking code, which does two things:</p>
+<ul>
+<li>checks if the inputs can be a square matrix</li>
+<li>checks if inputs are not numeric</li>
+</ul>
+<p>While we like these error messages, wrapping up the error messags as functions clarifies the intent of them, and avoids repitition:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">check_if_squarable</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">x</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">dims</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">squarable_length</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="o">(</span><span class="nv">dims</span><span class="o">)</span> <span class="o">==</span> <span class="nv">dims</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nv">squarable_length</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector is not of a squarable length"</span>,</span>
+<span>        <span class="s">"{.var x} is of length {.num {length(x)}}"</span>,</span>
+<span>        <span class="s">"This cannot be represented as a square"</span>,</span>
+<span>        <span class="s">"Square root of {.var dim(x)} is: {.num {round(dims, 3)}}."</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span><span class="o">}</span></span>
+<span></span>
+<span><span class="nv">check_if_not_numeric</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">x</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nf"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector must be {.cls numeric}, not {.cls {class(x)}}"</span>,</span>
+<span>        <span class="s">"We see that {.run is.numeric(x)} returns {.cls {class(x)}}"</span></span>
+<span>      <span class="o">)</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>These error messages can then be put into the function like so:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">vector_to_square</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nf">check_if_squarable</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span></span>
+<span>  <span class="nf">check_if_not_numeric</span><span class="o">(</span><span class="nv">data</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">dims</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="o">(</span><span class="nv">data</span><span class="o">)</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nf"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="o">(</span></span>
+<span>    data <span class="o">=</span> <span class="nv">data</span>,</span>
+<span>    nrow <span class="o">=</span> <span class="nv">dims</span>,</span>
+<span>    ncol <span class="o">=</span> <span class="nv">dims</span>,</span>
+<span>    byrow <span class="o">=</span> <span class="kc">TRUE</span></span>
+<span>  <span class="o">)</span></span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>The error checking code no longer eclipses your intent.</p>
+<p>I think the main benefit here is <em>improvement in intent</em> - I don’t have to read some error checking code, I can read the function name <code>check_if_squarable(data)</code> - this tells me it checks if it is squareable, and <code>check_if_not_numeric(data)</code> does what it says on the tin. This means I don’t have to spend time reading error checking code, which can sometimes be quite complex. I can focus on those functions intention. This means I can summarise this function like so:</p>
+<ul>
+<li><p>Do some checking of the inputs</p></li>
+<li><p>Get the dimensions for a square matrix</p></li>
+<li><p>Make the matrix, filling in by row</p></li>
+</ul>
+<p>There are a couple of other benefits to this:</p>
+<ul>
+<li>All my checking functions can get re-used in the other work I do</li>
+<li>I can find common cases of checking and improve them.</li>
+<li>I see two checking functions, and it invites me to think about other checks that I might want to perform.</li>
+</ul>
+</section>
+<section id="but-now-the-error-smells" class="level2">
+<h2 class="anchored" data-anchor-id="but-now-the-error-smells">But now the error smells</h2>
+<p>Ah, but we didn’t check to see what these new errors look like! My friend <a href="https://adamgruer.rbind.io/">Adam Gruer</a> pointed out:</p>
+<blockquote class="blockquote">
+<p>might a user get confused when then the error is reported as coming from the check_function rather than the function they called? What are your thoughts?</p>
+</blockquote>
+<p>Indeed, the errors are now different, check it out:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">)</span></span>
+<span><span class="c">#&gt;      [,1] [,2]</span></span>
+<span><span class="c">#&gt; [1,]    1    2</span></span>
+<span><span class="c">#&gt; [2,]    3    4</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `check_if_squarable()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector is not of a squarable length</span></span>
+<span><span class="c">#&gt; `x` is of length 5</span></span>
+<span><span class="c">#&gt; This cannot be represented as a square</span></span>
+<span><span class="c">#&gt; Square root of `dim(x)` is: 2.236.</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="nv">LETTERS</span><span class="o">[</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">]</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `check_if_not_numeric()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector must be <span style="color: #0000BB;">&lt;numeric&gt;</span>, not <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span><span class="c">#&gt; We see that `is.numeric(x)` returns <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span></span></code></pre>
+</div>
+<p>The error message is about the <strong>checking</strong> function, <code>check_if_squarable()</code> or <code>check_if_not_numeric()</code>. This could be confusing to the user as the error doesn’t appear to be coming from the <code>vector_to_square()</code> function.</p>
+<p>Seeing this also made me realise I’ve seen this problem before and been unsure how to solve it. Thankfully, the rlang team has thought about this, and they have a helpful vignette, <a href="https://rlang.r-lib.org/reference/topic-error-call.html">“Including function calls in error messages”</a>.</p>
+<p>They bring up two really great points. Both of which I hadn’t really thought about solving. I just thought this was the compromise.</p>
+<p>The first is how to make sure the input checking function references the function it was called in. This is why we see the error being about <code>check_if_squarable()</code>, and not <code>vector_to_square()</code>, which is what we want.</p>
+<p>This is solved by passing the <code>check_</code> functions a <code>call</code> environment. So we add <code>call = rlang::caller_env()</code> as an argument:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">check_if_squarable</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">x</span>,</span>
+<span>                               <span class="c"># Add this</span></span>
+<span>                               <span class="nv">call</span> <span class="o">=</span> <span class="nf">rlang</span><span class="nf">::</span><span class="nf"><a href="https://rlang.r-lib.org/reference/stack.html">caller_env</a></span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">dims</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="o">(</span><span class="nf"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">squarable_length</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="o">(</span><span class="nv">dims</span><span class="o">)</span> <span class="o">==</span> <span class="nv">dims</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nv">squarable_length</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      message <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector is not of a squarable length"</span>,</span>
+<span>        <span class="s">"{.var x} is of length {.num {length(x)}}"</span>,</span>
+<span>        <span class="s">"This cannot be represented as a square"</span>,</span>
+<span>        <span class="s">"Square root of {.var dim(x)} is: {.num {round(dims, 3)}}."</span></span>
+<span>      <span class="o">)</span>,</span>
+<span>      <span class="c"># And this</span></span>
+<span>      call <span class="o">=</span> <span class="nv">call</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span><span class="o">}</span></span>
+<span></span>
+<span><span class="nv">check_if_not_numeric</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">x</span>,</span>
+<span>                                 <span class="c"># Add this</span></span>
+<span>                                 <span class="nv">call</span> <span class="o">=</span> <span class="nf">rlang</span><span class="nf">::</span><span class="nf"><a href="https://rlang.r-lib.org/reference/stack.html">caller_env</a></span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nf"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      message <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector must be {.cls numeric}, not {.cls {class(x)}}"</span>,</span>
+<span>        <span class="s">"We see that {.run is.numeric(x)} returns {.cls {class(x)}}"</span></span>
+<span>      <span class="o">)</span>,</span>
+<span>      <span class="c"># And this</span></span>
+<span>      call <span class="o">=</span> <span class="nv">call</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>Let’s see what that looks like now:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">)</span></span>
+<span><span class="c">#&gt;      [,1] [,2]</span></span>
+<span><span class="c">#&gt; [1,]    1    2</span></span>
+<span><span class="c">#&gt; [2,]    3    4</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector is not of a squarable length</span></span>
+<span><span class="c">#&gt; `x` is of length 5</span></span>
+<span><span class="c">#&gt; This cannot be represented as a square</span></span>
+<span><span class="c">#&gt; Square root of `dim(x)` is: 2.236.</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="nv">LETTERS</span><span class="o">[</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">]</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector must be <span style="color: #0000BB;">&lt;numeric&gt;</span>, not <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span><span class="c">#&gt; We see that `is.numeric(x)` returns <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span></span></code></pre>
+</div>
+<p>OK much better, the error now starts with: “Error in <code>vector_to_square()</code>”.</p>
+<p>The second problem, which is hauntingly familiar, is to do with supplying argument names. Notice that the error message gives the error in terms of the argument <code>x</code>? Despite our argument to <code>vector_to_square</code> using the argument, <code>data</code></p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">)</span></span>
+<span><span class="c">#&gt;      [,1] [,2]</span></span>
+<span><span class="c">#&gt; [1,]    1    2</span></span>
+<span><span class="c">#&gt; [2,]    3    4</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector is not of a squarable length</span></span>
+<span><span class="c">#&gt; `x` is of length 5</span></span>
+<span><span class="c">#&gt; This cannot be represented as a square</span></span>
+<span><span class="c">#&gt; Square root of `dim(x)` is: 2.236.</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="nv">LETTERS</span><span class="o">[</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">]</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector must be <span style="color: #0000BB;">&lt;numeric&gt;</span>, not <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span><span class="c">#&gt; We see that `is.numeric(x)` returns <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span></span></code></pre>
+</div>
+<p>A small detail, perhaps? But I think it’s actually kind of a big problem! I don’t want my users to have to try and reckon/think about what <code>x</code> is, or have to imagine that I’ve written some fancy code checking functions. I just want them to know where the error came from. In more complex functions this could be even more confusing.</p>
+<p>Thankfully, yet again, the rlang team has thought about this, in <a href="https://rlang.r-lib.org/reference/topic-error-call.html#input-checkers-and-caller-arg-">Input checkers and <code>caller_arg()</code></a>, they suggest adding <code>arg = rlang::caller_arg(x)</code> to our checking function, which helps capture the name of the argument that is passed to the check functions. Super neat.</p>
+<p>Let’s demonstrate this - we change uses of <code>x</code> to using <code>arg</code> in the error message.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nv">check_if_squarable</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">x</span>,</span>
+<span>                               <span class="nv">arg</span> <span class="o">=</span> <span class="nf">rlang</span><span class="nf">::</span><span class="nf"><a href="https://rlang.r-lib.org/reference/caller_arg.html">caller_arg</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span>,</span>
+<span>                               <span class="nv">call</span> <span class="o">=</span> <span class="nf">rlang</span><span class="nf">::</span><span class="nf"><a href="https://rlang.r-lib.org/reference/stack.html">caller_env</a></span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="nv">x_len</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span></span>
+<span>  <span class="nv">dims</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="o">(</span><span class="nv">x_len</span><span class="o">)</span></span>
+<span>  </span>
+<span>  <span class="nv">squarable_length</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="o">(</span><span class="nv">dims</span><span class="o">)</span> <span class="o">==</span> <span class="nv">dims</span></span>
+<span>  </span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nv">squarable_length</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      message <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector is not of a squarable length"</span>,</span>
+<span>        <span class="s">"{.arg {arg}} is of length {.num {x_len}}"</span>,</span>
+<span>        <span class="s">"This cannot be represented as a square"</span></span>
+<span>      <span class="o">)</span>,</span>
+<span>      call <span class="o">=</span> <span class="nv">call</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span><span class="o">}</span></span>
+<span></span>
+<span><span class="nv">check_if_not_numeric</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">x</span>,</span>
+<span>                                 <span class="nv">arg</span> <span class="o">=</span> <span class="nf">rlang</span><span class="nf">::</span><span class="nf"><a href="https://rlang.r-lib.org/reference/caller_arg.html">caller_arg</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span>,</span>
+<span>                                 <span class="nv">call</span> <span class="o">=</span> <span class="nf">rlang</span><span class="nf">::</span><span class="nf"><a href="https://rlang.r-lib.org/reference/stack.html">caller_env</a></span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>  <span class="kr">if</span> <span class="o">(</span><span class="o">!</span><span class="nf"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="o">(</span><span class="nv">x</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span></span>
+<span>    <span class="nf">cli</span><span class="nf">::</span><span class="nf"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="o">(</span></span>
+<span>      message <span class="o">=</span> <span class="nf"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="o">(</span></span>
+<span>        <span class="s">"Provided vector, {.arg {arg}}, must be {.cls numeric}, not {.cls {class(x)}}"</span>,</span>
+<span>        <span class="s">"We see that {.run is.numeric({.arg {arg}})} returns {.cls {class(x)}}"</span></span>
+<span>      <span class="o">)</span>,</span>
+<span>      call <span class="o">=</span> <span class="nv">call</span></span>
+<span>    <span class="o">)</span></span>
+<span>  <span class="o">}</span></span>
+<span>  </span>
+<span><span class="o">}</span></span></code></pre>
+</div>
+<p>(in rewriting-ing this, I realised I don’t need to include the square root of the length to explain to the user, so I deleted that part of the message)</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">)</span></span>
+<span><span class="c">#&gt;      [,1] [,2]</span></span>
+<span><span class="c">#&gt; [1,]    1    2</span></span>
+<span><span class="c">#&gt; [2,]    3    4</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector is not of a squarable length</span></span>
+<span><span class="c">#&gt; `data` is of length 5</span></span>
+<span><span class="c">#&gt; This cannot be represented as a square</span></span>
+<span></span><span><span class="nf">vector_to_square</span><span class="o">(</span>data <span class="o">=</span> <span class="nv">LETTERS</span><span class="o">[</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="o">]</span><span class="o">)</span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `vector_to_square()`:</span></span></span>
+<span><span class="c">#&gt; <span style="color: #BBBB00;">!</span> Provided vector, `data`, must be <span style="color: #0000BB;">&lt;numeric&gt;</span>, not <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span><span class="c">#&gt; We see that `` is.numeric(`data`) `` returns <span style="color: #0000BB;">&lt;character&gt;</span></span></span>
+<span></span></code></pre>
+</div>
+<p>This now uses <code>data</code> instead of <code>x</code>, which is what we want!</p>
+</section>
+<section id="on-writing-error-messages" class="level1">
+<h1>On writing error messages</h1>
+<p>I do think that writing good error messages is hard. Something that helped me think about this differently was something from the <a href="https://style.tidyverse.org/error-messages.html">tidyverse style guide on error messages</a>:</p>
+<blockquote class="blockquote">
+<p>An error message should start with a general statement of the problem then give a concise description of what went wrong. Consistent use of punctuation and formatting makes errors easier to parse</p>
+</blockquote>
+<p>They also recommend using <a href="https://cli.r-lib.org/reference/cli_abort.html"><code>cli::cli_abort()</code></a>, which we used above. I’ve really enjoyed using this over <code>stop</code>, because, well, again, the tidyverse team summarises the reasons well, <a href="https://cli.r-lib.org/reference/cli_abort.html"><code>cli::cli_abort()</code></a> is good because it:</p>
+<blockquote class="blockquote">
+<ul>
+<li><p>Makes it easy to generate bulleted lists.</p></li>
+<li><p>Uses glue style interpolation to insert data into the error.</p></li>
+<li><p>Supports a wide range of <a href="https://cli.r-lib.org/reference/inline-markup.html">inline markup</a>.</p></li>
+<li><p>Provides convenient tools to <a href="https://rlang.r-lib.org/reference/topic-error-chaining.html">chain errors together</a>.</p></li>
+<li><p>Can control the <a href="https://rlang.r-lib.org/reference/topic-error-call.html">name of the function</a> shown in the error.</p></li>
+</ul>
+</blockquote>
+<p>You should read the <a href="https://style.tidyverse.org/error-messages.html">whole section on error messages</a>, they’ve got great advice on how to write good error messages.</p>
+</section>
+<section id="on-input-checking-functions" class="level1">
+<h1>On input checking functions</h1>
+<p>This type of error message is often called an “input checking function”. There’s a really nice blog post <a href="https://blog.r-hub.io/2022/03/10/input-checking/">“Checking the inputs of your R functions”</a>, by <a href="https://hugogruson.fr/">Hugo Gruson</a>, <a href="https://samabbott.co.uk/">Sam Abbott</a>, and <a href="https://twitter.com/cap1024">Carl Pearson</a>, which goes into more detail on the topic. They also recommend a few packages/functions for input checking that are worth checking out, such as <a href="https://mllg.github.io/checkmate/"><code>checkmate</code></a>, <a href="https://vctrs.r-lib.org/reference/vec_assert.html"><code>vec_assert()</code></a>, <a href="https://github.com/brodieG/vetr"><code>vetr</code></a>, and <a href="https://github.com/ropensci/assertr/"><code>assertr</code></a> to list a few.</p>
+</section>
+<section id="some-more-thoughts" class="level1">
+<h1>Some more thoughts</h1>
+<p>In writing this blog post I’ve now realised that my pattern of creating <code>check_</code> functions for input checking now also results in a potentially undesirable error for the user where they won’t know where the error has come from. I’ll need to make a note to change this in a lot of my packages.</p>
+<p>In the future I’d really like to dive a bit deeper into adding classes or subclasses of errors. <a href="https://www.mm218.dev/posts/2023-11-07-classed-errors/">Mike Mahoney’s blog post, “Classed conditions from rlang functions”</a> provides a good simple usecase of classed errors. And there’s a <a href="https://design.tidyverse.org/err-constructor.html">tidyverse design page on error constructors</a> that I should read more deeply. I’m pretty sure this would be helpful in things like <a href="https://greta-stats.org/"><code>greta</code></a>.</p>
+</section>
+<section id="functions-are-good" class="level1">
+<h1>Functions are good</h1>
+<p>I will wrap up by emphasising a point about using functions. <strong>Good functions can be individually reasoned with</strong>, and used repeatedly across your work. This means you can write them once, use them many times, and only need to make changes to one place, rather than in many. Writing functions helps abstract away details, and helps clarify your code. They are an important building block for writing good code that has content that can be easily reasoned with, and extended.</p>
+</section>
+<section id="thanks" class="level1">
+<h1>Thanks</h1>
+<p>Thank you very much to the maintainers of <a href="https://cli.r-lib.org/index.html"><code>cli</code></a> (<a href="https://github.com/gaborcsardi">Gábor Csárdi</a>), and <a href="https://rlang.r-lib.org/"><code>rlang</code></a> (<a href="https://github.com/lionel-">Lionel Henry</a>), and the team behind these packages. These are hard problems! Thanks to <a href="https://adamgruer.rbind.io/">Adam Gruer</a> for asking a great question that made me dive deeper into error checking. Special thanks to <a href="https://masalmon.eu/">Maëlle Salmon</a> for providing very useful comments that improved this post greatly, and thank you in general being a kind source of knowledge.</p>
+<p>Is there anything I missed? Other questions / problems to explore in this space? Leave me a comment below if you want to chat about any of this :).</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Thank you to Maëlle Salmon for helping me articulate this point, with inspiration from <a href="https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/">The Pragmatic Programmer</a>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2023-12-01-long-errors-smell/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

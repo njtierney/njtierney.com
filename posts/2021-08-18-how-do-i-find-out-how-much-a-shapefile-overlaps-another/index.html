@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2021-08-21">
+
+<title>How Much One Shapefile Overlaps Another? – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link active" data-scroll-target="#the-data">The Data</a></li>
+  <li><a href="#the-data-vis" id="toc-the-data-vis" class="nav-link" data-scroll-target="#the-data-vis">The Data Vis</a></li>
+  <li><a href="#the-area-of-the-shapefile-for-the-original-brisbane-file" id="toc-the-area-of-the-shapefile-for-the-original-brisbane-file" class="nav-link" data-scroll-target="#the-area-of-the-shapefile-for-the-original-brisbane-file">The area of the shapefile for the original Brisbane file</a></li>
+  <li><a href="#the-area-of-the-overlap-between-the-two-files" id="toc-the-area-of-the-overlap-between-the-two-files" class="nav-link" data-scroll-target="#the-area-of-the-overlap-between-the-two-files">The area of the overlap between the two files</a></li>
+  <li><a href="#the-ratio-of-the-area-in-the-original-shapefile-and-the-area-of-the-overlapping-areas" id="toc-the-ratio-of-the-area-in-the-original-shapefile-and-the-area-of-the-overlapping-areas" class="nav-link" data-scroll-target="#the-ratio-of-the-area-in-the-original-shapefile-and-the-area-of-the-overlapping-areas">The ratio of the area in the original shapefile, and the area of the overlapping areas</a></li>
+  <li><a href="#why-do-this" id="toc-why-do-this" class="nav-link" data-scroll-target="#why-do-this">Why do this?</a></li>
+  <li><a href="#thanks" id="toc-thanks" class="nav-link" data-scroll-target="#thanks">Thanks</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2021-08-18-how-do-i-find-out-how-much-a-shapefile-overlaps-another/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How Much One Shapefile Overlaps Another?</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">spatial</div>
+    <div class="quarto-category">gis</div>
+    <div class="quarto-category">sf</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2021-08-21</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="highlight">
+<p><img src="figs/overlapping-bubbles.jpg" width="100%" style="display: block; margin: auto;"></p>
+</div>
+<p align="right" font-size="12px">
+Photo By <a href="https://www.instagram.com/p/CSrX0-qh1tp/">Nick Tierney</a>
+</p>
+<p>Last week I needed to understand how to calculate how much two spatial areas overlapped. I found a nice <a href="https://gis.stackexchange.com/questions/362466/calculate-percentage-overlap-of-2-sets-of-polygons-in-r">thread on GIS stack exchange</a> that explained an answer (from user <a href="https://gis.stackexchange.com/users/161806/sandy-ab">Sandy AB</a>). This pretty much gave me what I was looking for - but I was after something with more pictures, so here’s an example of that.</p>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>I started by getting some spatial areas from the ABS at <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files">this link</a>, selecting, “statistical local areas level 4 2021”:</p>
+<div class="highlight">
+<p><img src="figs/shapefile-choose.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>I then did a bit of processing to shrink the data down to just my hometown, Brisbane.</p>
+<p>Let’s read this in with <a href="https://r-spatial.github.io/sf/index.html"><code>sf</code></a>:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="o">)</span>
+<span class="c">#&gt; Linking to GEOS 3.8.1, GDAL 3.2.1, PROJ 7.2.1</span>
+<span class="nv">brisbane_sf</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="o">(</span><span class="nf">here</span><span class="nf">::</span><span class="nf"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="o">(</span><span class="s">"content/post/2021-08-18-how-do-i-find-out-how-much-a-shapefile-overlaps-another/data/brisbane-sla4.shp"</span><span class="o">)</span><span class="o">)</span></code></pre>
+</div>
+</section>
+<section id="the-data-vis" class="level2">
+<h2 class="anchored" data-anchor-id="the-data-vis">The Data Vis</h2>
+<p>Let’s plot my hometown, Brisbane with <a href="https://ggplot2.tidyverse.org/index.html"><code>ggplot2</code></a> and <code>geom_sf()</code>.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="o">)</span>
+<span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="o">(</span>data <span class="o">=</span> <span class="nv">brisbane_sf</span>,
+          fill <span class="o">=</span> <span class="s">"forestgreen"</span><span class="o">)</span> 
+</code></pre>
+<p><img src="figs/gg-full-brisbane-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Let’s say we have a simpler shape file that we want to compare to this - which we create by simplifying the shapefile with <a href="https://github.com/ateucher/rmapshaper"><code>rmapshaper</code></a>.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://github.com/ateucher/rmapshaper">rmapshaper</a></span><span class="o">)</span>
+<span class="c">#&gt; Registered S3 method overwritten by 'geojsonlint':</span>
+<span class="c">#&gt;   method         from </span>
+<span class="c">#&gt;   print.location dplyr</span>
+<span class="nv">brisbane_simpler_sf</span> <span class="o">&lt;-</span> <span class="nv">brisbane_sf</span> <span class="o">%&gt;%</span> <span class="nf"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="o">(</span>keep <span class="o">=</span> <span class="m">0.01</span><span class="o">)</span></code></pre>
+</div>
+<p>With this simpler file, we want to know how much area we are losing. Here’s the “simpler” Brisbane in red.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="o">(</span>data <span class="o">=</span> <span class="nv">brisbane_simpler_sf</span>, 
+          fill <span class="o">=</span> <span class="s">"firebrick"</span><span class="o">)</span>
+</code></pre>
+<p><img src="figs/gg-simple-brisbane-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>We can overlay them to see how similar they are, full Brisbane in green, and new Brisbane in red:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="o">(</span>data <span class="o">=</span> <span class="nv">brisbane_sf</span>,
+          fill <span class="o">=</span> <span class="s">"forestgreen"</span>, alpha <span class="o">=</span> <span class="m">0.5</span><span class="o">)</span> <span class="o">+</span> 
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="o">(</span>data <span class="o">=</span> <span class="nv">brisbane_simpler_sf</span>, 
+          fill <span class="o">=</span> <span class="s">"firebrick"</span>,
+          alpha <span class="o">=</span> <span class="m">0.5</span><span class="o">)</span>
+</code></pre>
+<p><img src="figs/gg-overlap-brisbane-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>So how do we calculate the difference between the two? We can use <code>st_intersection</code> to find where both shapes overlap. Here it is visualised:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="o">(</span><span class="nv">brisbane_sf</span>, <span class="nv">brisbane_simpler_sf</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="o">(</span><span class="o">)</span> <span class="o">+</span>
+  <span class="nf"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="o">(</span>fill <span class="o">=</span> <span class="s">"brown"</span>, alpha <span class="o">=</span> <span class="m">0.5</span><span class="o">)</span>
+<span class="c">#&gt; although coordinates are longitude/latitude, st_intersection assumes that they are planar</span>
+<span class="c">#&gt; Warning: attribute variables are assumed to be spatially constant throughout all geometries</span>
+</code></pre>
+<p><img src="figs/gg-only-overlap-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>Compare this again to the previous plot - these are the brown sections.</p>
+<div class="highlight">
+<p><img src="figs/gg-overlap-brisbane-2-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+<p>But say we want to calculate the ratio of how similar these two shape files are - how do we do that? Here are the steps:</p>
+<ol type="1">
+<li>Find the area of the shapefile for the original Brisbane file</li>
+<li>Find the area of the overlap between the two files</li>
+<li>Calculate the ratio of the area in the original shapefile, and the area of the overlapping area</li>
+<li>Calculate the area of the overlap compared to the original Brisbane file, giving us the percentage of overlap!</li>
+</ol>
+</section>
+<section id="the-area-of-the-shapefile-for-the-original-brisbane-file" class="level2">
+<h2 class="anchored" data-anchor-id="the-area-of-the-shapefile-for-the-original-brisbane-file">The area of the shapefile for the original Brisbane file</h2>
+<p>Here are the steps:</p>
+<ol type="1">
+<li>Calculate area with <code>st_area</code></li>
+<li>Reduce the size of the data - then only keep the relevant data (just keeping the SA4 name (<code>SA4_NAME21</code>), and then area, then drop the geometry column).</li>
+</ol>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="kr"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="o">(</span><span class="nv"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="o">)</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt; Attaching package: 'dplyr'</span>
+<span class="c">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt;     filter, lag</span>
+<span class="c">#&gt; The following objects are masked from 'package:base':</span>
+<span class="c">#&gt; </span>
+<span class="c">#&gt;     intersect, setdiff, setequal, union</span>
+<span class="nv">brisbane_sf_areas</span> <span class="o">&lt;-</span> <span class="nv">brisbane_sf</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>brisbane_original_area <span class="o">=</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="o">(</span><span class="nv">.</span><span class="o">)</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="o">(</span><span class="nv">SA4_NAME21</span>, <span class="nv">brisbane_original_area</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+  <span class="nf"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="o">(</span><span class="o">)</span>
+  
+<span class="nv">brisbane_sf_areas</span>
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 1 × 2</span></span>
+<span class="c">#&gt;   SA4_NAME21          brisbane_original_area</span>
+<span class="c">#&gt; <span style="color: #555555;">*</span> <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                                <span style="color: #555555;">[m^2]</span></span>
+<span class="c">#&gt; <span style="color: #555555;">1</span> Brisbane Inner City               81738079</span></code></pre>
+</div>
+</section>
+<section id="the-area-of-the-overlap-between-the-two-files" class="level2">
+<h2 class="anchored" data-anchor-id="the-area-of-the-overlap-between-the-two-files">The area of the overlap between the two files</h2>
+<ol type="1">
+<li>Calculate the intersection of these two shape files (<code>st_intersection</code>)</li>
+<li>Calculate that area (<code>st_area</code>)</li>
+<li>Then only keep the relevant data again</li>
+</ol>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">intersection_area</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="o">(</span><span class="nv">brisbane_sf</span>, <span class="nv">brisbane_simpler_sf</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>intersect_area <span class="o">=</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="o">(</span><span class="nv">.</span><span class="o">)</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="o">(</span><span class="nv">SA4_NAME21</span>, <span class="nv">intersect_area</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="o">(</span><span class="o">)</span>
+<span class="c">#&gt; although coordinates are longitude/latitude, st_intersection assumes that they are planar</span>
+<span class="c">#&gt; Warning: attribute variables are assumed to be spatially constant throughout all geometries</span>
+
+<span class="nv">intersection_area</span>
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 1 × 2</span></span>
+<span class="c">#&gt;   SA4_NAME21          intersect_area</span>
+<span class="c">#&gt; <span style="color: #555555;">*</span> <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #555555;">[m^2]</span></span>
+<span class="c">#&gt; <span style="color: #555555;">1</span> Brisbane Inner City       76638525</span></code></pre>
+</div>
+</section>
+<section id="the-ratio-of-the-area-in-the-original-shapefile-and-the-area-of-the-overlapping-areas" class="level2">
+<h2 class="anchored" data-anchor-id="the-ratio-of-the-area-in-the-original-shapefile-and-the-area-of-the-overlapping-areas">The ratio of the area in the original shapefile, and the area of the overlapping areas</h2>
+<p>Now we have our pieces, now let us add these columns of the other data back to it:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">intersection_area</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="o">(</span><span class="nv">brisbane_sf_areas</span>, 
+              by <span class="o">=</span> <span class="s">"SA4_NAME21"</span><span class="o">)</span> 
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 1 × 3</span></span>
+<span class="c">#&gt;   SA4_NAME21          intersect_area brisbane_original_area</span>
+<span class="c">#&gt;   <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #555555;">[m^2]</span>                  <span style="color: #555555;">[m^2]</span></span>
+<span class="c">#&gt; <span style="color: #555555;">1</span> Brisbane Inner City       76638525               81738079</span></code></pre>
+</div>
+<p>And then calculate the ratio - which will tell us how much the simpler shape file overlaps the original ratio.</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">intersection_area</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="o">(</span><span class="nv">brisbane_sf_areas</span>, 
+              by <span class="o">=</span> <span class="s">"SA4_NAME21"</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>weight <span class="o">=</span> <span class="nv">intersect_area</span> <span class="o">/</span> <span class="nv">brisbane_original_area</span><span class="o">)</span>
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 1 × 4</span></span>
+<span class="c">#&gt;   SA4_NAME21          intersect_area brisbane_original_area   weight</span>
+<span class="c">#&gt;   <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #555555;">[m^2]</span>                  <span style="color: #555555;">[m^2]</span>      <span style="color: #555555;">[1]</span></span>
+<span class="c">#&gt; <span style="color: #555555;">1</span> Brisbane Inner City       76638525               81738079 0.937611</span></code></pre>
+</div>
+<p>And, because I think it’s good practice, all together as a function:</p>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nv">calculate_spatial_overlap</span> <span class="o">&lt;-</span> <span class="kr">function</span><span class="o">(</span><span class="nv">shape_new</span>,
+                                      <span class="nv">shape_old</span><span class="o">)</span> <span class="o">{</span>
+  
+  
+  <span class="nv">intersection_area</span> <span class="o">&lt;-</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="o">(</span><span class="nv">shape_new</span>, <span class="nv">shape_old</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>intersect_area <span class="o">=</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="o">(</span><span class="nv">.</span><span class="o">)</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="o">(</span><span class="nv">SA4_NAME21</span>, <span class="nv">intersect_area</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="o">(</span><span class="o">)</span>
+  
+  <span class="c"># Create a fresh area variable for counties</span>
+  <span class="nv">shape_old_areas</span> <span class="o">&lt;-</span> <span class="nv">shape_old</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>original_area <span class="o">=</span> <span class="nf"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="o">(</span><span class="nv">.</span><span class="o">)</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="o">(</span><span class="nv">original_area</span>, <span class="nv">SA4_NAME21</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="o">(</span><span class="o">)</span>
+  
+  <span class="nv">intersection_area</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="o">(</span><span class="nv">shape_old_areas</span>, 
+              by <span class="o">=</span> <span class="s">"SA4_NAME21"</span><span class="o">)</span> <span class="o">%&gt;%</span> 
+    <span class="nf"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="o">(</span>weight <span class="o">=</span> <span class="nv">intersect_area</span> <span class="o">/</span> <span class="nv">original_area</span><span class="o">)</span>
+  
+<span class="o">}</span></code></pre>
+</div>
+<div class="highlight">
+<pre class="chroma"><code class="language-r" data-lang="r"><span class="nf">calculate_spatial_overlap</span><span class="o">(</span>
+    <span class="nv">brisbane_simpler_sf</span>, <span class="nv">brisbane_sf</span>
+  <span class="o">)</span>
+<span class="c">#&gt; although coordinates are longitude/latitude, st_intersection assumes that they are planar</span>
+<span class="c">#&gt; Warning: attribute variables are assumed to be spatially constant throughout all geometries</span>
+<span class="c">#&gt; <span style="color: #555555;"># A tibble: 1 × 4</span></span>
+<span class="c">#&gt;   SA4_NAME21          intersect_area original_area   weight</span>
+<span class="c">#&gt;   <span style="color: #555555; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #555555;">[m^2]</span>         <span style="color: #555555;">[m^2]</span>      <span style="color: #555555;">[1]</span></span>
+<span class="c">#&gt; <span style="color: #555555;">1</span> Brisbane Inner City       76638525      81738079 0.937611</span></code></pre>
+</div>
+<p>So this tells us:</p>
+<blockquote class="blockquote">
+<p>The new shapefile covers about 93% of the old shape file.</p>
+</blockquote>
+<p>That is, the red areas cover 93% of the green area:</p>
+<div class="highlight">
+<p><img src="figs/show-gg-brisbane-overlap-1.png" width="700px" style="display: block; margin: auto;"></p>
+</div>
+</section>
+<section id="why-do-this" class="level1">
+<h1>Why do this?</h1>
+<p>Our use case in this example was to calculate the difference between shapefiles so we could then use this overalapping difference as a weight in subsequent measurements.</p>
+<p>But you can do more with this - the example from <a href="https://gis.stackexchange.com/questions/362466/calculate-percentage-overlap-of-2-sets-of-polygons-in-r">the GIS stack exchange thread</a> was trying to calculate the amount of overlap of a lot of smaller shape files on another shapefile - a measurement often referred to as “coverage”.</p>
+<p>And that’s it - hope that helps someone!</p>
+</section>
+<section id="thanks" class="level1">
+<h1>Thanks</h1>
+<p>Thank you again to user <a href="https://gis.stackexchange.com/users/161806/sandy-ab">Sandy AB</a> from Stack Exchange, who posted the answer!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2021-08-18-how-do-i-find-out-how-much-a-shapefile-overlaps-another/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

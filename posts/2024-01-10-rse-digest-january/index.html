@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-01-10">
+
+<title>Rstats RSE January Digest – Credibly Curious</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/njt-logo-small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7dd225cb8c6dcf6b6ec5b00fc793436c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a8d650adb36166f989d1a9b294a35133.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../../assets/hover.css">
+<link rel="stylesheet" href="../../assets/syntax.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#blog-news-posts" id="toc-blog-news-posts" class="nav-link active" data-scroll-target="#blog-news-posts">Blog / news posts</a></li>
+  <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R Packages</a></li>
+  <li><a href="#talks-videos" id="toc-talks-videos" class="nav-link" data-scroll-target="#talks-videos">Talks / Videos</a></li>
+  <li><a href="#papers" id="toc-papers" class="nav-link" data-scroll-target="#papers">Papers</a></li>
+  <li><a href="#newsletters" id="toc-newsletters" class="nav-link" data-scroll-target="#newsletters">Newsletters</a></li>
+  <li><a href="#book-recommendations" id="toc-book-recommendations" class="nav-link" data-scroll-target="#book-recommendations">Book recommendations</a></li>
+  <li><a href="#end" id="toc-end" class="nav-link" data-scroll-target="#end">End</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2024-01-10-rse-digest-january/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="../../assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  <nav>
+    <ul class="menu">
+      <li><a class="hvr-float" href="../../">Blog</a></li>
+      <li><a class="hvr-float" href="../../bio.html">Bio</a></li>
+      <li><a class="hvr-float" href="../../consulting.html">Consulting</a></li>
+      <li><a class="hvr-float" href="https://training.njtierney.com">Training</a></li>
+      <li><a class="hvr-float" href="../../talks.html">Talks</a></li>
+      <li><a class="hvr-float" href="../../resources.html">Resources</a></li>
+      <li><a class="hvr-float" href="../../software.html">Software</a></li>
+    </ul>
+    <hr>
+  </nav>
+</header>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Rstats RSE January Digest</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">rstats</div>
+    <div class="quarto-category">research software engineer</div>
+    <div class="quarto-category">rse</div>
+    <div class="quarto-category">digest</div>
+    <div class="quarto-category">newsletter</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2024-01-10</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<figure class="figure">
+<img src="img/happy-log.jpg" alt="A Happy Log, near Echo Lake, California. Fuji X100V, Nicholas Tierney." class="figure-img">
+<figcaption aria-hidden="true">
+A Happy Log, near Echo Lake, California. Fuji X100V, Nicholas Tierney.
+</figcaption>
+</figure>
+<p>I’ve been trying to read a bit more widely about R programming and other features of programming lately. I’ve seen some great newsletters from people like Bob Rudis in his <a href="https://dailydrop.hrbrmstr.dev/">“Daily Drop” series</a>, and I think that has inspired me to collect my monthly reading notes into a blog post / digest / newsletter type thing.</p>
+<p>I guess to articulate more clearly, want to do it for the following reasons:</p>
+<ol type="1">
+<li>Help me share bulk links of interest to the Research Software Engineer, with a focus being on those who use R.</li>
+<li>Force me to read these links so I can provide a little summary of the content.</li>
+<li>Engage more broadly with the RSE rstats community.</li>
+<li>Somewhat catch up on the technology/rstats world since I hiked the <a href="https://njt.micro.blog/">pacific crest trail from May - October 2023</a>.</li>
+</ol>
+<p>My intention is for these to be short lists. But this one is already getting bigger. This might be something regular, or something irregular. Who knows, maybe it’s just a one off. Here we go.</p>
+<section id="blog-news-posts" class="level1">
+<h1>Blog / news posts</h1>
+<p>Some of these links are things I missed, and other ones are just things I thought were really good. They could be new, they could be a few years old!</p>
+<p><a href="https://tidydesign.substack.com/">Hadley Wickham’s Design Newsletter</a>. I’ve followed Hadley’s work quite closely since 2013, and I was a little alarmed to see I had somehow missed his starting a newsletter about: “designing and implementing quality R code”. I’d seen his book, <a href="https://design.tidyverse.org/">“tidy design principles”</a> a while back, but it’s super exciting that they are working on it again. I highly recommend the newsletter. It’s also nice to see people engaging with <code>#rstats</code> content in a place that isn’t social media.</p>
+<p>The rOpenSci newletter is worth subscribing to, one of my favourite sections is the <a href="https://ropensci.org/blog/2023/11/24/news-november-2023/#package-development-corner">package development corner</a>, which contains lots of useful links to other cool new R features, blog posts, and more.</p>
+<p><a href="https://www.mm218.dev/posts/2023-11-07-classed-errors/">Mike Mahoney’s post on classed errors</a> really helped solidify my understanding and the overall benefits to not only the user, but the developer.</p>
+<p><a href="https://neopythonic.blogspot.com/2016/04/kings-day-speech.html">King’s Day Speech</a> by <a href="https://en.wikipedia.org/wiki/Guido_van_Rossum">Guido van Rossum</a>, <strong>the creator of the python language</strong>. A nice essay / auto biography. I especially enjoyed this quote:</p>
+<blockquote class="blockquote">
+<p>In reality, programming languages are how programmers express and communicate ideas — and the audience for those ideas is other programmers, not computers. The reason: the computer can take care of itself, but programmers are always working with other programmers, and poorly communicated ideas can cause expensive flops.</p>
+</blockquote>
+<p>They say, “science isn’t science until it’s communicated”, and building on that, I think that good science requires good communication. It doesn’t matter if your idea is world changing, if no one can understand it.</p>
+<p>Bob Rudis’s <a href="https://dailydrop.hrbrmstr.dev/2024/01/01/drop-395-2024-01-01-happy-new-year/#">“Daily Driver” post</a> contains an amazing list of things he uses daily from hardware to OS, VPN, RSS readers, browsers, browser extensions, and more.</p>
+<p><a href="https://yihui.org/en/2024/01/bye-rstudio/">“Bye, RStudio/Posit!”</a> by Yihui Xie. He’s leaving Posit! It came as a surprise to me. I have a lot of positive feelings about his incredible contributions to R and my career and life, I can’t condense them all here. But I know that his work on knitr, rmarkdown, xaringan, blogdown, and bookdown have all had incredibly positive impacts on how I communicate my work, and I simply don’t think I’d have the career I’ve had without him. Thank you, Yihui.</p>
+</section>
+<section id="r-packages" class="level1">
+<h1>R Packages</h1>
+<p>It’s hard to pick R packages to showcase, there are I think more than 20K on CRAN now. Rather than a laundry list of R packages I use, here are some of my favourite R packages that I use.</p>
+<p><a href="https://tidyverse.tidyverse.org/">tidyverse</a>, I’d be lost without it. It is simply an outstanding collection of software for doing data science and statistics in R.</p>
+<p><a href="https://docs.ropensci.org/targets/">targets</a>, one of my favourite R packages. <a href="https://wlandau.github.io/">Will Landau</a>, the developer behind targets is I think perhaps the most responsive and kindest maintainer I’ve ever encountered.</p>
+<p><a href="https://github.com/milesmcbain/tflow">tflow</a> by <a href="https://milesmcbain.xyz/">Miles McBain</a>, an ergonomic package that goes alongside the targets package. Use along with Miles’s other package, <a href="https://github.com/milesmcbain/fnmate">fnmate</a>. I think these tips are really useful:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>Put all your target code in separate functions in <code>R/</code>. Use <code>fnmate</code> to quickly generate function definitions in the right place. Let the plan in <code>_targets.R</code> define the structure of the workflow and use it as a map for your sources. Use ‘jump to function’ to quickly navigate to them.</li>
+</ol>
+</blockquote>
+<blockquote class="blockquote">
+<ol type="1">
+<li>Use a call <code>tar_make()</code> to kick off building your plan in a new R session.</li>
+</ol>
+</blockquote>
+<blockquote class="blockquote">
+<ol type="1">
+<li>Put all your <a href="https://rdrr.io/r/base/library.html"><code>library()</code></a> calls into <code>packages.R</code>. This way you’ll have them in one place when you go to add sandboxing with <code>renv</code>, <code>packarat</code>, and <code>switchr</code> etc.</li>
+</ol>
+</blockquote>
+<blockquote class="blockquote">
+<ol type="1">
+<li>Take advantage of automation for loading <code>targets</code> targets at the cursor with the ‘load target at cursor’ addin. Or the <code>tflow</code> addin: ‘load editor targets’ to load all targets referred to in the current editor.</li>
+</ol>
+</blockquote>
+<p><a href="https://docs.ropensci.org/autotest/">autotest</a> by <a href="https://mpadge.github.io/">Mark Padgham</a> with <a href="https://ropensci.org/">rOpenSci</a>. This package does rigorous, automated testing of your R package. Useful to help really kick the tyres of your work.</p>
+<p>And not quite an R package, but something from within <a href="https://github.com/r-lib/usethis">usethis</a>/<a href="https://github.com/r-lib/rlang/">rlang</a> as advertised by <a href="https://www.garrickadenbuie.com/">Garrick Aden Buie</a>, when <a href="https://aus.social/@grrrck@fosstodon.org/111564560024473157">commenting on</a> my blog post, <a href="https://www.njtierney.com/post/2023/12/06/long-errors-smell/">“Code Smell: Error Handling Eclipse”</a>:</p>
+<blockquote class="blockquote">
+<p>icymi and because it’s not widely publicized, there are type checking functions in {rlang} that you can copy into your package code with usethis::use_standalone() <a href="https://github.com/r-lib/rlang/blob/main/R/standalone-types-check.R" class="uri">https://github.com/r-lib/rlang/blob/main/R/standalone-types-check.R</a></p>
+</blockquote>
+<p>This is super useful because it injects selected R functions into your R package. So you can select some standalone functions to import directly into your code with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">use_standalone</span>(<span class="st">"https://github.com/r-lib/rlang/blob/main/R/standalone-types-check.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Importing code directly is an interesting take on things because normally in R you would import an R package, not copy over code. One benefit of this I think is that it lets you potentially tinker with the imported functions to suit your R package.</p>
+</section>
+<section id="talks-videos" class="level1">
+<h1>Talks / Videos</h1>
+<p>In part of writing a bit recently, I was reminded by a friend of <a href="https://jennybryan.org/">Jenny Bryan’s</a> UseR! keynote from 2018, <a href="https://youtu.be/7oyiPBjLAWY?si=bpmCGCJaVCysmUN5">Code Smells and Feels</a> - <a href="https://github.com/jennybc/code-smells-and-feels#readme">talk materials</a>. It is one of my favourite talks. I was there a few rows from the front when she gave it, but taking time to watch it again has been really great. Jenny is a talented communicator, and I’m going to list a couple of my favourite takeaways from the talk, but I don’t want to start just listing the content out from the talk. These tips will make the most sense alongside Jenny’s talk.</p>
+<ul>
+<li>Write simple condition. Use explaining variables.</li>
+<li>Write functions. A few little functions &gt;&gt; than monster function. Small well-named helper function &gt;&gt; commented code.</li>
+<li>Every if does not need an else, if you exit or return early. There is no <strong>else</strong> there is only <strong>if</strong>.</li>
+<li>If your conditions deal with <strong>class</strong>, it’s time to get object oriented (OO), and use <strong>polymorphism</strong>.</li>
+<li><a href="https://rdrr.io/r/base/switch.html"><code>switch()</code></a> is ideal if you need to dispatch different <strong>logic</strong>, based on a <strong>string</strong>.</li>
+<li><a href="https://dplyr.tidyverse.org/reference/case_when.html"><code>dplyr::case_when()</code></a> is ideal if you need to dispatch different <strong>data</strong> based on <strong>data (+logic)</strong>.</li>
+</ul>
+<p><a href="https://www.youtube.com/watch?v=rz3_FDVt9eg">Managing many models with R</a> by <a href="">Hadley Wickham</a>. I couldn’t find the original keynote that I saw of this, which was at the <a href="">WOMBAT 2016 conference</a>. The main takeaway from this for me was understanding one of the major benefits of using functions, and understanding how to use <code>map</code>.</p>
+<p><a href="https://www.youtube.com/live/8ZSaAM8hhJ4?si=o_tB4C8bsNezNyZ4">The Rise of the Research Software Engineer</a>, by <a href="https://walkingrandomly.com/?page_id=2">Mike Croucher</a>. A great talk covering a story of becoming a research software engineer, the importance of diversity of people, and technology in a team.</p>
+<p><a href="https://www.youtube.com/watch?v=-J3wNP6u5YU">Naming things in code</a> by <a href="https://www.youtube.com/@CodeAesthetic">code aesthetic</a>. I care a lot about naming things, and I really liked these ideas:</p>
+<ul>
+<li>Avoid single letter variables</li>
+<li>Never abbreviate</li>
+<li>Don’t put types in your name (e.g., Icost for Integer Cost), aka “hungarian notation”.</li>
+<li>Put units in variable names. e.g., weight_kg</li>
+<li>Don’t name variables “utils”. Refactor.</li>
+</ul>
+</section>
+<section id="papers" class="level1">
+<h1>Papers</h1>
+<p><a href="https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling--The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full">Statistical Modeling: The Two Cultures (with comments and a rejoinder by the author)</a>. It’s an absolute classic paper that I found really fundamental to understanding statistical modelling during my PhD. I like it because it introduces the ideas of prediction, and extracting information (inference), which are two really important concepts. It then kind of dunks on the statistics community, saying:</p>
+<blockquote class="blockquote">
+<p>The statistical community has been committed to the almost exclusive use of data models. This commitment has led to irrelevant theory, questionable conclusions, and has kept statisticians from working on a large range of interesting current problems…If our goal as a field is to use data to solve problems, then we need to move away from exclusive dependence on data models and adopt a more diverse set of tools.</p>
+</blockquote>
+</section>
+<section id="newsletters" class="level1">
+<h1>Newsletters</h1>
+<p>I get a lot of these links from trawling through various newsletters and things on twitter and mastodon. Here are some of my current favourites.</p>
+<p><a href="https://fhdata.substack.com/">Monday Morning Data Science</a> by the Fred Hutch group is great. Once a week, just a couple of links.</p>
+<p><a href="https://heidiseibold.com/">Heidi Seibold</a> has a nice newsletter that I enjoy reading: <a href="https://heidiseibold.ck.page/" class="uri">https://heidiseibold.ck.page/</a></p>
+<p>rOpenSci’s newsletter - which you can subscrive to at the bottom of this <a href="https://ropensci.org/blog/2023/12/22/news-december-2023/">recent newsletter blog post</a>.</p>
+<p>Bob Rudis’s <a href="https://dailydrop.hrbrmstr.dev/">“Daily Drop”</a> newsletter.</p>
+</section>
+<section id="book-recommendations" class="level1">
+<h1>Book recommendations</h1>
+<p>I’ve been meaning to collect together a list of books for programming. Mostly through conversations with <a href="https://masalmon.eu/">Maëlle Salmon</a>, I’ve got a few books I’d like to read. I basically just sifted through Maëlle’s list of book notes and have put a couple here.</p>
+<ul>
+<li>The Pragmatic Programmer - see some reading notes by <a href="https://masalmon.eu/2023/12/11/reading-notes-pragmatic-programmer/">Maëlle Salmon</a></li>
+<li>A Philosophy of Software Design - see more reading notes by <a href="https://masalmon.eu/2023/10/19/reading-notes-philosophy-software-design/">Maëlle Salmon</a></li>
+</ul>
+</section>
+<section id="end" class="level1">
+<h1>End</h1>
+<p>That’s it. Thanks for reading! What have I missed? Let me know in the comments!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.njtierney\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="rbind/njtierney.com" issue-term="title" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© <a href="https://njtierney.com">Nicholas Tierney</a> 2013-25 | <a href="https://github.com/njtierney">Github</a> | <a href="https://bsky.app/profile/njtierney.bsky.social">Blue Sky</a> | <a href="https://www.njtierney.com/index.xml">RSS</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rbind/njtierney.com/edit/master/posts/2024-01-10-rse-digest-january/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
