@@ -1,7 +1,0 @@
-/slides/*     https://slides.njtierney.com/:splat
-https://njt.netlify.com/*  https://njtierney.com/:splat  301!
-http://njt.netlify.com/*   https://njtierney.com/:splat  301!
-http://njtierney.com/*   https://njtierney.com/:splat  301!
-/r/missing%20data/rbloggers/2015/12/01/ggplot-missing-data/  /post/2015/11/12/ggplot-missing-data/
-
-/r/rbloggers/2017/01/11/reprex-magic             /post/2017/01/11/magic-reprex/

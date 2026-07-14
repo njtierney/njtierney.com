@@ -1,9 +1,0 @@
-<link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
-<link rel="stylesheet" href="{{ "/css/fonts.css" | relURL }}" />
-<link rel="stylesheet" href="{{ "/css/hover.css" | relURL }}" />
-<link rel="stylesheet" href="{{ "/css/syntax.css" | relURL }}" />
-<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/key-buttons.min.js" defer></script>
-<link href="https://cdn.jsdelivr.net/npm/@xiee/utils/css/key-buttons.min.css" rel="stylesheet">
-{{ with .OutputFormats.Get "rss" -}}
-  {{ printf `<link rel=%q type=%q href=%q title=%q>` .Rel .MediaType.Type .Permalink site.Title | safeHTML }}
-{{ end }}
