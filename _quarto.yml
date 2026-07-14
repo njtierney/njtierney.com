@@ -24,12 +24,12 @@ website:
   page-footer:
     center: |
       &copy; [Nicholas Tierney](https://njtierney.com) 2013-25 | [Github](https://github.com/njtierney) | [Blue Sky](https://bsky.app/profile/njtierney.bsky.social) | [RSS](https://www.njtierney.com/index.xml)
-  repo-url: https://github.com/rbind/njtierney.com
+  repo-url: https://github.com/njtierney/njtierney.com
   repo-branch: master
   repo-actions: [edit]
   comments:
     utterances:
-      repo: rbind/njtierney.com
+      repo: njtierney/njtierney.com
       label: "comments :speech_balloon:"
       theme: github-light
       issue-term: title

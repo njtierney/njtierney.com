@@ -72,64 +72,35 @@ Notes from the migration:
 
 ## Going live: hosting and DNS
 
-Two repos are in play:
+Status (2026-07-14): the repo was transferred from `rbind/njtierney.com`
+to **`njtierney/njtierney.com`** (the rbind org's domain-verification
+policy blocked attaching the custom domain; a personal repo has no such
+policy, and the utterances comment issues moved with the repo). GitHub
+Pages is enabled on the transferred repo (deploy from `gh-pages` / root),
+the custom domain `www.njtierney.com` is attached and verified, and the
+site is live at the Pages URL. `quarto-migration` still needs merging to
+`master`, which is what the publish workflow triggers on.
 
-- **`rbind/njtierney.com`** — this repo, the blog source. You have admin
-  rights on it; GitHub Pages is currently disabled.
-- **`njtierney/njtierney.github.io`** — your personal user-pages repo.
-  Pages is enabled but it currently serves a 404 (last touched Mar 2025),
-  so nothing depends on it.
+What remains is DNS (currently pointing at Netlify). At Route 53, hosted
+zone `njtierney.com` — only these two records change; never touch MX
+(Google email), NS/SOA, or the TXT records:
 
-They don't conflict: a user-pages repo (`njtierney.github.io`) and a
-project-pages repo (`rbind/njtierney.com`) are independent, and a custom
-domain can be attached to either. Pick one of these paths.
-
-### Option A (recommended): Pages on this repo
-
-Fewest moving parts — the publish workflow already targets this repo and
-needs no tokens or cross-repo setup. `njtierney.github.io` stays untouched.
-
-1. Flip `repo-branch` in `_quarto.yml` to `master` (fixes the "Edit this
-   page" links), then merge `quarto-migration` into `master`.
-2. Create the `gh-pages` branch once, either by running
-   `quarto publish gh-pages` locally, or:
-   `git checkout --orphan gh-pages && git rm -rf . && git commit --allow-empty -m "init gh-pages" && git push origin gh-pages && git checkout master`
-3. Repo settings → Pages: deploy from branch → `gh-pages` / root.
-4. Push to `master` → `.github/workflows/publish.yml` renders and
-   publishes. The `CNAME` file in the site output sets the custom domain
-   (`www.njtierney.com`) on the Pages site automatically.
-5. At your DNS provider: `www` CNAME → `rbind.github.io.`; apex
-   `njtierney.com` → A records `185.199.108.153`, `185.199.109.153`,
-   `185.199.110.153`, `185.199.111.153` (or a registrar-level redirect
-   apex → www). Leave Netlify running until the switch is verified.
-6. Once `https://www.njtierney.com` serves the Quarto site, tick
+1. Edit the **A** record (`njtierney.com`): replace Netlify's
+   `104.198.14.52` with GitHub Pages' four IPs, one per line:
+   `185.199.108.153`, `185.199.109.153`, `185.199.110.153`,
+   `185.199.111.153`. Keep "Alias" off.
+2. Edit the **CNAME** record (`www`): replace `njt-test.netlify.com` with
+   **`njtierney.github.io`** (the personal-account Pages host — *not*
+   `rbind.github.io` now that the repo has moved).
+3. Both records have TTL 300, so changes land in ~5 minutes; rollback is
+   restoring the old values. Leave Netlify running until the switch is
+   verified.
+4. Once `https://www.njtierney.com` serves the Quarto site, tick
    "Enforce HTTPS" in the Pages settings (appears after the certificate
    is issued), then decommission the Netlify site.
 
-One caveat: GitHub's *verified domains* protection is an org-level setting
-on `rbind` that you probably can't configure. The domain works fine
-without it; it only matters if Pages were ever disabled while DNS still
-pointed at GitHub.
-
-### Option B: publish to `njtierney/njtierney.github.io`
-
-Source stays in this repo; the workflow pushes the rendered site to the
-personal repo, so the site lives at `https://njtierney.github.io` plus the
-custom domain. Benefits: hosting fully under your own account, and you can
-verify the domain in your personal GitHub settings. Costs: the workflow
-needs a fine-grained PAT (contents: write on `njtierney.github.io`) stored
-as a secret in this repo, and a deploy-step swap (e.g.
-`peaceiris/actions-gh-pages` with `external_repository`) — one more token
-to mint and rotate.
-
-### Option C: move the repo to your account first
-
-Transfer `rbind/njtierney.com` → `njtierney/njtierney.com`, then follow
-Option A there. Cleanest long-term ownership; GitHub redirects the old
-repo URLs. Note the utterances comments live as issues in the rbind repo —
-they transfer with the repo, but `comments.utterances.repo` and `repo-url`
-in `_quarto.yml` must be updated to the new name. Requires the rbind org
-to permit the transfer.
+The leftover `_github-challenge-*` TXT record from the abandoned rbind
+org-verification attempt can be deleted from Route 53 if present.
 
 ## Other remaining work
 
