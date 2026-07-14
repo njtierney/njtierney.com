@@ -1,0 +1,15 @@
+---
+title: "{{title}}"
+date: '{{date}}'
+categories:
+{{categories}}
+---
+
+```{r setup, include=FALSE}
+air_tidy <- function(code, ...) {
+  system2("air", c("format", "--stdin-file-path", "chunk.R"),
+          input = code, stdout = TRUE)
+}
+knitr::opts_chunk$set(tidy = air_tidy)
+```
+

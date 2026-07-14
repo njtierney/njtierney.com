@@ -1,0 +1,41 @@
+<script>
+// Quarto's lightbox only attaches to markdown-syntax images, not the raw
+// HTML <img> tags that hugodown-era posts use for figures. Wrap those in
+// lightbox links ourselves and run a GLightbox instance over them, lazily
+// loading the library (which Quarto puts in site_libs whenever any page
+// uses lightbox) on pages where Quarto didn't include it.
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.getElementById("quarto-document-content");
+  if (!main) return;
+  var wrapped = 0;
+  main.querySelectorAll("img").forEach(function (img) {
+    if (img.closest("a")) return; // already linked or lightboxed
+    var a = document.createElement("a");
+    a.href = img.src;
+    a.className = "lightbox-shim";
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+    wrapped++;
+  });
+  if (!wrapped) return;
+
+  function init() {
+    if (window.GLightbox) {
+      window.GLightbox({ selector: ".lightbox-shim", openEffect: "zoom", closeEffect: "zoom" });
+    }
+  }
+  if (window.GLightbox) {
+    init();
+    return;
+  }
+  var base = "/site_libs/quarto-contrib/glightbox/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "glightbox.min.css";
+  document.head.appendChild(css);
+  var script = document.createElement("script");
+  script.src = base + "glightbox.min.js";
+  script.onload = init;
+  document.head.appendChild(script);
+});
+</script>

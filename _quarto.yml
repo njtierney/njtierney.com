@@ -1,0 +1,61 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "index.qmd"
+    - "bio.qmd"
+    - "consulting.qmd"
+    - "talks.qmd"
+    - "resources.qmd"
+    - "software.qmd"
+    - "cv.qmd"
+    - "publications.qmd"
+    - "posts/**"
+  resources:
+    - CNAME
+  post-render: scripts/copy-feed.sh
+
+website:
+  title: "Credibly Curious"
+  site-url: https://www.njtierney.com/
+  description: "Nick Tierney's (mostly) rstats blog"
+  favicon: assets/njt-logo-small.png
+  navbar: false
+  page-footer:
+    center: |
+      &copy; [Nicholas Tierney](https://njtierney.com) 2013-25 | [Github](https://github.com/njtierney) | [Blue Sky](https://bsky.app/profile/njtierney.bsky.social) | [RSS](https://www.njtierney.com/index.xml)
+  repo-url: https://github.com/rbind/njtierney.com
+  # NOTE: flip to master when the quarto-migration branch is merged
+  repo-branch: quarto-migration
+  repo-actions: [edit]
+  comments:
+    utterances:
+      repo: rbind/njtierney.com
+      label: "comments :speech_balloon:"
+      theme: github-light
+      issue-term: title
+
+format:
+  html:
+    theme:
+      - default
+      - assets/theme.scss
+    css:
+      - assets/hover.css
+      - assets/syntax.css
+    include-before-body: assets/header.html
+    include-after-body:
+      - assets/copy-chroma.html
+      - assets/lightbox-shim.html
+    grid:
+      body-width: 680px
+    toc: false
+    smooth-scroll: true
+    link-external-newwindow: false
+    code-copy: true
+    code-overflow: wrap
+    highlight-style: pygments
+    date-format: "YYYY-MM-DD"
+
+execute:
+  freeze: auto

@@ -1,0 +1,32 @@
+show-ishihara	::
+create-poly-packings	::	%>%	length	sample
+plot-triangles	aes	create_poly_packings	geom_polygon	ggplot	id	library	suppressPackageStartupMessages	x	y
+plot-many-triangles	aes	c	create_poly_packings	geom_polygon	ggplot	id	x	y
+circles	aes	c	coord_equal	create_poly_packings	geom_polygon	ggplot	id	x	y
+create-circle-plate	c	create_poly_packings	sample
+circle-plate	aes	coord_equal	create_circle_plate	geom_polygon	ggplot	id	x	y
+cast-packing-poly	::	%>%	c	id
+cast-packing-poly-sf	cast_packing_poly	circle_plate
+fun-glyph	::	%>%	>	if	nchar	stop
+print-glyph	glyph
+plot-glyph	aes	coord_equal	geom_polygon	ggplot	letter_s	x	y
+fun-cast-font-sf	::	%>%	c	glyph
+cast-letter-s	cast_font_sf	letter_s
+sf-plot	letter_s_sf	plot
+overlay-s	aes	circle_plate	coord_equal	geom_polygon	ggplot	glyph	id	letter_s	x	y
+funs-font-size-change	::	%>%	scale	x	y
+plot-font-size-change	%>%	aes	circle_plate	coord_equal	font_increase	geom_polygon	ggplot	glyph	id	letter_s	x	y
+increase-font-size-change	%>%	aes	circle_plate	coord_equal	font_center	font_increase	geom_polygon	ggplot	glyph	id	letter_s	x	y
+fun-overlays	::	%>%	as.logical	lengths
+cast-bigger-letter-s	cast_font_sf	letter_s_bigger
+overlay-circle	circle_plate_sf	letter_s_bigger_sf	overlay_text_in_circle
+plot-ishihara	aes	geom_sf	ggplot	in_text	overlayed_circle	theme	theme_void
+plot-multiple-colours	gg_ishihara	scale_fill_grey	scale_fill_viridis_d
+all-together-circles	create_circle_plate
+all-together-circles-sf	cast_packing_poly	circle_plate
+all-together-letter-s	%>%	font_center	font_increase	glyph
+all-together-letter-s-sf	cast_font_sf	letter_s
+all-together-circle	circle_plate_sf	letter_s_sf	overlay_text_in_circle
+all-together-plot	aes	geom_sf	ggplot	in_text	overlayed_circle	theme	theme_void
+all-together-plot-more	gg_ishihara	scale_fill_viridis_d
+gg-ishihara	gg_ishihara	ishihara_data	library

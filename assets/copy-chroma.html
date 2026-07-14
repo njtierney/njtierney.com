@@ -1,0 +1,26 @@
+<script>
+// Quarto only adds copy buttons to code it highlights itself. The
+// hugodown-era posts embed pre-highlighted chroma HTML, so give those
+// blocks the same button (identical markup, so Quarto's CSS applies).
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("div.highlight > pre").forEach(function (pre) {
+    if (pre.querySelector(".code-copy-button")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.title = "Copy to Clipboard";
+    btn.className = "code-copy-button";
+    btn.innerHTML = '<i class="bi"></i>';
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var text = pre.textContent.replace(/\s+$/, "");
+      navigator.clipboard.writeText(text).then(function () {
+        btn.classList.add("code-copy-button-checked");
+        setTimeout(function () {
+          btn.classList.remove("code-copy-button-checked");
+        }, 1000);
+      });
+    });
+  });
+});
+</script>

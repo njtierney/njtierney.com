@@ -1,0 +1,6 @@
+# Applies to every document under posts/
+toc: true
+toc-location: right
+toc-depth: 3
+toc-title: ""
+lightbox: true
