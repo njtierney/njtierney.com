@@ -3,6 +3,28 @@
 The whole lifecycle of a post, start to finish. Day-to-day it's:
 **new folder → write `index.qmd` → preview → commit & push.**
 
+## The quick way
+
+Steps 1 and 2 below are automated (the replacement for
+`blogdown::new_post()`). From the repo root, in R:
+
+```r
+source("scripts/new-post.R")
+new_post("My Great Title", categories = c("rstats", "blag"))
+```
+
+That creates `posts/<today>-my-great-title/index.qmd` from the archetype in
+`scripts/templates/post.qmd` (frontmatter plus the Air setup chunk from
+step 2) and opens it. Useful extras:
+
+- call it with no `categories` to be shown every category used so far
+  (`used_categories()` does the same)
+- `draft = TRUE` starts the post as a draft
+- `date = as.Date("2026-08-01")` overrides today's date
+- edit `scripts/templates/post.qmd` to change what new posts start from
+
+Then pick up at step 3 (preview). The manual steps follow, for reference.
+
 ## 1. Make a folder for the post
 
 One post = one folder inside `posts/`, named with the date and a short slug:
