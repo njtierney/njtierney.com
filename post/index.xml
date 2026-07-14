@@ -9,8 +9,8 @@
 <link>https://www.njtierney.com/</link>
 <atom:link href="https://www.njtierney.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Nick Tierney&#39;s (mostly) rstats blog</description>
-<generator>quarto-1.9.36</generator>
-<lastBuildDate>Wed, 08 Jul 2026 14:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Thu, 09 Jul 2026 00:00:00 GMT</lastBuildDate>
 <item>
   <title>How to Put your Course Book Online</title>
   <link>https://www.njtierney.com/posts/2026-07-09-put-course-online/</link>
@@ -253,7 +253,7 @@ will be visible once the deploy completes)</code></pre>
   <category>quarto</category>
   <category>teaching</category>
   <guid>https://www.njtierney.com/posts/2026-07-09-put-course-online/</guid>
-  <pubDate>Wed, 08 Jul 2026 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 09 Jul 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>R Version 4.5.0 is Out!</title>
@@ -617,7 +617,7 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div></div>
   <category>rse</category>
   <category>research software engineer</category>
   <guid>https://www.njtierney.com/posts/2025-04-14-r-version-4-5-0-is-out/</guid>
-  <pubDate>Sun, 13 Apr 2025 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 14 Apr 2025 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>{geotargets} 0.2.0</title>
@@ -894,7 +894,7 @@ font-style: inherit;">"https://cran.r-project.org"</span>))</span></code></pre><
   <category>rstats</category>
   <category>functions</category>
   <guid>https://www.njtierney.com/posts/2024-11-22-geotargets-0-2-0/</guid>
-  <pubDate>Tue, 26 Nov 2024 13:00:00 GMT</pubDate>
+  <pubDate>Wed, 27 Nov 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>{geotargets} 0.1.0</title>
@@ -1038,7 +1038,7 @@ font-style: inherit;">"https://cran.r-project.org"</span>))</span></code></pre><
   <category>targets</category>
   <category>packages</category>
   <guid>https://www.njtierney.com/posts/2024-05-16-geotargets-0-1-0/</guid>
-  <pubDate>Sun, 26 May 2024 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 May 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Find Out How many Times Faster your Code is</title>
@@ -1256,7 +1256,7 @@ font-style: inherit;">"https://cran.r-project.org"</span>))</span></code></pre><
   <category>rse</category>
   <category>research software engineer</category>
   <guid>https://www.njtierney.com/posts/2024-05-17-summary-benchmark/</guid>
-  <pubDate>Thu, 16 May 2024 14:00:00 GMT</pubDate>
+  <pubDate>Fri, 17 May 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>{naniar} version 1.1.0 “Prince Caspian”</title>
@@ -1634,7 +1634,124 @@ font-style: inherit;">"https://cran.r-project.org"</span>))</span></code></pre><
   <category>research software engineer</category>
   <category>data visualisation</category>
   <guid>https://www.njtierney.com/posts/2024-03-04-naniar-version-1-1-0-prince-caspian/</guid>
-  <pubDate>Sun, 03 Mar 2024 13:00:00 GMT</pubDate>
+  <pubDate>Mon, 04 Mar 2024 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Some Goals for 2024</title>
+  <link>https://www.njtierney.com/posts/2024-01-08-goals/</link>
+  <description><![CDATA[ 
+<header class="site-header">
+  <h1 class="site-title">
+    <a href="../../">
+      <img class="hvr-grow site-logo" src="https://www.njtierney.com/assets/njt-logo-small.png" alt="Nick logo">
+    </a>
+    <span class="hvr-bob site-title-credibly">Credibly</span>
+    <span class="hvr-hang site-title-curious">Curious</span>
+  </h1>
+  <p class="site-subtitle">
+    Nick Tierney's (mostly) rstats blog
+  </p>
+  
+</header>
+
+
+
+
+<figure class="figure">
+<img src="https://www.njtierney.com/posts/2024-01-08-goals/img/flower-goals.jpg" alt="Flowers in the Victorian Alps, Ricoh GRiii, Nicholas Tierney." class="figure-img">
+
+</figure>
+<p>To help me be more accountable, and also work out how to plan my year and work out what’s important to me, I thought I’d share some of my goals for 2024. Writing it all down is a bit scary, and it makes me think that maybe I might be a bit ambitious here. But I think it’s OK to be ambitious.</p>
+<section id="learn-js-and-rust" class="level2">
+<h2 class="anchored" data-anchor-id="learn-js-and-rust">Learn JS and Rust</h2>
+<p>I’d like to try and pick up another programming language for 2024. I don’t really have good fluency with other languages outside of R. I can fumble my way through python and HTML/CSS, a wee bit of C++. But I think it’s important and useful to learn a new language to help broaden your own understanding. I’d like to focus on JS (javascript) and Rust.</p>
+<p>I think JS because it has such an enormous influence on the web, and the tools we use every day. I’ve taken a nice course by <a href="https://github.com/gadenbuie">Garrick Aden Buie</a> (I can’t seem to find the course website) in 2020 (one of the last conferences I went to), but I unfortunately didn’t really use JS that year so it’s sort of all fell out of my head.</p>
+<p>To learn JS I was thinking I would start with <a href="https://github.com/wesbos/JavaScript30">JavaScript30</a> by <a href="https://github.com/wesbos">Wes Bos</a>, and then move on to <a href="https://github.com/getify/You-Dont-Know-JS">You Don’t Know JS</a> by <a href="https://github.com/getify">Kyle Simpson</a>. Hopefully I can learn and understand enough to try incorporating JS into R via quarto or htmlwidgets or something.</p>
+<p>Rust seems like a better language to use than C++. My experience with the <a href="https://rustlings.cool/">rustlings</a> course was excellent, and the error messages from rust were like, actually understandable? It was bizarre. Plus with the <a href="https://extendr.github.io/">rextender</a> R package you can bundle up your R code just like you do with cpp11 or Rcpp. It’d be cool to build something fast and fun in Rust and then bundle it into an R package.</p>
+<p>It’s hard to learn two languages at the same time, so I think I’ll try and do 6 months on JS, and 6 months on Rust.</p>
+<ul>
+<li>January - June: JS</li>
+<li>July - December: Rust</li>
+</ul>
+</section>
+<section id="read-some-more-programming-books" class="level2">
+<h2 class="anchored" data-anchor-id="read-some-more-programming-books">Read some more programming books</h2>
+<p>I’d really like to read these three books:</p>
+<ul>
+<li><a href="https://xcelab.net/rm/statistical-rethinking/">Statistical Rethinking</a></li>
+<li><a href="https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/">The Pragmatic Programmer</a></li>
+<li><a href="https://web.mit.edu/6.001/6.037/sicp.pdf">Structure and Interpretation of Computer Programs</a> (potentially even the <a href="https://mitpress.mit.edu/9780262543231/structure-and-interpretation-of-computer-programs/">JS edition</a>)</li>
+</ul>
+<p>Hopefully by saying this out aloud I will be able to actually complete this.</p>
+<p>Similar to above, I guess I’ll break this up into 3 parts of the year:</p>
+<ul>
+<li>January - April: Statistical Rethinking (~4 chapters a month)</li>
+<li>May - August: The Pragmatic Programmer (2 chapters a month)</li>
+<li>September - December: Structure and Interpretation of Computer Programs (~1 chapter a month. But oh boy is that book massive…)</li>
+</ul>
+</section>
+<section id="make-a-contribution-to-r-core" class="level2">
+<h2 class="anchored" data-anchor-id="make-a-contribution-to-r-core">Make a contribution to R Core</h2>
+<p>There is now an <a href="https://contributor.r-project.org/working-group">R Contribution Working Group</a>, which is focussed on encouraging new contributors to R core, with a focus on diversity and inclusion. I’ve joined the slack team, and put the next two meetings in my calendar.</p>
+</section>
+<section id="courses-books" class="level2">
+<h2 class="anchored" data-anchor-id="courses-books">Courses &amp; books</h2>
+<p>This year I’m going to be helping deliver a few more courses, the rough plan so far is:</p>
+<ul>
+<li>Feb 7: <a href="https://www.statsoc.org.au/event-5513733">greta course in Canberra</a></li>
+<li>March 25/26: <a href="https://github.com/njtierney/qmd4sci">quarto for scientists</a> (online)</li>
+<li>June: longitudinal data analysis</li>
+<li>Later in the year: another course - functional programming? Missing data?</li>
+</ul>
+<p>Accompanying these courses I’d like to publish little living books, like I’ve done with the <a href="https://github.com/njtierney/rmd4sci">Rmarkdown for scientists book</a>.</p>
+</section>
+<section id="r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="r-packages">R packages</h2>
+<ul>
+<li>Publish and finish <a href="https://github.com/njtierney/conmat">conmat</a></li>
+<li>Regular releases of <a href="https://github.com/greta-dev/greta">greta</a></li>
+<li>Develop and release new pipeline on <a href="https://github.com/idem-lab/map-ir-pipeline">generalised stacking in insecticide resistance</a></li>
+<li>Keep my other R packages updated</li>
+</ul>
+</section>
+<section id="work-things" class="level2">
+<h2 class="anchored" data-anchor-id="work-things">Work things</h2>
+<p>The big goals for work this year are related to the above tasks, but the big ticket items for me are:</p>
+<ol type="1">
+<li>(Finally) release the Tensorflow 2 version of greta</li>
+<li>Establish regular greta releases, create a greta blog</li>
+<li>Develop documentation on the internals of greta</li>
+<li>Develop a culture and community of practice at work with code review</li>
+<li>Win grants for developing software to solve tricky problems in infectious disease modelling</li>
+<li>Publish software as JOSS papers</li>
+</ol>
+</section>
+<section id="other-misc-tech-ideas" class="level2">
+<h2 class="anchored" data-anchor-id="other-misc-tech-ideas">Other misc tech / ideas</h2>
+<ul>
+<li>Blog regularly</li>
+<li>Remember how to use <code>switch</code> reliably in R</li>
+<li>Become more proficient with <code>git</code></li>
+<li>Use <a href="https://lintr.r-lib.org/">lintr</a> in my projects</li>
+<li>Consider doing a livestream of a tidy tuesday data cleaning / EDA</li>
+<li>Condense my internet browsing into an RSS reader</li>
+<li>Focus on getting quality sleep</li>
+<li>Do more running</li>
+</ul>
+</section>
+<section id="end" class="level1">
+<h1>End</h1>
+<p>My hope is that I’ll review these goals at the end of 2024. Honestly it’s quite scary to post these plans, and I’m questioning if this is even a good idea to do so publicly. But I think I’ve got the right intention, so let’s leave it at that.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>rstats</category>
+  <category>functions</category>
+  <category>goals</category>
+  <guid>https://www.njtierney.com/posts/2024-01-08-goals/</guid>
+  <pubDate>Wed, 10 Jan 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Rstats RSE January Digest</title>
@@ -1782,124 +1899,7 @@ font-style: inherit;">"https://github.com/r-lib/rlang/blob/main/R/standalone-typ
   <category>digest</category>
   <category>newsletter</category>
   <guid>https://www.njtierney.com/posts/2024-01-10-rse-digest-january/</guid>
-  <pubDate>Tue, 09 Jan 2024 13:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Some Goals for 2024</title>
-  <link>https://www.njtierney.com/posts/2024-01-08-goals/</link>
-  <description><![CDATA[ 
-<header class="site-header">
-  <h1 class="site-title">
-    <a href="../../">
-      <img class="hvr-grow site-logo" src="https://www.njtierney.com/assets/njt-logo-small.png" alt="Nick logo">
-    </a>
-    <span class="hvr-bob site-title-credibly">Credibly</span>
-    <span class="hvr-hang site-title-curious">Curious</span>
-  </h1>
-  <p class="site-subtitle">
-    Nick Tierney's (mostly) rstats blog
-  </p>
-  
-</header>
-
-
-
-
-<figure class="figure">
-<img src="https://www.njtierney.com/posts/2024-01-08-goals/img/flower-goals.jpg" alt="Flowers in the Victorian Alps, Ricoh GRiii, Nicholas Tierney." class="figure-img">
-
-</figure>
-<p>To help me be more accountable, and also work out how to plan my year and work out what’s important to me, I thought I’d share some of my goals for 2024. Writing it all down is a bit scary, and it makes me think that maybe I might be a bit ambitious here. But I think it’s OK to be ambitious.</p>
-<section id="learn-js-and-rust" class="level2">
-<h2 class="anchored" data-anchor-id="learn-js-and-rust">Learn JS and Rust</h2>
-<p>I’d like to try and pick up another programming language for 2024. I don’t really have good fluency with other languages outside of R. I can fumble my way through python and HTML/CSS, a wee bit of C++. But I think it’s important and useful to learn a new language to help broaden your own understanding. I’d like to focus on JS (javascript) and Rust.</p>
-<p>I think JS because it has such an enormous influence on the web, and the tools we use every day. I’ve taken a nice course by <a href="https://github.com/gadenbuie">Garrick Aden Buie</a> (I can’t seem to find the course website) in 2020 (one of the last conferences I went to), but I unfortunately didn’t really use JS that year so it’s sort of all fell out of my head.</p>
-<p>To learn JS I was thinking I would start with <a href="https://github.com/wesbos/JavaScript30">JavaScript30</a> by <a href="https://github.com/wesbos">Wes Bos</a>, and then move on to <a href="https://github.com/getify/You-Dont-Know-JS">You Don’t Know JS</a> by <a href="https://github.com/getify">Kyle Simpson</a>. Hopefully I can learn and understand enough to try incorporating JS into R via quarto or htmlwidgets or something.</p>
-<p>Rust seems like a better language to use than C++. My experience with the <a href="https://rustlings.cool/">rustlings</a> course was excellent, and the error messages from rust were like, actually understandable? It was bizarre. Plus with the <a href="https://extendr.github.io/">rextender</a> R package you can bundle up your R code just like you do with cpp11 or Rcpp. It’d be cool to build something fast and fun in Rust and then bundle it into an R package.</p>
-<p>It’s hard to learn two languages at the same time, so I think I’ll try and do 6 months on JS, and 6 months on Rust.</p>
-<ul>
-<li>January - June: JS</li>
-<li>July - December: Rust</li>
-</ul>
-</section>
-<section id="read-some-more-programming-books" class="level2">
-<h2 class="anchored" data-anchor-id="read-some-more-programming-books">Read some more programming books</h2>
-<p>I’d really like to read these three books:</p>
-<ul>
-<li><a href="https://xcelab.net/rm/statistical-rethinking/">Statistical Rethinking</a></li>
-<li><a href="https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/">The Pragmatic Programmer</a></li>
-<li><a href="https://web.mit.edu/6.001/6.037/sicp.pdf">Structure and Interpretation of Computer Programs</a> (potentially even the <a href="https://mitpress.mit.edu/9780262543231/structure-and-interpretation-of-computer-programs/">JS edition</a>)</li>
-</ul>
-<p>Hopefully by saying this out aloud I will be able to actually complete this.</p>
-<p>Similar to above, I guess I’ll break this up into 3 parts of the year:</p>
-<ul>
-<li>January - April: Statistical Rethinking (~4 chapters a month)</li>
-<li>May - August: The Pragmatic Programmer (2 chapters a month)</li>
-<li>September - December: Structure and Interpretation of Computer Programs (~1 chapter a month. But oh boy is that book massive…)</li>
-</ul>
-</section>
-<section id="make-a-contribution-to-r-core" class="level2">
-<h2 class="anchored" data-anchor-id="make-a-contribution-to-r-core">Make a contribution to R Core</h2>
-<p>There is now an <a href="https://contributor.r-project.org/working-group">R Contribution Working Group</a>, which is focussed on encouraging new contributors to R core, with a focus on diversity and inclusion. I’ve joined the slack team, and put the next two meetings in my calendar.</p>
-</section>
-<section id="courses-books" class="level2">
-<h2 class="anchored" data-anchor-id="courses-books">Courses &amp; books</h2>
-<p>This year I’m going to be helping deliver a few more courses, the rough plan so far is:</p>
-<ul>
-<li>Feb 7: <a href="https://www.statsoc.org.au/event-5513733">greta course in Canberra</a></li>
-<li>March 25/26: <a href="https://github.com/njtierney/qmd4sci">quarto for scientists</a> (online)</li>
-<li>June: longitudinal data analysis</li>
-<li>Later in the year: another course - functional programming? Missing data?</li>
-</ul>
-<p>Accompanying these courses I’d like to publish little living books, like I’ve done with the <a href="https://github.com/njtierney/rmd4sci">Rmarkdown for scientists book</a>.</p>
-</section>
-<section id="r-packages" class="level2">
-<h2 class="anchored" data-anchor-id="r-packages">R packages</h2>
-<ul>
-<li>Publish and finish <a href="https://github.com/njtierney/conmat">conmat</a></li>
-<li>Regular releases of <a href="https://github.com/greta-dev/greta">greta</a></li>
-<li>Develop and release new pipeline on <a href="https://github.com/idem-lab/map-ir-pipeline">generalised stacking in insecticide resistance</a></li>
-<li>Keep my other R packages updated</li>
-</ul>
-</section>
-<section id="work-things" class="level2">
-<h2 class="anchored" data-anchor-id="work-things">Work things</h2>
-<p>The big goals for work this year are related to the above tasks, but the big ticket items for me are:</p>
-<ol type="1">
-<li>(Finally) release the Tensorflow 2 version of greta</li>
-<li>Establish regular greta releases, create a greta blog</li>
-<li>Develop documentation on the internals of greta</li>
-<li>Develop a culture and community of practice at work with code review</li>
-<li>Win grants for developing software to solve tricky problems in infectious disease modelling</li>
-<li>Publish software as JOSS papers</li>
-</ol>
-</section>
-<section id="other-misc-tech-ideas" class="level2">
-<h2 class="anchored" data-anchor-id="other-misc-tech-ideas">Other misc tech / ideas</h2>
-<ul>
-<li>Blog regularly</li>
-<li>Remember how to use <code>switch</code> reliably in R</li>
-<li>Become more proficient with <code>git</code></li>
-<li>Use <a href="https://lintr.r-lib.org/">lintr</a> in my projects</li>
-<li>Consider doing a livestream of a tidy tuesday data cleaning / EDA</li>
-<li>Condense my internet browsing into an RSS reader</li>
-<li>Focus on getting quality sleep</li>
-<li>Do more running</li>
-</ul>
-</section>
-<section id="end" class="level1">
-<h1>End</h1>
-<p>My hope is that I’ll review these goals at the end of 2024. Honestly it’s quite scary to post these plans, and I’m questioning if this is even a good idea to do so publicly. But I think I’ve got the right intention, so let’s leave it at that.</p>
-
-
-</section>
-
- ]]></description>
-  <category>rstats</category>
-  <category>functions</category>
-  <category>goals</category>
-  <guid>https://www.njtierney.com/posts/2024-01-08-goals/</guid>
-  <pubDate>Tue, 09 Jan 2024 13:00:00 GMT</pubDate>
+  <pubDate>Wed, 10 Jan 2024 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Code Smell: Error Handling Eclipse</title>
@@ -2316,7 +2316,7 @@ font-style: inherit;">"https://github.com/r-lib/rlang/blob/main/R/standalone-typ
   <category>research software engineer</category>
   <category>rstats</category>
   <guid>https://www.njtierney.com/posts/2023-12-01-long-errors-smell/</guid>
-  <pubDate>Tue, 05 Dec 2023 13:00:00 GMT</pubDate>
+  <pubDate>Wed, 06 Dec 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Get Good with R: Typing Skills and Shortcuts</title>
@@ -2435,7 +2435,7 @@ font-style: inherit;">"https://github.com/r-lib/rlang/blob/main/R/standalone-typ
   <category>rbloggers</category>
   <category>rstats</category>
   <guid>https://www.njtierney.com/posts/2023-11-23-get-good-type-fast/</guid>
-  <pubDate>Sun, 03 Dec 2023 13:00:00 GMT</pubDate>
+  <pubDate>Mon, 04 Dec 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>How to Get Good with R?</title>
@@ -2860,7 +2860,7 @@ font-style: inherit;">undebug</span>(mean_center)</span></code></pre></div></div
  ]]></description>
   <category>rstats</category>
   <guid>https://www.njtierney.com/posts/2023-10-30-how-to-get-good-with-r/</guid>
-  <pubDate>Thu, 09 Nov 2023 13:00:00 GMT</pubDate>
+  <pubDate>Fri, 10 Nov 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Continuing to Improve R’s Ability to Visualise and Explore Missing Values: Milestone 1</title>
@@ -2960,7 +2960,7 @@ font-style: inherit;">undebug</span>(mean_center)</span></code></pre></div></div
   <category>ggplot2</category>
   <category>rstats</category>
   <guid>https://www.njtierney.com/posts/2023-04-24-improving-missing-data-m1/</guid>
-  <pubDate>Sun, 23 Apr 2023 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 24 Apr 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>naniar Version 1.0.0</title>
@@ -3164,7 +3164,7 @@ font-style: inherit;">undebug</span>(mean_center)</span></code></pre></div></div
   <category>data visualisation</category>
   <category>missing data</category>
   <guid>https://www.njtierney.com/posts/2023-02-02-naniar-version-0-6-0/</guid>
-  <pubDate>Mon, 06 Feb 2023 13:00:00 GMT</pubDate>
+  <pubDate>Tue, 07 Feb 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>visdat Version 0.6.0</title>
@@ -3499,7 +3499,7 @@ font-style: inherit;">undebug</span>(mean_center)</span></code></pre></div></div
   <category>missing data</category>
   <category>rbloggers</category>
   <guid>https://www.njtierney.com/posts/2023-02-01-visdat-version-0-6-0/</guid>
-  <pubDate>Wed, 01 Feb 2023 13:00:00 GMT</pubDate>
+  <pubDate>Thu, 02 Feb 2023 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Population Pyramid Plots in ggplot2</title>
@@ -4144,7 +4144,7 @@ font-style: inherit;">sum</span>(population))</span></code></pre></div></div>
   <category>colour palette</category>
   <category>rstats</category>
   <guid>https://www.njtierney.com/posts/2022-08-09-pyramid-plots-in-ggplot2/</guid>
-  <pubDate>Mon, 08 Aug 2022 14:00:00 GMT</pubDate>
+  <pubDate>Tue, 09 Aug 2022 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Using across() to create multiple columns</title>
@@ -4509,7 +4509,7 @@ font-style: inherit;">sum</span>(population))</span></code></pre></div></div>
   <category>rstats</category>
   <category>functions</category>
   <guid>https://www.njtierney.com/posts/2022-08-08-fun-across/</guid>
-  <pubDate>Sun, 07 Aug 2022 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 08 Aug 2022 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Notes on Changing from Rmarkdown/Bookdown to Quarto</title>
@@ -4715,7 +4715,7 @@ url: 'https\://rmd4sci.njtierney.com/'
   <category>bookdown</category>
   <category>quarto</category>
   <guid>https://www.njtierney.com/posts/2022-04-08-rmd-to-qmd/</guid>
-  <pubDate>Sun, 10 Apr 2022 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 11 Apr 2022 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>How Much One Shapefile Overlaps Another?</title>
@@ -4956,7 +4956,7 @@ Photo By <a href="https://www.instagram.com/p/CSrX0-qh1tp/">Nick Tierney</a>
   <category>gis</category>
   <category>sf</category>
   <guid>https://www.njtierney.com/posts/2021-08-18-how-do-i-find-out-how-much-a-shapefile-overlaps-another/</guid>
-  <pubDate>Fri, 20 Aug 2021 14:00:00 GMT</pubDate>
+  <pubDate>Sat, 21 Aug 2021 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Some Unexpected Things About Subsetting</title>
@@ -5115,7 +5115,7 @@ font-style: inherit;">"AUS"</span>, ]</span></code></pre></div></div>
  ]]></description>
   <category>rstats</category>
   <guid>https://www.njtierney.com/posts/2021-06-30-subsetting/</guid>
-  <pubDate>Tue, 29 Jun 2021 14:00:00 GMT</pubDate>
+  <pubDate>Wed, 30 Jun 2021 00:00:00 GMT</pubDate>
 </item>
 <item>
   <title>What if Australia’s vaccination rate is similar to our testing?</title>
@@ -5451,7 +5451,7 @@ font-style: inherit;">"AUS"</span>, ]</span></code></pre></div></div>
   <category>ggplot2</category>
   <category>time series</category>
   <guid>https://www.njtierney.com/posts/2021-02-27-oz-covid-vacc/</guid>
-  <pubDate>Sat, 20 Mar 2021 13:00:00 GMT</pubDate>
+  <pubDate>Sun, 21 Mar 2021 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
