@@ -52,6 +52,7 @@ I'm **currently accepting** select clients for new projects. My approach is tail
 - Research institute, UK, 2025. Refreshed software used for infectious disease modelling. This involved developing a new R package for data access, as well as carefully separating out functionality into easier to maintain pieces whilst ensuring existing code would not break.
 - Research institute, Australia, 2025-2026. Translated existing research methods into R software for use in geospatial data analytics.
 - Research institute, Europe, 2026. Reviewed statistical methodology and ensured implementation in software matched the methods. Reviewed software and provided guidance on how to improve key areas, listed in order of importance and effort.
+- Research institute, Australia, 2026. Reviewed an R package, [season](https://github.com/agbarnett/season), for seasonal analysis of health data. Implemented best practices in research software engineering (continuous integration, comprehensive testing, linting and formatting), modernised plotting to ggplot2, and added tidyverse integration. Published example-driven documentation and a package website, and delivered a prioritised roadmap for future maintenance. See work completed at during the review in the [closed issues](https://github.com/agbarnett/season/issues?q=is%3Aissue%20state%3Aclosed).
 
 
 # Let's Solve Your Data Challenges
